@@ -1,6 +1,5 @@
-package dev.kobzar.onboarding
+package dev.kobzar.details
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -15,45 +14,48 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.registry.rememberScreen
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.Navigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.kobzar.navigation.shared.SharedScreen
 import dev.kobzar.ui.compose.theme.AppTheme
 
-class OnBoardingScreen : Screen {
+data class DetailsScreen(
+    val asteroidId: String?
+): Screen {
 
     @Composable
     override fun Content() {
+
         val navigator = LocalNavigator.current
-        val asteroidsListScreen = rememberScreen(SharedScreen.AsteroidsListScreen)
-        OnBoardingScreenComposable(
-            navigator = navigator,
-            screen = asteroidsListScreen
+
+        val compareScreen = rememberScreen(SharedScreen.CompareScreen)
+
+        DetailsScreenComposable(
+            asteroidId = asteroidId,
+            onBackClick = { navigator?.pop() },
+            onCompareClick = { navigator?.push(compareScreen) }
         )
     }
 
 }
 
 @Composable
-private fun OnBoardingScreenComposable(
-    navigator: Navigator?,
-    screen: Screen
+private fun DetailsScreenComposable(
+    asteroidId: String?,
+    onBackClick: () -> Unit,
+    onCompareClick: () -> Unit
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(AppTheme.colors.background),
-        contentAlignment = Alignment.Center
-    ) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "OnBoardingScreen", style = AppTheme.typography.subtitle)
+            Text(text = "DetailsScreen\nparam: $asteroidId", style = AppTheme.typography.subtitle)
             Spacer(modifier = Modifier.height(64.dp))
-            Button(onClick = {
-                navigator?.push(screen)
-            }) {
-                Text(text = "To AsteroidsListScreen")
+            Button(onClick = onBackClick) {
+                Text(text = "Back")
+
+            }
+            Spacer(modifier = Modifier.height(32.dp))
+            Button(onClick = onCompareClick) {
+                Text(text = "To CompareScreen")
             }
         }
     }
