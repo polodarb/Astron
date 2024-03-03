@@ -55,6 +55,9 @@ fun lightColors() = Colors(
     tertiaryViolet100 = Color(0xFFF0EFFA),
     tertiaryViolet50 = Color(0xFFF9F9FD),
     border = Color(0xFFF9FDFF),
+    outline = Color(0xFF79747E),
+    white = Color(0xFFFFFFFF),
+    black = Color(0xFF000000),
 )
 
 

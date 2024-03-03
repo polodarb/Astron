@@ -40,6 +40,9 @@ android {
 
 dependencies {
 
+    // Kotlin immutable collections
+    implementation(libs.kotlinx.collections.immutable)
+
     // Compose
     implementation(libs.androidx.ui.compose.runtime)
     implementation(libs.androidx.lifecycle.runtime.ktx)

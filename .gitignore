@@ -29,7 +29,7 @@ data/repository/impl/build
 domain/build
 domain/impl/build
 
-features/asteroidsList/build
+features/asteroids/build
 features/onboarding/build
 features/settings/build
 features/favorites/build

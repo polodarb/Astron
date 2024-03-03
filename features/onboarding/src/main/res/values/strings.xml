@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    ONBOARDING-->
+    <string name="onboarding_page1_title">Welcome!</string>
+    <string name="onboarding_page1_desc">Watch for asteroids approaching Earth. Study the data and keep an eye out for dangerous objects</string>
+
+    <string name="onboarding_page2_title">Browse the details!</string>
+    <string name="onboarding_page2_desc">You can find out a lot of data about the asteroid such as diameter, hazard, and even compare it to others</string>
+
+    <string name="onboarding_page3_title">Small adjustments</string>
+
+    <string name="onboarding_prefs_distance_units_title">Miss distance units</string>
+    <string name="onboarding_prefs_relative_velocity_title">Relative velocity units</string>
+    <string name="onboarding_prefs_diameter_units_title">Select diameter units</string>
+</resources>
