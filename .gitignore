@@ -31,6 +31,10 @@ domain/impl/build
 
 features/asteroidsList/build
 features/onboarding/build
+features/settings/build
+features/favorites/build
+features/details/build
+features/compare/build
 
 # Project exclude paths
 /core/ui/build/

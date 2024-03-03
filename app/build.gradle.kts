@@ -90,5 +90,9 @@ dependencies {
     implementation(project(":domain:impl"))
 
     implementation(project(":features:onboarding"))
-    implementation(project(":features:asteroidsList"))
+    implementation(project(":features:asteroids"))
+    implementation(project(":features:details"))
+    implementation(project(":features:favorites"))
+    implementation(project(":features:settings"))
+    implementation(project(":features:compare"))
 }
