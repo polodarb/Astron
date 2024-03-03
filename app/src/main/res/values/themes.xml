@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="Theme.Astro" parent="Theme.Material3.Light.NoActionBar" />
 
-    <style name="Theme.KobzarDanyil" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.Astro.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/data_splash_logo</item>
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="postSplashScreenTheme">@style/Theme.Astro</item>
+    </style>
 </resources>

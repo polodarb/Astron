@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:name=".AsterApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -10,13 +11,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.KobzarDanyil"
+        android:theme="@style/Theme.Astro"
         tools:targetApi="31">
         <activity
-            android:name="dev.kobzar.app.MainActivity"
+            android:name="dev.kobzar.app.activity.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.KobzarDanyil">
+            android:theme="@style/Theme.Astro.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

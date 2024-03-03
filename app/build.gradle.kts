@@ -57,6 +57,10 @@ dependencies {
     implementation(libs.voyager.hilt)
     implementation(libs.voyager.transitions)
 
+    // Splash Screen
+    implementation(libs.splashscreen)
+
+    implementation(libs.material.view)
     implementation(libs.androidx.ui.compose.runtime)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
