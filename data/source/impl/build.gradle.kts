@@ -48,8 +48,8 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    implementation(project(":data:repository"))
     implementation(project(":data:source"))
+//    implementation(project(":data:preferences"))
 }
 
 kapt {

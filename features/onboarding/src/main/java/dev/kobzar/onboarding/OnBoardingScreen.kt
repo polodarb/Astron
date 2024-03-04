@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import cafe.adriel.voyager.core.registry.rememberScreen
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.hilt.getScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import dev.kobzar.navigation.shared.SharedScreen
 import dev.kobzar.onboarding.screens.DetailsScreen
@@ -30,6 +31,7 @@ class OnBoardingScreen : Screen {
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
     override fun Content() {
+        val viewModel = getScreenModel<OnBoardingViewModel>()
         val navigator = LocalNavigator.current
         val asteroidsScreen = rememberScreen(SharedScreen.AsteroidsListScreen)
 
@@ -37,9 +39,14 @@ class OnBoardingScreen : Screen {
             3
         })
 
+        val coroutineScope = rememberCoroutineScope()
+
         OnBoardingScreenComposable(
             pagerState = pagerState,
             onFinishClick = {
+                coroutineScope.launch {
+                    viewModel.setFirstLaunch(true)
+                }
                 navigator?.let {
                     it.push(asteroidsScreen)
                     it.replaceAll(asteroidsScreen)

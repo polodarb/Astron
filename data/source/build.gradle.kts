@@ -1,13 +1,10 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-
-    alias(libs.plugins.hilt)
-    kotlin("kapt")
 }
 
 android {
-    namespace = "dev.kobzar.impl"
+    namespace = "dev.kobzar.datasource"
     compileSdk = 34
 
     defaultConfig {
@@ -37,10 +34,6 @@ android {
 
 dependencies {
 
-    // Hilt
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -48,10 +41,5 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    implementation(project(":data:repository"))
-    implementation(project(":data:source"))
-}
-
-kapt {
-    correctErrorTypes = true
+    api(project(":data:preferences"))
 }

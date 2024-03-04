@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+
+    alias(libs.plugins.hilt)
+    kotlin("kapt")
 }
 
 android {
@@ -40,6 +43,10 @@ android {
 
 dependencies {
 
+    // Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+
     // Kotlin immutable collections
     implementation(libs.kotlinx.collections.immutable)
 
@@ -68,4 +75,9 @@ dependencies {
 
     implementation(project(":core:ui"))
     implementation(project(":core:navigation"))
+    implementation(project(":data:repository"))
+}
+
+kapt {
+    correctErrorTypes = true
 }

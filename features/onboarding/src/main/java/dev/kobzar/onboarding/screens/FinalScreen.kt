@@ -67,14 +67,14 @@ private fun FinalScreenAdjustments(
 
     val scrollableState = rememberScrollState()
 
-    val itemsList = persistentListOf("Km", "Meter", "Mile", "Feet")
-    val (diameterSelectedOption) = remember { mutableStateOf(itemsList[0]) }
+    val itemsList = listOf("Km", "Meter", "Mile", "Feet")
+    val (diameterSelectedOption, diameterOnOptionSelectedState) = remember { mutableStateOf(itemsList[0]) }
 
-    val velocityUnits = persistentListOf("Km/s", "Km/h", "Mile/h")
-    val (velocitySelectedOption) = remember { mutableStateOf(velocityUnits[0]) }
+    val velocityUnits = listOf("Km/s", "Km/h", "Mile/h")
+    val (velocitySelectedOption, velocityOnOptionSelectedState) = remember { mutableStateOf(velocityUnits[0]) }
 
-    val distanceUnits = persistentListOf("Km", "Mile", "Lunar", "Astronomical")
-    val (distanceSelectedOption) = remember { mutableStateOf(distanceUnits[0]) }
+    val distanceUnits = listOf("Km", "Mile", "Lunar", "Astronomical")
+    val (distanceSelectedOption, distanceOnOptionSelectedState) = remember { mutableStateOf(distanceUnits[0]) }
 
     Column(
         modifier = modifier
@@ -92,14 +92,20 @@ private fun FinalScreenAdjustments(
             title = stringResource(R.string.onboarding_prefs_diameter_units_title),
             itemsList = itemsList,
             selectedOption = diameterSelectedOption,
-            onOptionSelected = diameterOnOptionSelected
+            onOptionSelected = {
+                diameterOnOptionSelectedState(it)
+                diameterOnOptionSelected(it)
+            }
         )
 
         FinalScreenAdjustmentsRow(
             title = stringResource(R.string.onboarding_prefs_relative_velocity_title),
             itemsList = velocityUnits,
             selectedOption = velocitySelectedOption,
-            onOptionSelected = velocityOnOptionSelected,
+            onOptionSelected = {
+                velocityOnOptionSelectedState(it)
+                velocityOnOptionSelected(it)
+            },
             modifier = Modifier.padding(top = AppTheme.spaces.space28)
         )
 
@@ -107,7 +113,10 @@ private fun FinalScreenAdjustments(
             title = stringResource(R.string.onboarding_prefs_distance_units_title),
             itemsList = distanceUnits,
             selectedOption = distanceSelectedOption,
-            onOptionSelected = distanceOnOptionSelected,
+            onOptionSelected = {
+                distanceOnOptionSelectedState(it)
+                distanceOnOptionSelected(it)
+            },
             modifier = Modifier.padding(top = AppTheme.spaces.space28)
         )
     }
@@ -118,7 +127,7 @@ private fun FinalScreenAdjustments(
 private fun FinalScreenAdjustmentsRow(
     modifier: Modifier = Modifier,
     title: String,
-    itemsList: PersistentList<String>,
+    itemsList: List<String>,
     selectedOption: String,
     onOptionSelected: (String) -> Unit
 ) {
