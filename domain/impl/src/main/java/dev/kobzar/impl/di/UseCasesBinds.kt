@@ -4,16 +4,16 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dev.kobzar.impl.DataStoreManagerImpl
-import dev.kobzar.preferences.DataStoreManager
+import dev.kobzar.domain.useCases.ConfigureFirstStart
+import dev.kobzar.impl.useCases.ConfigureFirstStartImpl
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-interface BindModule {
+interface UseCasesBinds {
 
     @Binds
     @Singleton
-    fun bindDataStoreManager(dataStoreManager: DataStoreManagerImpl): DataStoreManager
+    fun bindConfigureFirstStart(impl: ConfigureFirstStartImpl): ConfigureFirstStart
 
 }

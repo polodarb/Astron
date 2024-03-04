@@ -76,6 +76,7 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:navigation"))
     implementation(project(":data:repository"))
+    implementation(project(":domain"))
 }
 
 kapt {

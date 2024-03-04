@@ -21,10 +21,4 @@ class DatastoreModule {
     fun provideDataStoreManager(@ApplicationContext context: Context): DataStoreManager {
         return DataStoreManagerImpl(context)
     }
-
-//    @Provides
-//    @Singleton
-//    fun provideContext(application: Application): Context {
-//        return application.applicationContext
-//    }
 }

@@ -25,8 +25,6 @@ import dev.kobzar.onboarding.screens.shared.OnboardingScreenDescription
 import dev.kobzar.onboarding.screens.shared.OnboardingScreenImage
 import dev.kobzar.ui.compose.components.chips.AsterFilterChip
 import dev.kobzar.ui.compose.theme.AppTheme
-import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 internal fun FinalScreen(
@@ -68,13 +66,25 @@ private fun FinalScreenAdjustments(
     val scrollableState = rememberScrollState()
 
     val itemsList = listOf("Km", "Meter", "Mile", "Feet")
-    val (diameterSelectedOption, diameterOnOptionSelectedState) = remember { mutableStateOf(itemsList[0]) }
+    val (diameterSelectedOption, diameterOnOptionSelectedState) = remember {
+        mutableStateOf(
+            itemsList[0]
+        )
+    }
 
     val velocityUnits = listOf("Km/s", "Km/h", "Mile/h")
-    val (velocitySelectedOption, velocityOnOptionSelectedState) = remember { mutableStateOf(velocityUnits[0]) }
+    val (velocitySelectedOption, velocityOnOptionSelectedState) = remember {
+        mutableStateOf(
+            velocityUnits[0]
+        )
+    }
 
     val distanceUnits = listOf("Km", "Mile", "Lunar", "Astronomical")
-    val (distanceSelectedOption, distanceOnOptionSelectedState) = remember { mutableStateOf(distanceUnits[0]) }
+    val (distanceSelectedOption, distanceOnOptionSelectedState) = remember {
+        mutableStateOf(
+            distanceUnits[0]
+        )
+    }
 
     Column(
         modifier = modifier

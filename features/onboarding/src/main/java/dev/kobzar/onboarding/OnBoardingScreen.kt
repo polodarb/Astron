@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalContext
 import cafe.adriel.voyager.core.registry.rememberScreen
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.hilt.getScreenModel
@@ -21,6 +22,10 @@ import dev.kobzar.navigation.shared.SharedScreen
 import dev.kobzar.onboarding.screens.DetailsScreen
 import dev.kobzar.onboarding.screens.FinalScreen
 import dev.kobzar.onboarding.screens.WelcomeScreen
+import dev.kobzar.preferences.model.DiameterUnit
+import dev.kobzar.preferences.model.MissDistanceUnit
+import dev.kobzar.preferences.model.RelativeVelocityUnit
+import dev.kobzar.preferences.model.UserPreferencesModel
 import dev.kobzar.ui.compose.components.buttons.OnBoardingSkipButton
 import dev.kobzar.ui.compose.components.indicators.OnBoardingPageIndicator
 import dev.kobzar.ui.compose.theme.AppTheme
@@ -35,21 +40,47 @@ class OnBoardingScreen : Screen {
         val navigator = LocalNavigator.current
         val asteroidsScreen = rememberScreen(SharedScreen.AsteroidsListScreen)
 
+        val coroutineScope = rememberCoroutineScope()
+        val context = LocalContext.current
+
         val pagerState = rememberPagerState(pageCount = {
             3
         })
 
-        val coroutineScope = rememberCoroutineScope()
+        var diameterUnit = "Km"
+        var velocityUnit = "Km/s"
+        var distanceUnit = "Km"
 
         OnBoardingScreenComposable(
             pagerState = pagerState,
             onFinishClick = {
-                coroutineScope.launch {
-                    viewModel.setFirstLaunch(true)
-                }
                 navigator?.let {
                     it.push(asteroidsScreen)
                     it.replaceAll(asteroidsScreen)
+                }
+                coroutineScope.launch {
+                    viewModel.setUserPreferences(
+                        prefs = UserPreferencesModel(
+                            diameterUnits = when (diameterUnit) {
+                                "Meter" -> DiameterUnit.METER
+                                "Mile" -> DiameterUnit.MILE
+                                "Feet" -> DiameterUnit.FEET
+                                else -> DiameterUnit.KILOMETER
+                            },
+                            relativeVelocityUnits = when (velocityUnit) {
+                                "Km/h" -> RelativeVelocityUnit.KM_H
+                                "Mile/h" -> RelativeVelocityUnit.MILE_H
+                                else -> RelativeVelocityUnit.KM_S
+                            },
+                            missDistanceUnits = when (distanceUnit) {
+                                "Mile" -> MissDistanceUnit.MILE
+                                "Lunar" -> MissDistanceUnit.LUNAR
+                                "Astronomical" -> MissDistanceUnit.ASTRONOMICAL
+                                else -> MissDistanceUnit.KILOMETER
+                            }
+                        )
+                    )
+                    viewModel.configureFirstStart()
                 }
             },
             onSkipClick = {
@@ -59,13 +90,13 @@ class OnBoardingScreen : Screen {
                 }
             },
             diameterOnOptionSelected = {
-                // TODO
+                diameterUnit = it
             },
             velocityOnOptionSelected = {
-                // TODO
+                velocityUnit = it
             },
             distanceOnOptionSelected = {
-                // TODO
+                distanceUnit = it
             }
         )
     }

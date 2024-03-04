@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import dev.kobzar.ui.compose.theme.AppTheme
 
-class SettingsScreen: Screen {
+class SettingsScreen : Screen {
 
     @Composable
     override fun Content() = SettingsScreenComposable()

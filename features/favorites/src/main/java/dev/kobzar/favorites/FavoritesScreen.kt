@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import dev.kobzar.ui.compose.theme.AppTheme
 
-class FavoritesScreen: Screen {
+class FavoritesScreen : Screen {
 
     @Composable
     override fun Content() = FavoritesScreenComposable()

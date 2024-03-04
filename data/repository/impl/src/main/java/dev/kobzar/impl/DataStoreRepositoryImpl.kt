@@ -10,14 +10,6 @@ class DataStoreRepositoryImpl @Inject constructor(
     private val dataSource: DataStoreSource
 ): DataStoreRepository {
 
-    override suspend fun setFirstLaunch(value: Boolean) {
-        dataSource.setFirstLaunch(value)
-    }
-
-    override suspend fun getFirstLaunch(): Flow<Boolean?> {
-        return dataSource.getFirstLaunch()
-    }
-
     override suspend fun setUserPreferences(prefs: UserPreferencesModel) {
         dataSource.setUserPreferences(prefs)
     }

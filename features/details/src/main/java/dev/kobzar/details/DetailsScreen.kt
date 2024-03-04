@@ -19,7 +19,7 @@ import dev.kobzar.ui.compose.theme.AppTheme
 
 data class DetailsScreen(
     val asteroidId: String?
-): Screen {
+) : Screen {
 
     @Composable
     override fun Content() {

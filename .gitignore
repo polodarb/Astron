@@ -25,6 +25,8 @@ data/preferences/build
 data/preferences/impl/build
 data/repository/build
 data/repository/impl/build
+data/source
+data/source/impl
 
 domain/build
 domain/impl/build

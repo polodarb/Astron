@@ -12,4 +12,5 @@ open class BaseActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
     }
+
 }

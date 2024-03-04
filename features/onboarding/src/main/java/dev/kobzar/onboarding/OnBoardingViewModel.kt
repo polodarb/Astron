@@ -2,25 +2,26 @@ package dev.kobzar.onboarding
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.kobzar.domain.useCases.ConfigureFirstStart
+import dev.kobzar.preferences.model.UserPreferencesModel
 import dev.kobzar.repository.DataStoreRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-//@HiltViewModel
 class OnBoardingViewModel @Inject constructor(
-//    private val preferencesRepository: DataStoreRepository
-): ScreenModel {
+    private val preferencesRepository: DataStoreRepository,
+    private val configureUseCase: ConfigureFirstStart
+) : ScreenModel {
 
-    suspend fun setFirstLaunch(value: Boolean) {
+    suspend fun setUserPreferences(prefs: UserPreferencesModel) {
         screenModelScope.launch {
-//            preferencesRepository.setFirstLaunch(value)
+            preferencesRepository.setUserPreferences(prefs)
         }
     }
 
-    suspend fun setUserPreferences() {
+    suspend fun configureFirstStart() {
         screenModelScope.launch {
-//            preferencesRepository.getUserPreferences()
+            configureUseCase()
         }
     }
 
