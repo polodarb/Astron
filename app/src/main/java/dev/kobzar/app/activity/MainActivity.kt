@@ -1,13 +1,13 @@
 package dev.kobzar.app.activity
 
+import android.content.Context
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.activity.viewModels
 import cafe.adriel.voyager.core.registry.ScreenRegistry
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
+import dagger.hilt.android.AndroidEntryPoint
 import dev.kobzar.asteroidslist.AsteroidsListScreen
 import dev.kobzar.compare.CompareScreen
 import dev.kobzar.details.DetailsScreen
@@ -17,11 +17,23 @@ import dev.kobzar.onboarding.OnBoardingScreen
 import dev.kobzar.platform.base.BaseActivity
 import dev.kobzar.settings.SettingsScreen
 import dev.kobzar.ui.compose.AppTheme
+import java.io.File
 
+@AndroidEntryPoint
 class MainActivity : BaseActivity() {
+
+    private val viewModel: MainViewModel by viewModels()
+
+    private val context: Context by lazy {
+        this.applicationContext
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val configuredFile = File(context.filesDir, "configured")
+        val isFirstStart = !configuredFile.exists()
+
 
         ScreenRegistry {
             register<SharedScreen.OnBoardingScreen> { OnBoardingScreen() }
@@ -34,10 +46,18 @@ class MainActivity : BaseActivity() {
 
         setContent {
             AppTheme {
-                Navigator(screen = OnBoardingScreen()) { navigator ->
+                val startScreen = if (isFirstStart) {
+                    OnBoardingScreen()
+                } else {
+                    AsteroidsListScreen()
+                }
+
+                Navigator(screen = startScreen) { navigator ->
                     SlideTransition(navigator)
                 }
             }
         }
+
     }
+
 }

@@ -50,7 +50,10 @@ class Colors(
     tertiaryViolet200: Color,
     tertiaryViolet100: Color,
     tertiaryViolet50: Color,
-    border: Color
+    border: Color,
+    outline: Color,
+    white: Color,
+    black: Color
 ) {
 
     var background by mutableStateOf(background)
@@ -180,6 +183,15 @@ class Colors(
         private set
 
     var border by mutableStateOf(border)
+        private set
+
+    var outline by mutableStateOf(outline)
+        private set
+
+    var white by mutableStateOf(white)
+        private set
+
+    var black by mutableStateOf(black)
         private set
 }
 

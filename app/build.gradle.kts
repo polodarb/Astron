@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+
+    alias(libs.plugins.hilt)
+    kotlin("kapt")
 }
 
 android {
@@ -47,9 +50,17 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    hilt {
+        enableAggregatingTask = false
+    }
 }
 
 dependencies {
+
+    // Hilt
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.common)
+    kapt(libs.hilt.compiler)
 
     // Voyager Navigation
     implementation(libs.voyager.navigator)
@@ -69,6 +80,9 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+
+    // Testing
+    kaptTest(libs.hilt.android.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -83,6 +97,10 @@ dependencies {
 
     implementation(project(":data:repository"))
     implementation(project(":data:repository:impl"))
+    implementation(project(":data:source"))
+    implementation(project(":data:source:impl"))
+    implementation(project(":data:preferences"))
+    implementation(project(":data:preferences:impl"))
     implementation(project(":data:network"))
     implementation(project(":data:network:impl"))
 
@@ -95,4 +113,8 @@ dependencies {
     implementation(project(":features:favorites"))
     implementation(project(":features:settings"))
     implementation(project(":features:compare"))
+}
+
+kapt {
+    correctErrorTypes = true
 }

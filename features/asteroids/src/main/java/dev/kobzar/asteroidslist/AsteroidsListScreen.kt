@@ -55,6 +55,7 @@ class AsteroidsListScreen : Screen {
                 navigator?.push(settingsScreen)
             }
         )
+
     }
 
 }

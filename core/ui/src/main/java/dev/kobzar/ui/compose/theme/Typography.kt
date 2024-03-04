@@ -9,6 +9,10 @@ import androidx.compose.ui.unit.sp
 import dev.kobzar.ui.R
 
 data class Typography(
+    val largeTitle: TextStyle = TextStyle(
+        fontFamily = FontFamily(Font(R.font.inter_semibold)),
+        fontSize = 28.sp
+    ),
     val title: TextStyle = TextStyle(
         fontFamily = FontFamily(Font(R.font.inter_bold)),
         fontWeight = FontWeight.Bold,
@@ -20,9 +24,13 @@ data class Typography(
         fontSize = 16.sp
     ),
     val mediumTitle: TextStyle = TextStyle(
-        fontFamily = FontFamily(Font(R.font.inter_bold)),
-        fontWeight = FontWeight.Bold,
+        fontFamily = FontFamily(Font(R.font.inter_medium)),
+        fontWeight = FontWeight.Medium,
         fontSize = 16.sp
+    ),
+    val titleRegular: TextStyle = TextStyle(
+        fontFamily = FontFamily(Font(R.font.inter)),
+        fontSize = 18.sp
     ),
     val mediumSubtitle: TextStyle = TextStyle(
         fontFamily = FontFamily(Font(R.font.inter_medium)),
