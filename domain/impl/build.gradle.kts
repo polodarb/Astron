@@ -37,6 +37,10 @@ android {
 
 dependencies {
 
+    // Paging
+    api(libs.paging3)
+    api(libs.paging3.compose)
+
     // Hilt
     implementation(libs.hilt.android)
     implementation(libs.hilt.common)

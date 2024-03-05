@@ -1,6 +1,5 @@
 package dev.kobzar.repository
 
-import dev.kobzar.network.models.NetworkAsteroidsModel
 import dev.kobzar.repository.models.MainAsteroidsModel
 
 interface AsteroidsRepository {
@@ -9,5 +8,9 @@ interface AsteroidsRepository {
         startDate: String,
         endDate: String
     ): MainAsteroidsModel?
+
+    suspend fun getAsteroidsByDate(
+        url: String
+    ): MainAsteroidsModel
 
 }

@@ -17,8 +17,10 @@ class AsteroidsRepositoryImpl @Inject constructor(
         endDate: String
     ): MainAsteroidsModel {
         val networkAsteroidsModel = networkSource.getAsteroidsByDate(startDate, endDate)
-        Log.d("TAG", "getAsteroidsByDate: $networkAsteroidsModel")
         return networkAsteroidsModel.toMainAsteroidsModel()
     }
 
+    override suspend fun getAsteroidsByDate(url: String): MainAsteroidsModel {
+        return networkSource.getAsteroidsByDate(url).toMainAsteroidsModel()
+    }
 }

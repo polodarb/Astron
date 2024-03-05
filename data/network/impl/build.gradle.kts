@@ -37,6 +37,9 @@ android {
 
 dependencies {
 
+    // Interceptor
+    implementation(libs.logging.interceptor)
+
     // Hilt
     implementation(libs.hilt.android)
     implementation(libs.hilt.common)

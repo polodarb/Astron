@@ -13,6 +13,7 @@ import dev.kobzar.impl.service.NasaAPI
 import okhttp3.Interceptor
 import retrofit2.converter.gson.GsonConverterFactory
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -20,7 +21,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object RetrofitModule {
 
-    private const val BASE_URL = "https://api.nasa.gov/neo/rest/v1/"
+    const val BASE_URL = "https://api.nasa.gov/neo/rest/v1/"
 
     @Provides
     @Singleton
@@ -32,7 +33,7 @@ object RetrofitModule {
     @Provides
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): retrofit2.Retrofit {
-        return createRetrofit(BASE_URL, okHttpClient).build()
+        return createRetrofit(okHttpClient).build()
     }
 
     @Provides
@@ -41,24 +42,25 @@ object RetrofitModule {
         @ApplicationContext context: Context
     ): OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(ChuckerInterceptor.Builder(context).build())
+//            .addInterceptor(createLoggingInterceptor(context))
+            .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             .build()
     }
 
-    private fun createRetrofit(url: String, okHttpClient: OkHttpClient) = retrofit2.Retrofit.Builder()
-        .baseUrl(url)
+    private fun createRetrofit(okHttpClient: OkHttpClient) = retrofit2.Retrofit.Builder()
+        .baseUrl(BASE_URL)
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
 
-//    private fun createLoggingInterceptor(
-//        @ApplicationContext context: Context
-//    ): Interceptor {
-//        return ChuckerInterceptor.Builder(context)
-//            .collector(ChuckerCollector(context))
-//            .maxContentLength(250_000L)
-//            .redactHeaders(emptySet())
-//            .alwaysReadResponseBody(false)
-//            .build()
-//    }
+    private fun createLoggingInterceptor(
+        @ApplicationContext context: Context
+    ): Interceptor {
+        return ChuckerInterceptor.Builder(context)
+            .collector(ChuckerCollector(context))
+            .maxContentLength(250_000L)
+            .redactHeaders(emptySet())
+            .alwaysReadResponseBody(false)
+            .build()
+    }
 
 }

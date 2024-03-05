@@ -10,4 +10,8 @@ interface NetworkSource: BaseNetworkSource {
         endDate: String
     ): NetworkAsteroidsModel
 
+    suspend fun getAsteroidsByDate(
+        url: String
+    ): NetworkAsteroidsModel
+
 }
