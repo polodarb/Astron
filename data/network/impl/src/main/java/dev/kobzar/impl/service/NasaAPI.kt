@@ -5,13 +5,15 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
+private const val API_KEY = "gHAEmoJC38y9u6oZUdOnaHf4OewOgMPFqd5piwqp"
 
 interface NasaAPI {
 
-    @GET("start_date")
+    @GET("feed")
     suspend fun getAsteroidsByDate(
         @Query("start_date") startDate: String,
-        @Query("end_date") endDate: String
-    ): Response<NetworkAsteroidsModel>
+        @Query("end_date") endDate: String,
+        @Query("api_key") apiKey: String = API_KEY
+    ): NetworkAsteroidsModel
 
 }

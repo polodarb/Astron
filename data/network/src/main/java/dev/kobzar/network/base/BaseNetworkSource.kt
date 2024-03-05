@@ -1,5 +1,6 @@
 package dev.kobzar.network.base
 
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
@@ -12,6 +13,7 @@ interface BaseNetworkSource {
             try {
                 call()
             } catch (ex: Exception) {
+                Log.e("BaseNetworkSource", ex.stackTraceToString(), ex)
                 when (ex) {
                     is HttpException -> throw handleHttpException(ex)
                     is UnknownHostException -> throw ApiExceptions.NoNetworkException(

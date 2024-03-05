@@ -1,7 +1,9 @@
 package dev.kobzar.impl.di
 
 import android.content.Context
+import com.chuckerteam.chucker.api.ChuckerCollector
 import com.chuckerteam.chucker.api.ChuckerInterceptor
+import com.chuckerteam.chucker.api.RetentionManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,8 +20,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object RetrofitModule {
 
-    private const val API_KEY = "gHAEmoJC38y9u6oZUdOnaHf4OewOgMPFqd5piwqp"
-    private const val BASE_URL: String = "https://api.nasa.gov/neo/rest/v1/neo/?api_key=$API_KEY"
+    private const val BASE_URL = "https://api.nasa.gov/neo/rest/v1/"
 
     @Provides
     @Singleton
@@ -40,7 +41,7 @@ object RetrofitModule {
         @ApplicationContext context: Context
     ): OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(createLoggingInterceptor(context))
+            .addInterceptor(ChuckerInterceptor.Builder(context).build())
             .build()
     }
 
@@ -49,10 +50,15 @@ object RetrofitModule {
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
 
-    private fun createLoggingInterceptor(
-        @ApplicationContext context: Context
-    ): Interceptor {
-        return ChuckerInterceptor(context)
-    }
+//    private fun createLoggingInterceptor(
+//        @ApplicationContext context: Context
+//    ): Interceptor {
+//        return ChuckerInterceptor.Builder(context)
+//            .collector(ChuckerCollector(context))
+//            .maxContentLength(250_000L)
+//            .redactHeaders(emptySet())
+//            .alwaysReadResponseBody(false)
+//            .build()
+//    }
 
 }

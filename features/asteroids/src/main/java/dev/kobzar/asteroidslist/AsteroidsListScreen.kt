@@ -24,6 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.registry.rememberScreen
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.hilt.getScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import dev.kobzar.navigation.shared.SharedScreen
 import dev.kobzar.ui.compose.theme.AppTheme
@@ -32,6 +33,8 @@ class AsteroidsListScreen : Screen {
 
     @Composable
     override fun Content() {
+
+        val viewModel = getScreenModel<AsteroidsListViewModel>()
 
         val navigator = LocalNavigator.current
 
@@ -50,6 +53,7 @@ class AsteroidsListScreen : Screen {
             },
             onFilterClick = {
                 Toast.makeText(context, "Filter BS", Toast.LENGTH_SHORT).show()
+                viewModel.getAsteroids()
             },
             onSettingsClick = {
                 navigator?.push(settingsScreen)

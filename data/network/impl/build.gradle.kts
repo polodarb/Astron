@@ -43,11 +43,11 @@ dependencies {
     kapt(libs.hilt.compiler)
 
     // Retrofit
-    implementation(libs.retrofit)
-    implementation(libs.gson)
+    api(libs.retrofit)
+    api(libs.gson)
 
     // OkHttp
-    implementation(libs.okhttp)
+    api(libs.okhttp)
 
     // Chucker
     debugImplementation(libs.chucker)
