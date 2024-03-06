@@ -34,16 +34,6 @@ class MainActivity : BaseActivity() {
         val configuredFile = File(context.filesDir, "configured")
         val isFirstStart = !configuredFile.exists()
 
-
-        ScreenRegistry {
-            register<SharedScreen.OnBoardingScreen> { OnBoardingScreen() }
-            register<SharedScreen.AsteroidsListScreen> { AsteroidsListScreen() }
-            register<SharedScreen.DetailsScreen> { DetailsScreen(asteroidId = null) }
-            register<SharedScreen.FavoritesScreen> { FavoritesScreen() }
-            register<SharedScreen.SettingsScreen> { SettingsScreen() }
-            register<SharedScreen.CompareScreen> { CompareScreen() }
-        }
-
         setContent {
             AppTheme {
                 val startScreen = if (isFirstStart) {

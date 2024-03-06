@@ -24,6 +24,8 @@ data class DetailsScreen(
     @Composable
     override fun Content() {
 
+        val asteroidId = asteroidId
+
         val navigator = LocalNavigator.current
 
         val compareScreen = rememberScreen(SharedScreen.CompareScreen)
