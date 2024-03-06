@@ -36,7 +36,7 @@ fun PrimaryButton(
     val interactionSource = remember { MutableInteractionSource() }
     var isHover by remember { mutableStateOf(false) }
     val backgroundColor by animateColorAsState(
-        targetValue = if (isHover) AppTheme.colors.darkBlue700 else AppTheme.colors.primary,
+        targetValue = if (isHover) AppTheme.colors.secondaryGray900 else AppTheme.colors.primary,
         animationSpec = tween(durationMillis = 200, easing = LinearEasing),
         label = "colorAnim"
     )
@@ -68,7 +68,7 @@ fun PrimaryButton(
     ) {
         Text(
             text = text,
-            style = AppTheme.typography.mediumTitle,
+            style = AppTheme.typography.medium16,
             color = AppTheme.colors.white,
             modifier = Modifier.padding(horizontal = AppTheme.spaces.space16, vertical = AppTheme.spaces.space14)
         )

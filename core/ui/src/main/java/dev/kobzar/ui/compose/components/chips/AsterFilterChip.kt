@@ -37,7 +37,7 @@ fun AsterFilterChip(
         Text(
             text = title,
             color = textColor,
-            style = AppTheme.typography.mediumSubtitle,
+            style = AppTheme.typography.medium14,
             modifier = Modifier
                 .padding(vertical = AppTheme.spaces.space8, horizontal = AppTheme.spaces.space16)
                 .align(Alignment.Center)

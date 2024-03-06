@@ -31,7 +31,7 @@ fun OnBoardingSkipButton(
             if (it) {
                 Text(
                     text = "Skip",
-                    style = AppTheme.typography.mediumSubtitle,
+                    style = AppTheme.typography.medium14,
                     modifier = Modifier
                         .clip(RoundedCornerShape(8.dp))
                         .clickable {
@@ -43,7 +43,7 @@ fun OnBoardingSkipButton(
             } else {
                 Text(
                     text = String(),
-                    style = AppTheme.typography.mediumSubtitle,
+                    style = AppTheme.typography.medium14,
                     modifier = Modifier.padding(8.dp)
                 )
             }

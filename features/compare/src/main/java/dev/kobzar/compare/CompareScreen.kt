@@ -39,7 +39,7 @@ private fun CompareScreenComposable(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "CompareScreen", style = AppTheme.typography.subtitle)
+            Text(text = "CompareScreen", style = AppTheme.typography.medium16)
             Spacer(modifier = Modifier.height(64.dp))
             Button(onClick = onReturnToMain) {
                 Text(text = "To MainScreen")

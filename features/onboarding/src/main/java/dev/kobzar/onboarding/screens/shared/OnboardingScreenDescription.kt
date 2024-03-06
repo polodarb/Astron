@@ -18,18 +18,18 @@ internal fun OnboardingScreenDescription(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = AppTheme.spaces.space28),
+            .padding(horizontal = AppTheme.spaces.space24, vertical = AppTheme.spaces.space4),
         horizontalAlignment = Alignment.Start
     ) {
         Text(
             text = title,
-            style = AppTheme.typography.largeTitle,
+            style = AppTheme.typography.semibold26,
             color = AppTheme.colors.primary
         )
         if (description != null) {
             Text(
                 text = description,
-                style = AppTheme.typography.titleRegular,
+                style = AppTheme.typography.regular16,
                 color = AppTheme.colors.primary.copy(alpha = 0.6f),
                 modifier = Modifier.padding(top = AppTheme.spaces.space16)
             )

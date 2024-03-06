@@ -47,7 +47,7 @@ private fun DetailsScreenComposable(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "DetailsScreen\nparam: $asteroidId", style = AppTheme.typography.subtitle)
+            Text(text = "DetailsScreen\nparam: $asteroidId", style = AppTheme.typography.medium16)
             Spacer(modifier = Modifier.height(64.dp))
             Button(onClick = onBackClick) {
                 Text(text = "Back")

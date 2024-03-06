@@ -19,6 +19,6 @@ class SettingsScreen : Screen {
 @Composable
 private fun SettingsScreenComposable() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = "SettingsScreen", style = AppTheme.typography.subtitle)
+        Text(text = "SettingsScreen", style = AppTheme.typography.medium16)
     }
 }
