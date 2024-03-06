@@ -4,13 +4,11 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import dev.kobzar.repository.AsteroidsRepository
 import dev.kobzar.repository.models.MainAsteroidsListItem
-import dev.kobzar.repository.models.MainAsteroidsModel
-import kotlinx.coroutines.delay
 
 class AsteroidsPagingSource(
     private val repository: AsteroidsRepository,
-    private val startDate: String,
-    private val endDate: String
+    private val initdate: String,
+    private var dateRangeCount: Int
 ) : PagingSource<String, MainAsteroidsListItem>() {
 
     override fun getRefreshKey(state: PagingState<String, MainAsteroidsListItem>): String? {
@@ -21,20 +19,25 @@ class AsteroidsPagingSource(
         val page = params.key
         return try {
 
+            dateRangeCount--
+
             val response = if (page == null) {
-                repository.getAsteroidsByDate(startDate, endDate)
+                repository.getAsteroidsByDate(initdate, initdate)
             } else {
                 repository.getAsteroidsByDate(page)
             }
 
-//            delay(3000)
-
             val formattedResponse = response?.nearEarthObjects?.values?.flatten()
+
+            val nextKey = if (dateRangeCount >= 0) response?.pageKeys?.next?.replace(
+                "http://",
+                "https://"
+            ) else null
 
             LoadResult.Page(
                 data = formattedResponse ?: emptyList(),
                 prevKey = null,
-                nextKey = response?.pageKeys?.next?.replace("http://", "https://")
+                nextKey = nextKey
             )
         } catch (e: Exception) {
             LoadResult.Error(e)
