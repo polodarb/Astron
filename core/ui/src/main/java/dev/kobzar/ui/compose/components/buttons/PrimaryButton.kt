@@ -68,7 +68,7 @@ fun PrimaryButton(
     ) {
         Text(
             text = text,
-            style = AppTheme.typography.mediumTitle,
+            style = AppTheme.typography.medium16,
             color = AppTheme.colors.white,
             modifier = Modifier.padding(horizontal = AppTheme.spaces.space16, vertical = AppTheme.spaces.space14)
         )

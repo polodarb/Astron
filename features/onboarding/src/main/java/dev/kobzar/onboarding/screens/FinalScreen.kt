@@ -146,7 +146,7 @@ private fun FinalScreenAdjustmentsRow(
     ) {
         Text(
             text = title,
-            style = AppTheme.typography.mediumSubtitle,
+            style = AppTheme.typography.medium14,
             color = AppTheme.colors.outline
         )
         FlowRow(

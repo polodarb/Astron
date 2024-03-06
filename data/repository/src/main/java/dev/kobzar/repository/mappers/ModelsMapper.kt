@@ -13,42 +13,7 @@ import dev.kobzar.repository.models.MainAsteroidsModel
 
 object ModelsMapper {
 
-//    fun NetworkAsteroidsModel.toMainAsteroidsModel(): MainAsteroidsModel {
-//        return MainAsteroidsModel(
-//            elementCount = this.elementCount,
-//            nearEarthObjects = this.nearEarthObjects
-//                .flatMap { it.entries }
-//                .associate { entry ->
-//                    entry.key to entry.value.map { networkAsteroid ->
-//                        MainAsteroidsListItem(
-//                            id = networkAsteroid.id,
-//                            neoReferenceId = networkAsteroid.neoReferenceId,
-//                            name = networkAsteroid.name,
-//                            estimatedDiameter = MainAsteroidsEstimatedDiameter(
-//                                kilometers = networkAsteroid.estimatedDiameter.kilometers,
-//                                meters = networkAsteroid.estimatedDiameter.meters,
-//                                feet = networkAsteroid.estimatedDiameter.feet
-//                            ),
-//                            isDangerous = networkAsteroid.isPotentiallyHazardousAsteroid,
-//                            closeApproachData = networkAsteroid.closeApproachData.map { closeApproachData ->
-//                                MainAsteroidsCloseApproachData(
-//                                    closeApproachDate = closeApproachData.closeApproachDate,
-//                                    orbitingBody = closeApproachData.orbitingBody
-//                                )
-//                            },
-//                            isSentryObject = networkAsteroid.isSentryObject
-//                        )
-//                    }
-//                },
-//            pageKeys = MainAsteroidsLinks(
-//                next = this.pageKeys.next,
-//                prev = this.pageKeys.prev,
-//                self = this.pageKeys.self
-//            )
-//        )
-//    }
-
-    fun NetworkLinks.toMainAsteroidsLinks(): MainAsteroidsLinks {
+    private fun NetworkLinks.toMainAsteroidsLinks(): MainAsteroidsLinks {
         return MainAsteroidsLinks(
             next = this.next,
             prev = this.prev,
@@ -56,17 +21,19 @@ object ModelsMapper {
         )
     }
 
-    fun NetworkAsteroid.toMainAsteroidsListItem(): MainAsteroidsListItem {
+    private fun NetworkAsteroid.toMainAsteroidsListItem(): MainAsteroidsListItem {
         return MainAsteroidsListItem(
             id = this.id,
             neoReferenceId = this.neoReferenceId,
             name = this.name,
-            estimatedDiameter = MainAsteroidsEstimatedDiameter(
-                kilometers = MainAsteroidsDiameter(this.estimatedDiameter.kilometers.estimatedDiameterMin, this.estimatedDiameter.kilometers.estimatedDiameterMax),
-                meters = MainAsteroidsDiameter(this.estimatedDiameter.meters.estimatedDiameterMin, this.estimatedDiameter.meters.estimatedDiameterMax),
-                miles = MainAsteroidsDiameter(this.estimatedDiameter.miles.estimatedDiameterMin, this.estimatedDiameter.miles.estimatedDiameterMax),
-                feet = MainAsteroidsDiameter(this.estimatedDiameter.feet.estimatedDiameterMin, this.estimatedDiameter.feet.estimatedDiameterMax)
-            ),
+            estimatedDiameter = with(this.estimatedDiameter) {
+                MainAsteroidsEstimatedDiameter(
+                    kilometers = MainAsteroidsDiameter(kilometers.estimatedDiameterMin, kilometers.estimatedDiameterMax),
+                    meters = MainAsteroidsDiameter(meters.estimatedDiameterMin, meters.estimatedDiameterMax),
+                    miles = MainAsteroidsDiameter(miles.estimatedDiameterMin, miles.estimatedDiameterMax),
+                    feet = MainAsteroidsDiameter(feet.estimatedDiameterMin, feet.estimatedDiameterMax)
+                )
+            },
             isDangerous = this.isPotentiallyHazardousAsteroid,
             closeApproachData = this.closeApproachData.map { it.toMainAsteroidsCloseApproachData() },
             isSentryObject = this.isSentryObject

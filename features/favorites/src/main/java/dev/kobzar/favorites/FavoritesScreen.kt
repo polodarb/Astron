@@ -19,6 +19,6 @@ class FavoritesScreen : Screen {
 @Composable
 private fun FavoritesScreenComposable() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = "FavoritesScreen", style = AppTheme.typography.subtitle)
+        Text(text = "FavoritesScreen", style = AppTheme.typography.medium16)
     }
 }
