@@ -1,4 +1,4 @@
-package dev.kobzar.ui.compose.components.buttons
+package dev.kobzar.ui.compose.components.buttons.text
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.clickable

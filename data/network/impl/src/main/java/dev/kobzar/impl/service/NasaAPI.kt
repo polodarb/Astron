@@ -1,9 +1,11 @@
 package dev.kobzar.impl.service
 
 import dev.kobzar.impl.di.RetrofitModule.BASE_URL
+import dev.kobzar.network.models.NetworkAsteroid
 import dev.kobzar.network.models.NetworkAsteroidsModel
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.http.Url
 
@@ -22,5 +24,11 @@ interface NasaAPI {
     suspend fun getAsteroidsByDate(
         @Url url: String
     ): NetworkAsteroidsModel
+
+    @GET("${BASE_URL}neo/{asteroidId}")
+    suspend fun getAsteroidDetails(
+        @Path("asteroidId") asteroidId: String,
+        @Query("api_key") apiKey: String = API_KEY
+    ): NetworkAsteroid
 
 }

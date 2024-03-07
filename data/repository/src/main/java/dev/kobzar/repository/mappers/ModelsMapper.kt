@@ -4,14 +4,37 @@ import dev.kobzar.network.models.NetworkAsteroid
 import dev.kobzar.network.models.NetworkAsteroidsModel
 import dev.kobzar.network.models.NetworkCloseApproachData
 import dev.kobzar.network.models.NetworkLinks
+import dev.kobzar.repository.mappers.ModelsMapper.toMainAsteroidsListItem
 import dev.kobzar.repository.models.MainAsteroidsCloseApproachData
-import dev.kobzar.repository.models.MainAsteroidsDiameter
-import dev.kobzar.repository.models.MainAsteroidsEstimatedDiameter
-import dev.kobzar.repository.models.MainAsteroidsLinks
 import dev.kobzar.repository.models.MainAsteroidsListItem
 import dev.kobzar.repository.models.MainAsteroidsModel
+import dev.kobzar.repository.models.MainDetailsCloseApproachData
+import dev.kobzar.repository.models.MainDetailsModel
+import dev.kobzar.repository.models.shared.MainAsteroidsDiameter
+import dev.kobzar.repository.models.shared.MainAsteroidsEstimatedDiameter
+import dev.kobzar.repository.models.shared.MainAsteroidsLinks
 
 object ModelsMapper {
+
+    fun NetworkAsteroid.toMainDetailsModel(): MainDetailsModel {
+        return MainDetailsModel(
+            id = this.id,
+            name = this.name,
+            neoReferenceId = this.neoReferenceId,
+            nasaJplUrl = this.nasaJplUrl,
+            isDangerous = this.isPotentiallyHazardousAsteroid,
+            estimatedDiameter = with(this.estimatedDiameter) {
+                MainAsteroidsEstimatedDiameter(
+                    kilometers = MainAsteroidsDiameter(kilometers.estimatedDiameterMin, kilometers.estimatedDiameterMax),
+                    meters = MainAsteroidsDiameter(meters.estimatedDiameterMin, meters.estimatedDiameterMax),
+                    miles = MainAsteroidsDiameter(miles.estimatedDiameterMin, miles.estimatedDiameterMax),
+                    feet = MainAsteroidsDiameter(feet.estimatedDiameterMin, feet.estimatedDiameterMax)
+                )
+            },
+            closeApproachData = this.closeApproachData.map { it.toMainDetailsCloseApproachData() },
+            isSentryObject = this.isSentryObject
+        )
+    }
 
     private fun NetworkLinks.toMainAsteroidsLinks(): MainAsteroidsLinks {
         return MainAsteroidsLinks(
@@ -44,6 +67,17 @@ object ModelsMapper {
         return MainAsteroidsCloseApproachData(
             closeApproachDate = this.closeApproachDate,
             orbitingBody = this.orbitingBody
+        )
+    }
+
+    private fun NetworkCloseApproachData.toMainDetailsCloseApproachData(): MainDetailsCloseApproachData {
+        return MainDetailsCloseApproachData(
+            closeApproachDate = this.closeApproachDate,
+            closeApproachDateFull = this.closeApproachDateFull,
+            epochDateCloseApproach = this.epochDateCloseApproach,
+            orbitingBody = this.orbitingBody,
+            relativeVelocity = this.relativeVelocity,
+            missDistance = this.missDistance
         )
     }
 
