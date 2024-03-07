@@ -36,7 +36,7 @@ class MainActivity : BaseActivity() {
 
         setContent {
             AppTheme {
-                val startScreen = if (isFirstStart) {
+                val startScreen = if (isFirstStart) { // TODO: REVIEW
                     OnBoardingScreen()
                 } else {
                     AsteroidsListScreen()

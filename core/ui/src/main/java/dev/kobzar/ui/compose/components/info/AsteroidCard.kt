@@ -32,7 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.kobzar.ui.compose.theme.AppTheme
 import dev.kobzar.ui.compose.unitsEnum.EstimatedDiameterEnum
-import dev.kobzar.ui.compose.utils.UnitUtils
+import dev.kobzar.platform.utils.UnitUtils
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable

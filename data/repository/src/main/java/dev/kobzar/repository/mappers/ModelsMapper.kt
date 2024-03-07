@@ -77,7 +77,8 @@ object ModelsMapper {
             epochDateCloseApproach = this.epochDateCloseApproach,
             orbitingBody = this.orbitingBody,
             relativeVelocity = this.relativeVelocity,
-            missDistance = this.missDistance
+            missDistance = this.missDistance,
+            astronomicalDistance = this.missDistance.astronomical
         )
     }
 

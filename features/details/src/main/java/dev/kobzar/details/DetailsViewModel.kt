@@ -3,34 +3,28 @@ package dev.kobzar.details
 import android.util.Log
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import cafe.adriel.voyager.hilt.ScreenModelFactory
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
-import dev.kobzar.repository.AsteroidDetailsRepository
+import dev.kobzar.domain.mapper.toCorrectedFormatModel
+import dev.kobzar.domain.useCases.FormatAsteroidDetailsByPrefs
 import dev.kobzar.repository.models.MainDetailsModel
+import dev.kobzar.repository.models.PrefsDetailsModel
 import dev.kobzar.repository.uiStates.UiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.lang.NullPointerException
 import javax.inject.Inject
 
-typealias AsteroidDetails = UiState<MainDetailsModel>
+typealias AsteroidDetails = UiState<PrefsDetailsModel>
 
 class DetailsViewModel @Inject constructor(
-    private val repository: AsteroidDetailsRepository
+//    private val repository: AsteroidDetailsRepository
+    private val asteroidDetails: FormatAsteroidDetailsByPrefs
 ) : ScreenModel {
 
     private val _details = MutableStateFlow<AsteroidDetails>(UiState.Loading())
     val details: StateFlow<AsteroidDetails> = _details
 
     var asteroid: String? = null
-
-    fun log() {
-        Log.e("DetailsViewModel", asteroid.toString())
-    }
 
     fun setAsteroidId(id: String?) {
         asteroid = id
@@ -39,10 +33,14 @@ class DetailsViewModel @Inject constructor(
     fun getAsteroidDetails(asteroid: String?) {
         screenModelScope.launch(Dispatchers.IO) {
             if (asteroid != null) {
-                repository.getAsteroidDetails(asteroid).collect {
+                asteroidDetails.invoke(asteroid).collect {
                     when (it) {
                         is UiState.Success -> {
-                            _details.value = UiState.Success(it.data)
+                            _details.value =
+                                UiState.Success(
+                                    data = it.data,
+                                    diameterUnit = it.diameterUnit
+                                )
                         }
 
                         is UiState.Error -> {
