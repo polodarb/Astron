@@ -3,6 +3,7 @@ package dev.kobzar.details
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,6 +23,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
@@ -49,6 +52,7 @@ import dev.kobzar.navigation.shared.SharedScreen
 import dev.kobzar.preferences.model.DiameterUnit
 import dev.kobzar.repository.models.PrefsDetailsModel
 import dev.kobzar.repository.uiStates.UiState
+import dev.kobzar.ui.compose.components.charts.CompareSizeChart
 import dev.kobzar.ui.compose.components.inserts.InsertError
 import dev.kobzar.ui.compose.components.inserts.InsertLoader
 import dev.kobzar.ui.compose.components.topbars.SecondaryTopBar
@@ -80,7 +84,7 @@ data class DetailsScreen(
         DetailsScreenComposable(
             data = asteroidData.value,
             onBackClick = { navigator?.pop() },
-            onSaveClick = {  },
+            onSaveClick = { },
             onCompareClick = { navigator?.push(compareScreen) }
         )
     }
@@ -111,6 +115,7 @@ private fun DetailsScreenComposable(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DetailsMainContent(
     data: PrefsDetailsModel,
@@ -119,6 +124,11 @@ fun DetailsMainContent(
     onSaveClick: () -> Unit,
     onCompareClick: () -> Unit
 ) {
+
+    val pagerState = rememberPagerState(pageCount = {
+        2
+    })
+
     Scaffold(
         containerColor = AppTheme.colors.background,
         topBar = {
@@ -140,14 +150,41 @@ fun DetailsMainContent(
                 sbdAction = {} // todo: add sbd action
             )
 
-            DetailsTable(
-                modifier = Modifier
-                    .padding(top = AppTheme.spaces.space32),
-                data = data,
-                diameterUnit = missDistance
-            )
+            HorizontalPager(
+                state = pagerState, modifier = Modifier.fillMaxSize(),
+                verticalAlignment = Alignment.Top
+            ) {
+                when (it) {
+                    0 -> DetailsTable(
+                        modifier = Modifier
+                            .padding(top = AppTheme.spaces.space32),
+                        data = data,
+                        diameterUnit = missDistance
+                    )
+
+                    1 -> DetailsCompareSizeScreen(
+                        modifier = Modifier
+                            .padding(
+                                top = AppTheme.spaces.space32,
+                                start = AppTheme.spaces.space16,
+                                end = AppTheme.spaces.space16
+                            ),
+                        objectName = data.name,
+                        objectSize = data.estimatedDiameter.estimatedDiameterMax.toFloat()
+                    )
+                }
+            }
         }
     }
+}
+
+@Composable
+fun DetailsCompareSizeScreen(
+    modifier: Modifier = Modifier,
+    objectName: String,
+    objectSize: Float
+) {
+    CompareSizeChart(objectDiameter = objectSize, objectName = objectName, modifier = modifier)
 }
 
 @Composable
@@ -242,14 +279,14 @@ fun DetailsTable(
     diameterUnit: DiameterUnit?
 ) {
 
-    val DiameterPrefixUnit = with(data.estimatedDiameter) {
-       when (diameterUnit) {
-           DiameterUnit.KILOMETER -> "Km"
-           DiameterUnit.METER -> "Meters"
-           DiameterUnit.MILE -> "Miles"
-           DiameterUnit.FEET -> "Feet"
-           null -> ""
-       }
+    val diameterPrefixUnit = with(data.estimatedDiameter) {
+        when (diameterUnit) {
+            DiameterUnit.KILOMETER -> "Km"
+            DiameterUnit.METER -> "Meters"
+            DiameterUnit.MILE -> "Miles"
+            DiameterUnit.FEET -> "Feet"
+            null -> ""
+        }
     }
 
     OutlineBox(
@@ -266,12 +303,12 @@ fun DetailsTable(
 
             DetailsTableItem(
                 title = "Min diameter",
-                value = "${data.estimatedDiameter.estimatedDiameterMin} $DiameterPrefixUnit"
+                value = "${data.estimatedDiameter.estimatedDiameterMin} $diameterPrefixUnit"
             )
 
             DetailsTableItem(
                 title = "Max diameter",
-                value = "${data.estimatedDiameter.estimatedDiameterMax} $DiameterPrefixUnit"
+                value = "${data.estimatedDiameter.estimatedDiameterMax} $diameterPrefixUnit"
             )
 
             DetailsTableItem(

@@ -55,8 +55,8 @@ fun MainDetailsModel.toPrefsDetailsModel(
         else -> this.estimatedDiameter.kilometers
     }
 
-    val diameterMax = UnitUtils.roundDouble(estimatedDiameter.estimatedDiameterMax, 1)
-    val diameterMin = UnitUtils.roundDouble(estimatedDiameter.estimatedDiameterMin, 1)
+    val diameterMax = UnitUtils.roundDouble(estimatedDiameter.estimatedDiameterMax, 3)
+    val diameterMin = UnitUtils.roundDouble(estimatedDiameter.estimatedDiameterMin, 3)
 
     val relativeVelocityKmPerSecond = UnitUtils.extractIntegerPart(closestApproach.relativeVelocity.kilometersPerSecond)
     val relativeVelocityKmPerHour = UnitUtils.extractIntegerPart(closestApproach.relativeVelocity.kilometersPerHour)
