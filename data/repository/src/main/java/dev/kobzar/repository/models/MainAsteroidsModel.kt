@@ -1,5 +1,8 @@
 package dev.kobzar.repository.models
 
+import dev.kobzar.repository.models.shared.MainAsteroidsEstimatedDiameter
+import dev.kobzar.repository.models.shared.MainAsteroidsLinks
+
 data class MainAsteroidsModel (
     val elementCount: Int,
     val nearEarthObjects: Map<String, List<MainAsteroidsListItem>>,
@@ -19,22 +22,4 @@ data class MainAsteroidsListItem(
 data class MainAsteroidsCloseApproachData(
     val closeApproachDate: String,
     val orbitingBody: String
-)
-
-data class MainAsteroidsEstimatedDiameter(
-    val kilometers: MainAsteroidsDiameter,
-    val meters: MainAsteroidsDiameter,
-    val miles: MainAsteroidsDiameter,
-    val feet: MainAsteroidsDiameter
-)
-
-data class MainAsteroidsDiameter(
-    val estimatedDiameterMin: Double,
-    val estimatedDiameterMax: Double
-)
-
-data class MainAsteroidsLinks(
-    val next: String,
-    val prev: String,
-    val self: String
 )

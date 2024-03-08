@@ -8,8 +8,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import dev.kobzar.ui.compose.components.buttons.PrimaryButton
-import dev.kobzar.ui.compose.components.buttons.SecondaryButton
+import dev.kobzar.ui.compose.components.buttons.main.PrimaryButton
+import dev.kobzar.ui.compose.components.buttons.main.SecondaryButton
 import dev.kobzar.ui.compose.theme.AppTheme
 
 @Composable

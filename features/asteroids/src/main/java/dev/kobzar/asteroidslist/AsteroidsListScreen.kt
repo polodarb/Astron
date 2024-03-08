@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import cafe.adriel.voyager.core.registry.ScreenRegistry
 import cafe.adriel.voyager.core.registry.rememberScreen
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.hilt.getScreenModel
@@ -86,7 +88,6 @@ class AsteroidsListScreen : Screen {
 
         val showDatePicker = remember { mutableStateOf(false) }
 
-        val detailsScreen = rememberScreen(SharedScreen.DetailsScreen(null))
         val settingsScreen = rememberScreen(SharedScreen.SettingsScreen)
         val favoritesScreen = rememberScreen(SharedScreen.FavoritesScreen)
 
@@ -99,7 +100,7 @@ class AsteroidsListScreen : Screen {
                 navigator?.push(favoritesScreen)
             },
             onDetailsClick = {
-                navigator?.push(detailsScreen)
+                navigator?.push(ScreenRegistry.get(SharedScreen.DetailsScreen(it)))
             },
             onFilterClick = {
                 showBottomSheet = true
@@ -153,7 +154,7 @@ class AsteroidsListScreen : Screen {
 private fun AsteroidsListScreenComposable(
     dataState: LazyPagingItems<MainAsteroidsListItem>,
     onFavoritesClick: () -> Unit,
-    onDetailsClick: () -> Unit,
+    onDetailsClick: (asteroidId: String) -> Unit,
     onFilterClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onFilterBsDismiss: () -> Unit,
@@ -207,7 +208,9 @@ private fun AsteroidsListScreenComposable(
                             diameterMax = item.estimatedDiameter.kilometers.estimatedDiameterMax,
                             orbitingBody = item.closeApproachData[0].orbitingBody, // TODO: Review before release
                             closeApproach = item.closeApproachData[0].closeApproachDate, // TODO: Review before release
-                            onCardClick = onDetailsClick
+                            onCardClick = {
+                                onDetailsClick(item.id)
+                            }
                         )
                     }
                 }

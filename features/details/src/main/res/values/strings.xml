@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="details_table_item_dangerous">Dangerous</string>
+    <string name="details_table_item_min_diameter">Min diameter</string>
+    <string name="details_table_item_max_diameter">Max diameter</string>
+    <string name="details_table_item_close_approach">Close approach</string>
+    <string name="details_table_item_relative_velocity">Relative velocity</string>
+    <string name="details_table_item_miss_distance">Miss distance</string>
+    <string name="details_table_item_orbiting_body">Orbiting body</string>
+    <string name="details_table_item_is_sentry_object">Is sentry object</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="details_chip_sbd">Go to SBD</string>
+    <string name="details_switch_title_size">Size</string>
+    <string name="details_switch_title_distance">Distance</string>
+    <string name="details_chart_title_astronomical_distance">Astronomical distance</string>
+</resources>

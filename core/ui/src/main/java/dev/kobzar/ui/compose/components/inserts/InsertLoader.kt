@@ -1,5 +1,6 @@
 package dev.kobzar.ui.compose.components.inserts
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -20,7 +21,7 @@ fun InsertLoader(
     text: String
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.background(AppTheme.colors.background),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

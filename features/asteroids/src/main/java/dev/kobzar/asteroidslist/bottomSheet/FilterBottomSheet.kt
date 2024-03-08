@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -46,12 +45,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import dev.kobzar.asteroidslist.R
-import dev.kobzar.ui.compose.components.buttons.OutlineButton
-import dev.kobzar.ui.compose.components.buttons.PrimaryButton
+import dev.kobzar.ui.compose.components.buttons.icon.OutlineIconButton
+import dev.kobzar.ui.compose.components.buttons.main.OutlineButton
+import dev.kobzar.ui.compose.components.buttons.main.PrimaryButton
 import dev.kobzar.ui.compose.theme.AppTheme
 import kotlinx.coroutines.flow.collectLatest
 
@@ -95,16 +94,12 @@ fun FilterBottomSheet(
                     overflow = TextOverflow.Ellipsis,
                     style = AppTheme.typography.semibold26
                 )
-                Box(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .border(1.dp, AppTheme.colors.secondaryGray200, CircleShape)
-                        .clickable { onDismiss() },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(imageVector = Icons.Default.Close, contentDescription = null)
-                }
+                OutlineIconButton(
+                    icon = {
+                        Icon(imageVector = Icons.Default.Close, contentDescription = null)
+                    },
+                    onClick = onDismiss
+                )
             }
 
             // Dates

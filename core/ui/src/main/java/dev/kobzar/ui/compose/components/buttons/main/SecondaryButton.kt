@@ -1,4 +1,4 @@
-package dev.kobzar.ui.compose.components.buttons
+package dev.kobzar.ui.compose.components.buttons.main
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.LinearEasing
@@ -9,7 +9,6 @@ import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -28,7 +27,7 @@ import dev.kobzar.ui.compose.theme.AppTheme
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun PrimaryButton(
+fun SecondaryButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     text: String
@@ -36,7 +35,7 @@ fun PrimaryButton(
     val interactionSource = remember { MutableInteractionSource() }
     var isHover by remember { mutableStateOf(false) }
     val backgroundColor by animateColorAsState(
-        targetValue = if (isHover) AppTheme.colors.secondaryGray900 else AppTheme.colors.primary,
+        targetValue = if (isHover) AppTheme.colors.tertiaryViolet100 else AppTheme.colors.white,
         animationSpec = tween(durationMillis = 200, easing = LinearEasing),
         label = "colorAnim"
     )
@@ -69,7 +68,7 @@ fun PrimaryButton(
         Text(
             text = text,
             style = AppTheme.typography.medium16,
-            color = AppTheme.colors.white,
+            color = AppTheme.colors.tertiaryViolet900,
             modifier = Modifier.padding(horizontal = AppTheme.spaces.space16, vertical = AppTheme.spaces.space14)
         )
     }
@@ -77,9 +76,9 @@ fun PrimaryButton(
 
 @Preview
 @Composable
-fun PrimaryButtonPreview() {
-    PrimaryButton(
+fun SecondaryButtonPreview() {
+    SecondaryButton(
         onClick = {},
-        text = "Primary Button"
+        text = "Secondary Button"
     )
 }

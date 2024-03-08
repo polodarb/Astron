@@ -1,6 +1,7 @@
 package dev.kobzar.impl.source
 
 import dev.kobzar.impl.service.NasaAPI
+import dev.kobzar.network.models.NetworkAsteroid
 import dev.kobzar.network.models.NetworkAsteroidsModel
 import dev.kobzar.network.source.NetworkSource
 import javax.inject.Inject
@@ -17,4 +18,7 @@ class NetworkSourceImpl @Inject constructor(
 
     override suspend fun getAsteroidsByDate(url: String): NetworkAsteroidsModel =
         apiCall { api.getAsteroidsByDate(url) }
+
+    override suspend fun getAsteroidDetails(asteroidId: String): NetworkAsteroid =
+        apiCall { api.getAsteroidDetails(asteroidId) }
 }

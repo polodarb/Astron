@@ -26,7 +26,7 @@ import dev.kobzar.preferences.model.DiameterUnit
 import dev.kobzar.preferences.model.MissDistanceUnit
 import dev.kobzar.preferences.model.RelativeVelocityUnit
 import dev.kobzar.preferences.model.UserPreferencesModel
-import dev.kobzar.ui.compose.components.buttons.OnBoardingSkipButton
+import dev.kobzar.ui.compose.components.buttons.text.OnBoardingSkipButton
 import dev.kobzar.ui.compose.components.indicators.OnBoardingPageIndicator
 import dev.kobzar.ui.compose.theme.AppTheme
 import kotlinx.coroutines.launch
