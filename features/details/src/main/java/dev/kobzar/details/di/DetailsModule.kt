@@ -1,8 +1,6 @@
 package dev.kobzar.details.di
 
 import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.hilt.ScreenModelFactory
-import cafe.adriel.voyager.hilt.ScreenModelFactoryKey
 import cafe.adriel.voyager.hilt.ScreenModelKey
 import dagger.Binds
 import dagger.Module

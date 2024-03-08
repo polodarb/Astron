@@ -1,12 +1,10 @@
 package dev.kobzar.ui.compose.components.topbars
 
-import android.icu.text.CaseMap.Title
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -25,9 +23,10 @@ import dev.kobzar.ui.compose.theme.AppTheme
 fun SecondaryTopBar(
     modifier: Modifier = Modifier,
     title: String,
-    onActionClick: () -> Unit,
     customAction: (@Composable (onBackClick: () -> Unit) -> Unit)? = null,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    isFavorite: Boolean,
+    onFavoriteClick: (value: Boolean) -> Unit
 ) {
 
     val haptic = LocalHapticFeedback.current
@@ -69,7 +68,11 @@ fun SecondaryTopBar(
                 OutlineIconButton(
                     icon = {
                         Icon(
-                            painter = painterResource(id = R.drawable.ic_bookmark),
+                            painter = if (isFavorite) {
+                                painterResource(id = R.drawable.ic_bookmark)
+                            } else {
+                                painterResource(id = R.drawable.ic_bookmark_fill)
+                            },
                             contentDescription = null,
                             tint = AppTheme.colors.primary,
                             modifier = Modifier.size(26.dp)
@@ -77,7 +80,7 @@ fun SecondaryTopBar(
                     },
                     onClick = {
                         haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                        onActionClick()
+                        onFavoriteClick(!isFavorite)
                     }
                 )
             }

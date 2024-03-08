@@ -64,8 +64,8 @@ fun MainDetailsModel.toPrefsDetailsModel(
 
     val missDistanceAstronomical = UnitUtils.roundDouble(closestApproach.missDistance.astronomical.toDouble())
     val missDistanceLunar = UnitUtils.roundDouble(closestApproach.missDistance.lunar.toDouble())
-    val missDistanceKm = UnitUtils.roundDouble(closestApproach.missDistance.kilometers.toDouble())
-    val missDistanceMiles = UnitUtils.roundDouble(closestApproach.missDistance.miles.toDouble())
+    val missDistanceKm = UnitUtils.extractIntegerPart(closestApproach.missDistance.kilometers)
+    val missDistanceMiles = UnitUtils.extractIntegerPart(closestApproach.missDistance.miles)
 
     val missDistance = when (missDistanceUnit) {
         MissDistanceUnit.KILOMETER -> "$missDistanceKm Km"

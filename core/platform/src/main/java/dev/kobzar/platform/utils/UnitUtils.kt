@@ -2,14 +2,14 @@ package dev.kobzar.platform.utils
 
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.text.DecimalFormat
 
 object UnitUtils {
 
     fun roundDouble(input: Double, digits: Int = 3): Double {
         return try {
-            val bd = BigDecimal(input)
-            val truncatedValue = bd.setScale(digits, RoundingMode.HALF_UP)
-            return truncatedValue.toDouble()
+            val df = DecimalFormat("#." + "#".repeat(digits))
+            df.format(input).toDouble()
         } catch (e: Exception) {
             0.0
         }

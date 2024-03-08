@@ -3,9 +3,7 @@ package dev.kobzar.details
 import android.util.Log
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import dev.kobzar.domain.mapper.toCorrectedFormatModel
 import dev.kobzar.domain.useCases.FormatAsteroidDetailsByPrefs
-import dev.kobzar.repository.models.MainDetailsModel
 import dev.kobzar.repository.models.PrefsDetailsModel
 import dev.kobzar.repository.uiStates.UiState
 import kotlinx.coroutines.Dispatchers

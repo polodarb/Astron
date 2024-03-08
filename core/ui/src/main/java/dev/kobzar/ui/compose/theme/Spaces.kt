@@ -22,7 +22,10 @@ data class Spaces(
     val space30: Dp = 30.dp,
     val space32: Dp = 32.dp,
     val space34: Dp = 34.dp,
-    val space36: Dp = 36.dp
+    val space36: Dp = 36.dp,
+    val space40: Dp = 40.dp,
+    val space44: Dp = 44.dp,
+    val space48: Dp = 48.dp
 )
 
 val LocalSpaces = staticCompositionLocalOf { Spaces() }

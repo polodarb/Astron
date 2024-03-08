@@ -49,7 +49,7 @@ fun CompareSizeChart(
     val bigCircleRadius = 950f / 2
     val smallCircleRadius = objectDiameter / 2
 
-    val zoomMultiplier = bigCircleRadius / smallCircleRadius
+    val zoomMultiplier = (bigCircleRadius / smallCircleRadius)
 
     val initialZoom = minOf(
         LocalDensity.current.run { (LocalConfiguration.current.screenWidthDp.dp / (bigCircleRadius * 1.3f)).value },
