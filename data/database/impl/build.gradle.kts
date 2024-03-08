@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
+    kotlin("kapt")
 }
 
 android {
@@ -34,6 +37,17 @@ android {
 
 dependencies {
 
+    // Hilt
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.common)
+    kapt(libs.hilt.compiler)
+
+    // Room Database
+    implementation(libs.room.runtime)
+    ksp(libs.room.compiler)
+    implementation(libs.room.ktx)
+    implementation(libs.room.paging)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -42,4 +56,8 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(project(":data:database"))
+}
+
+kapt {
+    correctErrorTypes = true
 }

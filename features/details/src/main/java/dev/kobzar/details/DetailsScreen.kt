@@ -1,6 +1,7 @@
 package dev.kobzar.details
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -97,7 +98,11 @@ private fun DetailsScreenComposable(
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         when (data) {
-            is UiState.Loading -> InsertLoader(text = "Loading asteroid details")
+            is UiState.Loading -> {
+                Box(modifier = Modifier.fillMaxSize().background(AppTheme.colors.background), contentAlignment = Alignment.Center) {
+                    InsertLoader(text = "Loading asteroid details")
+                }
+            }
             is UiState.Error -> InsertError()
             is UiState.Success -> {
                 DetailsMainContent(
