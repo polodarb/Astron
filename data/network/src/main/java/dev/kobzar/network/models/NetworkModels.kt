@@ -1,40 +1,45 @@
 package dev.kobzar.network.models
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class NetworkAsteroidsModel(
-    @SerializedName("element_count")
+    @SerialName("element_count")
     val elementCount: Int,
-    @SerializedName("near_earth_objects")
+    @SerialName("near_earth_objects")
     val nearEarthObjects: Map<String, List<NetworkAsteroid>>,
-    @SerializedName("links")
+    @SerialName("links")
     val pageKeys: NetworkLinks
 )
 
+@Serializable
 data class NetworkAsteroid(
     val links: NetworkAsteroidLinks,
     val id: String,
-    @SerializedName("neo_reference_id")
+    @SerialName("neo_reference_id")
     val neoReferenceId: String,
     val name: String,
-    @SerializedName("nasa_jpl_url")
+    @SerialName("nasa_jpl_url")
     val nasaJplUrl: String,
-    @SerializedName("absolute_magnitude_h")
+    @SerialName("absolute_magnitude_h")
     val absoluteMagnitudeH: Double,
-    @SerializedName("estimated_diameter")
+    @SerialName("estimated_diameter")
     val estimatedDiameter: NetworkEstimatedDiameter,
-    @SerializedName("is_potentially_hazardous_asteroid")
+    @SerialName("is_potentially_hazardous_asteroid")
     val isPotentiallyHazardousAsteroid: Boolean,
-    @SerializedName("close_approach_data")
+    @SerialName("close_approach_data")
     val closeApproachData: List<NetworkCloseApproachData>,
-    @SerializedName("is_sentry_object")
+    @SerialName("is_sentry_object")
     val isSentryObject: Boolean
 )
 
+@Serializable
 data class NetworkAsteroidLinks(
     val self: String
 )
 
+@Serializable
 data class NetworkEstimatedDiameter(
     val kilometers: NetworkDiameter,
     val meters: NetworkDiameter,
@@ -42,37 +47,41 @@ data class NetworkEstimatedDiameter(
     val feet: NetworkDiameter
 )
 
+@Serializable
 data class NetworkDiameter(
-    @SerializedName("estimated_diameter_min")
+    @SerialName("estimated_diameter_min")
     val estimatedDiameterMin: Double,
-    @SerializedName("estimated_diameter_max")
+    @SerialName("estimated_diameter_max")
     val estimatedDiameterMax: Double
 )
 
+@Serializable
 data class NetworkCloseApproachData(
-    @SerializedName("close_approach_date")
+    @SerialName("close_approach_date")
     val closeApproachDate: String,
-    @SerializedName("close_approach_date_full")
+    @SerialName("close_approach_date_full")
     val closeApproachDateFull: String,
-    @SerializedName("epoch_date_close_approach")
+    @SerialName("epoch_date_close_approach")
     val epochDateCloseApproach: Long,
-    @SerializedName("relative_velocity")
+    @SerialName("relative_velocity")
     val relativeVelocity: NetworkRelativeVelocity,
-    @SerializedName("miss_distance")
+    @SerialName("miss_distance")
     val missDistance: NetworkMissDistance,
-    @SerializedName("orbiting_body")
+    @SerialName("orbiting_body")
     val orbitingBody: String
 )
 
+@Serializable
 data class NetworkRelativeVelocity(
-    @SerializedName("kilometers_per_second")
+    @SerialName("kilometers_per_second")
     val kilometersPerSecond: String,
-    @SerializedName("kilometers_per_hour")
+    @SerialName("kilometers_per_hour")
     val kilometersPerHour: String,
-    @SerializedName("miles_per_hour")
+    @SerialName("miles_per_hour")
     val milesPerHour: String
 )
 
+@Serializable
 data class NetworkMissDistance(
     val astronomical: String,
     val lunar: String,
@@ -80,6 +89,7 @@ data class NetworkMissDistance(
     val miles: String
 )
 
+@Serializable
 data class NetworkLinks(
     val next: String,
     val prev: String,

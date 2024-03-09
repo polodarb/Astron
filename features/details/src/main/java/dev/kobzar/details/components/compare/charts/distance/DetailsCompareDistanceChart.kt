@@ -24,7 +24,9 @@ fun DetailsCompareDistanceChart(
             modifier = Modifier.padding(top = AppTheme.spaces.space16)
         ) {
             DetailsTableItem(
-                title = stringResource(R.string.details_chart_title_astronomical_distance),
+                title = stringResource(R.string.details_chart_title_astronomical_distance) + stringResource(
+                    R.string.unit_astronomical
+                ),
                 itemValue = astronomicalDistance.toString(),
                 modifier = Modifier.padding(vertical = AppTheme.spaces.space8)
             )

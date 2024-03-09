@@ -33,10 +33,10 @@ fun DetailsTable(
     }
 
     val missDistancePrefix = when (userPrefs?.missDistanceUnits) {
-        MissDistanceUnit.LUNAR -> "LD"
-        MissDistanceUnit.KILOMETER -> "Km"
-        MissDistanceUnit.MILE -> "Miles"
-        MissDistanceUnit.ASTRONOMICAL -> "A. U."
+        MissDistanceUnit.LUNAR -> stringResource(R.string.unit_lunar)
+        MissDistanceUnit.KILOMETER -> stringResource(R.string.unit_km)
+        MissDistanceUnit.MILE -> stringResource(R.string.unit_miles)
+        MissDistanceUnit.ASTRONOMICAL -> stringResource(R.string.unit_astronomical)
         else -> ""
     }
 
@@ -48,9 +48,9 @@ fun DetailsTable(
     }
 
     val relativeVelocityPrefix = when (userPrefs?.relativeVelocityUnits) {
-        RelativeVelocityUnit.MILE_H -> "mph"
-        RelativeVelocityUnit.KM_S -> "km/s"
-        RelativeVelocityUnit.KM_H -> "km/h"
+        RelativeVelocityUnit.MILE_H -> stringResource(R.string.unit_speed_mph)
+        RelativeVelocityUnit.KM_S -> stringResource(R.string.unit_speed_km_s)
+        RelativeVelocityUnit.KM_H -> stringResource(R.string.unit_speed_km_h)
         else -> ""
     }
 
@@ -64,10 +64,10 @@ fun DetailsTable(
 
     val diameterPrefixUnit = with(data.closeApproachData) {
         when (userPrefs?.diameterUnits) {
-            DiameterUnit.KILOMETER -> "Km"
-            DiameterUnit.METER -> "Meters"
-            DiameterUnit.MILE -> "Miles"
-            DiameterUnit.FEET -> "Feet"
+            DiameterUnit.KILOMETER -> stringResource(R.string.unit_km)
+            DiameterUnit.METER -> stringResource(R.string.unit_meters)
+            DiameterUnit.MILE -> stringResource(R.string.unit_miles)
+            DiameterUnit.FEET -> stringResource(R.string.unit_feets)
             null -> ""
         }
     }
