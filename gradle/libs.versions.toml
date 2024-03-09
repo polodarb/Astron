@@ -26,6 +26,7 @@ pagingCompose = "3.3.0-alpha03"
 uiTooling = "1.6.2"
 room = "2.6.1"
 ksp = "1.9.20-1.0.14"
+sheetsCompose = "1.3.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -71,6 +72,8 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
+sheets-compose = { group = "com.maxkeppeler.sheets-compose-dialogs", name = "core", version.ref = "sheetsCompose" }
+sheets-compose-options = { group = "com.maxkeppeler.sheets-compose-dialogs", name = "option", version.ref = "sheetsCompose" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

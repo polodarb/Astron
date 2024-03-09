@@ -16,11 +16,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import cafe.adriel.voyager.core.registry.rememberScreen
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
@@ -41,6 +44,8 @@ import dev.kobzar.ui.compose.components.inserts.InsertError
 import dev.kobzar.ui.compose.components.inserts.InsertLoader
 import dev.kobzar.ui.compose.components.topbars.SecondaryTopBar
 import dev.kobzar.ui.compose.theme.AppTheme
+import dev.kobzar.platform.utils.ConvertDiameterToKm
+import kotlinx.coroutines.launch
 
 data class DetailsScreen(
     val asteroidId: String?
@@ -69,6 +74,8 @@ data class DetailsScreen(
 
         var checkedSavedAsteroid by remember { mutableStateOf(false) }
 
+        val uriHandler = LocalUriHandler.current
+
         DetailsScreenComposable(
             data = asteroidData.value,
             onBackClick = { navigator?.pop() },
@@ -79,7 +86,7 @@ data class DetailsScreen(
             onCompareClick = { navigator?.push(compareScreen) },
             compareFabVisibility = true, // TODO: Review after favorites feature is implemented
             onSbdClick = {
-
+                uriHandler.openUri(it)
             }
         )
     }
@@ -141,17 +148,21 @@ fun DetailsMainContent(
     compareFabVisibility: Boolean,
     onSbdClick: (url: String) -> Unit
 ) {
+    val comparePagerState = rememberPagerState(pageCount = { 2 })
+    var selectedIndex by remember { mutableIntStateOf(0) }
 
-    val estimatedDiameter = when (userPrefs?.diameterUnits) {
-        DiameterUnit.KILOMETER -> data.estimatedDiameter.kilometers.estimatedDiameterMin to data.estimatedDiameter.kilometers.estimatedDiameterMax
-        DiameterUnit.METER -> data.estimatedDiameter.meters.estimatedDiameterMin to data.estimatedDiameter.meters.estimatedDiameterMax
-        DiameterUnit.MILE -> data.estimatedDiameter.miles.estimatedDiameterMin to data.estimatedDiameter.miles.estimatedDiameterMax
-        DiameterUnit.FEET -> data.estimatedDiameter.feet.estimatedDiameterMin to data.estimatedDiameter.feet.estimatedDiameterMax
-        else -> null to null
-    }
+    val coroutineScope = rememberCoroutineScope()
 
     val closeApproach = data.closeApproachData[0]
     val astronomicalDistance = closeApproach.missDistance.astronomical
+
+    val convertedDiameterToKm = when (userPrefs?.diameterUnits) {
+        DiameterUnit.KILOMETER -> data.estimatedDiameter.kilometers.estimatedDiameterMax.toFloat()
+        DiameterUnit.METER -> ConvertDiameterToKm.metersToKilometers(data.estimatedDiameter.meters.estimatedDiameterMax.toFloat())
+        DiameterUnit.MILE -> ConvertDiameterToKm.milesToKilometers(data.estimatedDiameter.miles.estimatedDiameterMax.toFloat())
+        DiameterUnit.FEET -> ConvertDiameterToKm.feetToKilometers(data.estimatedDiameter.feet.estimatedDiameterMax.toFloat())
+        else -> 0f
+    }
 
     Scaffold(
         containerColor = AppTheme.colors.background,
@@ -205,8 +216,16 @@ fun DetailsMainContent(
                         modifier = Modifier
                             .padding(horizontal = AppTheme.spaces.space16),
                         objectName = data.name,
-                        objectSize = estimatedDiameter.second?.toFloat() ?: 0f,
-                        astronomicalDistance = astronomicalDistance.toFloat()
+                        objectSize = convertedDiameterToKm,
+                        astronomicalDistance = astronomicalDistance.toFloat(),
+                        comparePagerState = comparePagerState,
+                        switchIndexPosition = selectedIndex,
+                        onSwitchIndexPosition = {
+                            selectedIndex = it
+                            coroutineScope.launch {
+                                comparePagerState.animateScrollToPage(it)
+                            }
+                        }
                     )
                 }
             }

@@ -1,49 +1,44 @@
 package dev.kobzar.settings
 
 import cafe.adriel.voyager.core.model.ScreenModel
-import dev.kobzar.preferences.model.DiameterUnit
-import dev.kobzar.preferences.model.MissDistanceUnit
-import dev.kobzar.preferences.model.RelativeVelocityUnit
+import cafe.adriel.voyager.core.model.screenModelScope
 import dev.kobzar.preferences.model.UserPreferencesModel
-import dev.kobzar.repository.models.PrefsDetailsModel
+import dev.kobzar.repository.DataStoreRepository
 import dev.kobzar.repository.uiStates.UiState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SettingsViewModel @Inject constructor(
-//    private val prefsUseCase: ABC
+    private val prefsRepository: DataStoreRepository
 ): ScreenModel {
 
-
-    val fakeUserData = UserPreferencesModel(
-        diameterUnits = DiameterUnit.KILOMETER,
-        missDistanceUnits = MissDistanceUnit.LUNAR,
-        relativeVelocityUnits = RelativeVelocityUnit.KM_H
-    )
-
-    val _userPrefs = MutableStateFlow<UiState<UserPreferencesModel>>(UiState.Success(fakeUserData))
-    val userPrefs: StateFlow<UiState<UserPreferencesModel>> = _userPrefs.asStateFlow()
+    private val _userPrefs = MutableStateFlow<UiState<UserPreferencesModel?>>(UiState.Success(null))
+    val userPrefs: StateFlow<UiState<UserPreferencesModel?>> = _userPrefs.asStateFlow()
 
     init {
-        // todo
+        getUserPrefs()
     }
 
-    fun getUserPrefs() {
-        // todo
+    private fun getUserPrefs() {
+        screenModelScope.launch {
+            try {
+                prefsRepository.getUserPreferences().collect {
+                    _userPrefs.value = UiState.Success(it)
+                }
+            } catch (e: Exception) {
+                _userPrefs.value = UiState.Error(e)
+            }
+        }
     }
 
-    fun updateDiameterUnit(newDiameterUnit: DiameterUnit) {
-        // todo
-    }
-
-    fun updateMissDistanceUnit(newMissDistanceUnit: MissDistanceUnit) {
-       // todo
-    }
-
-    fun updateRelativeVelocityUnit(newRelativeVelocityUnit: RelativeVelocityUnit) {
-        // todo
+    fun updatePrefsData(data: UserPreferencesModel) {
+        screenModelScope.launch(Dispatchers.IO) {
+            prefsRepository.setUserPreferences(data)
+        }
     }
 
 }

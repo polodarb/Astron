@@ -7,9 +7,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import dev.kobzar.details.R
+import dev.kobzar.details.utils.PrefsDataExtensions.getDiameterRangeByUnit
+import dev.kobzar.details.utils.PrefsDataExtensions.getMissDistanceUnit
+import dev.kobzar.details.utils.PrefsDataExtensions.getRelativeVelocity
 import dev.kobzar.preferences.model.DiameterUnit
-import dev.kobzar.preferences.model.MissDistanceUnit
-import dev.kobzar.preferences.model.RelativeVelocityUnit
 import dev.kobzar.preferences.model.UserPreferencesModel
 import dev.kobzar.repository.models.MainDetailsModel
 import dev.kobzar.ui.compose.components.containers.OutlineBox
@@ -24,53 +25,13 @@ fun DetailsTable(
 
     val closeApproachData = data.closeApproachData[0]
 
-    val missDistanceUnit = when (userPrefs?.missDistanceUnits) {
-        MissDistanceUnit.LUNAR -> closeApproachData.missDistance.lunar
-        MissDistanceUnit.KILOMETER -> closeApproachData.missDistance.kilometers
-        MissDistanceUnit.MILE -> closeApproachData.missDistance.miles
-        MissDistanceUnit.ASTRONOMICAL -> closeApproachData.missDistance.astronomical
-        else -> null
-    }
+    val missDistanceUnit = closeApproachData.getMissDistanceUnit(userPrefs)
+    val relativeVelocity = closeApproachData.getRelativeVelocity(userPrefs)
+    val diameterUnits = data.estimatedDiameter.getDiameterRangeByUnit(userPrefs?.diameterUnits ?: DiameterUnit.KILOMETER)
 
-    val missDistancePrefix = when (userPrefs?.missDistanceUnits) {
-        MissDistanceUnit.LUNAR -> stringResource(R.string.unit_lunar)
-        MissDistanceUnit.KILOMETER -> stringResource(R.string.unit_km)
-        MissDistanceUnit.MILE -> stringResource(R.string.unit_miles)
-        MissDistanceUnit.ASTRONOMICAL -> stringResource(R.string.unit_astronomical)
-        else -> ""
-    }
-
-    val relativeVelocity = when (userPrefs?.relativeVelocityUnits) {
-        RelativeVelocityUnit.MILE_H -> closeApproachData.relativeVelocity.milesPerHour
-        RelativeVelocityUnit.KM_S -> closeApproachData.relativeVelocity.kilometersPerSecond
-        RelativeVelocityUnit.KM_H -> closeApproachData.relativeVelocity.kilometersPerHour
-        else -> null
-    }
-
-    val relativeVelocityPrefix = when (userPrefs?.relativeVelocityUnits) {
-        RelativeVelocityUnit.MILE_H -> stringResource(R.string.unit_speed_mph)
-        RelativeVelocityUnit.KM_S -> stringResource(R.string.unit_speed_km_s)
-        RelativeVelocityUnit.KM_H -> stringResource(R.string.unit_speed_km_h)
-        else -> ""
-    }
-
-    val diameterUnits = when (userPrefs?.diameterUnits) {
-        DiameterUnit.KILOMETER -> data.estimatedDiameter.kilometers.estimatedDiameterMin to data.estimatedDiameter.kilometers.estimatedDiameterMax
-        DiameterUnit.METER -> data.estimatedDiameter.meters.estimatedDiameterMin to data.estimatedDiameter.meters.estimatedDiameterMax
-        DiameterUnit.MILE -> data.estimatedDiameter.miles.estimatedDiameterMin to data.estimatedDiameter.miles.estimatedDiameterMax
-        DiameterUnit.FEET -> data.estimatedDiameter.feet.estimatedDiameterMin to data.estimatedDiameter.feet.estimatedDiameterMax
-        else -> null to null
-    }
-
-    val diameterPrefixUnit = with(data.closeApproachData) {
-        when (userPrefs?.diameterUnits) {
-            DiameterUnit.KILOMETER -> stringResource(R.string.unit_km)
-            DiameterUnit.METER -> stringResource(R.string.unit_meters)
-            DiameterUnit.MILE -> stringResource(R.string.unit_miles)
-            DiameterUnit.FEET -> stringResource(R.string.unit_feets)
-            null -> ""
-        }
-    }
+    val diameterPrefixUnit = userPrefs?.diameterUnits?.unit?.let { stringResource(id = it) } ?: "N/A"
+    val relativeVelocityPrefix = userPrefs?.relativeVelocityUnits?.unit?.let { stringResource(id = it) } ?: "N/A"
+    val missDistancePrefix = userPrefs?.missDistanceUnits?.unit?.let { stringResource(id = it) } ?: "N/A"
 
     OutlineBox(
         modifier = modifier

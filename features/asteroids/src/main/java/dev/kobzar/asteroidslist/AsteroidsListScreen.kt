@@ -6,10 +6,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePickerDialog
@@ -32,6 +31,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
@@ -205,7 +206,7 @@ private fun AsteroidsListScreenComposable(
                 items(dataState.itemCount) { index ->
                     dataState[index]?.let { item ->
 
-                        val data = item.closeApproachData[0] // TODO: Review before release
+                        val data = item.closeApproachData[0] // It always has only one item
 
                         val diameterValue = when (userPrefsData?.diameterUnits) {
                             DiameterUnit.KILOMETER -> item.estimatedDiameter.kilometers
@@ -215,16 +216,8 @@ private fun AsteroidsListScreenComposable(
                             else -> null
                         }
 
-                        val diameterPrefix = when (userPrefsData?.diameterUnits) {
-                            DiameterUnit.KILOMETER -> "Km"
-                            DiameterUnit.METER -> "m"
-                            DiameterUnit.MILE -> "mi"
-                            DiameterUnit.FEET -> "ft"
-                            else -> "N/A"
-                        }
-
                         AsteroidCard(
-                            diameterUnits = diameterPrefix,
+                            diameterUnits = userPrefsData?.diameterUnits?.unit?.let { stringResource(id = it) } ?: "N/A",
                             name = item.name,
                             isDangerous = item.isDangerous,
                             diameterMin = diameterValue?.estimatedDiameterMin ?: 0.0,
@@ -353,9 +346,10 @@ fun BsDateRangePicker(
 @Composable
 fun LoadingNextPageItem(modifier: Modifier) {
     CircularProgressIndicator(
+        strokeCap = StrokeCap.Round,
+        color = AppTheme.colors.primary,
         modifier = modifier
-            .fillMaxWidth()
-            .padding(10.dp)
-            .wrapContentWidth(Alignment.CenterHorizontally)
+            .padding(bottom = AppTheme.spaces.space20)
+            .size(28.dp)
     )
 }

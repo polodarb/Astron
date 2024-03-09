@@ -22,17 +22,18 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.hilt.getScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
-import dev.kobzar.preferences.model.DiameterUnit
-import dev.kobzar.preferences.model.MissDistanceUnit
-import dev.kobzar.preferences.model.RelativeVelocityUnit
+import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import dev.kobzar.preferences.model.UserPreferencesModel
 import dev.kobzar.repository.uiStates.UiState
+import dev.kobzar.settings.dialogs.DiameterUnitDialog
+import dev.kobzar.settings.dialogs.MissDistanceUnitDialog
+import dev.kobzar.settings.dialogs.RelativeVelocityUnitDialog
 import dev.kobzar.ui.compose.components.containers.OutlineColumn
-import dev.kobzar.ui.compose.components.inserts.InsertError
 import dev.kobzar.ui.compose.components.inserts.InsertLoader
 import dev.kobzar.ui.compose.components.topbars.SecondaryTopBar
 import dev.kobzar.ui.compose.theme.AppTheme
@@ -50,14 +51,8 @@ class SettingsScreen : Screen {
 
         SettingsStatesScreenComposable(
             prefs = prefs.value,
-            onUpdateDiameterUnit = {
-                viewModel.updateDiameterUnit(it)
-            },
-            onUpdateMissDistanceUnit = {
-                viewModel.updateMissDistanceUnit(it)
-            },
-            onUpdateRelativeVelocityUnit = {
-                viewModel.updateRelativeVelocityUnit(it)
+            onUpdatePrefsData = {
+                viewModel.updatePrefsData(it)
             },
             onBackClick = { navigator?.pop() }
         )
@@ -68,10 +63,8 @@ class SettingsScreen : Screen {
 
 @Composable
 private fun SettingsStatesScreenComposable(
-    prefs: UiState<UserPreferencesModel>,
-    onUpdateDiameterUnit: (DiameterUnit) -> Unit,
-    onUpdateMissDistanceUnit: (MissDistanceUnit) -> Unit,
-    onUpdateRelativeVelocityUnit: (RelativeVelocityUnit) -> Unit,
+    prefs: UiState<UserPreferencesModel?>,
+    onUpdatePrefsData: (UserPreferencesModel) -> Unit,
     onBackClick: () -> Unit
 ) {
 
@@ -98,13 +91,14 @@ private fun SettingsStatesScreenComposable(
                     }
                 }
 
-                is UiState.Error -> InsertError()
+                is UiState.Error -> {}
 
                 is UiState.Success -> {
                     SettingsScreenComposable(
                         data = prefs.data,
-                        modifier = Modifier.padding(top = AppTheme.spaces.space12)
-                    ) // todo
+                        modifier = Modifier.padding(top = AppTheme.spaces.space12),
+                        onPrefsUpdate = onUpdatePrefsData
+                    )
                 }
             }
         }
@@ -114,22 +108,13 @@ private fun SettingsStatesScreenComposable(
 @Composable
 private fun SettingsScreenComposable(
     modifier: Modifier = Modifier,
-    data: UserPreferencesModel
+    data: UserPreferencesModel?,
+    onPrefsUpdate: (UserPreferencesModel) -> Unit
 ) {
 
-    val diameterUnits = when (data.diameterUnits) {
-        DiameterUnit.KILOMETER -> "Kilometers"
-        DiameterUnit.METER -> "Meters"
-        DiameterUnit.MILE -> "Miles"
-        DiameterUnit.FEET -> "Feet"
-    }
-
-    val missDistanceUnits = when (data.missDistanceUnits) {
-        MissDistanceUnit.KILOMETER -> "Kilometers"
-        MissDistanceUnit.LUNAR -> "Lunar"
-        MissDistanceUnit.MILE -> "Miles"
-        MissDistanceUnit.ASTRONOMICAL -> "Astronomical"
-    }
+    val diameterDialogShow = rememberUseCaseState(embedded = false)
+    val missDistanceDialogShow = rememberUseCaseState(embedded = false)
+    val relativeVelocityDialogShow = rememberUseCaseState(embedded = false)
 
     Column(
         modifier = modifier
@@ -137,7 +122,7 @@ private fun SettingsScreenComposable(
             .padding(AppTheme.spaces.space16)
     ) {
         Text(
-            text = "General",
+            text = stringResource(R.string.settings_title_general),
             style = AppTheme.typography.medium14,
             modifier = Modifier.padding(
                 bottom = AppTheme.spaces.space8
@@ -146,30 +131,33 @@ private fun SettingsScreenComposable(
         )
         OutlineColumn {
             SettingsItem(title = "Diameter unit") {
-                Text(
-                    text = diameterUnits,
-                    color = AppTheme.colors.secondaryGray800,
+                Text(text = data?.diameterUnits?.unit?.let { stringResource(id = it) } ?: "N/A",
+                color = AppTheme.colors.secondaryGray800,
                     modifier = Modifier.settingsItemValue {
-
+                        diameterDialogShow.show()
                     }
                 )
             }
 
             SettingsItem(title = "Miss distance unit") {
-                Text(text = missDistanceUnits, modifier = Modifier.settingsItemValue {
-
-                })
+                Text(text = data?.missDistanceUnits?.unit?.let { stringResource(id = it) } ?: "N/A",
+                    color = AppTheme.colors.secondaryGray800,
+                    modifier = Modifier.settingsItemValue {
+                        missDistanceDialogShow.show()
+                    })
             }
 
             SettingsItem(title = "Relative velocity unit") {
-                Text(text = "${data.relativeVelocityUnits.name}", modifier = Modifier.settingsItemValue {
-
-                })
+                Text(text = data?.relativeVelocityUnits?.unit?.let { stringResource(id = it) } ?: "N/A",
+                    color = AppTheme.colors.secondaryGray800,
+                    modifier = Modifier.settingsItemValue {
+                        relativeVelocityDialogShow.show()
+                    })
             }
         }
 
         Text(
-            text = "Other",
+            text = stringResource(R.string.settings_title_other),
             style = AppTheme.typography.medium14,
             modifier = Modifier.padding(
                 bottom = AppTheme.spaces.space8,
@@ -189,6 +177,54 @@ private fun SettingsScreenComposable(
                 )
             }
         }
+
+        DiameterUnitDialog(
+            showDialog = diameterDialogShow,
+            diameterPrefs = data?.diameterUnits,
+            onItemSelected = {
+                if (data != null) {
+                    onPrefsUpdate(
+                        UserPreferencesModel(
+                            diameterUnits = it,
+                            relativeVelocityUnits = data.relativeVelocityUnits,
+                            missDistanceUnits = data.missDistanceUnits
+                        )
+                    )
+                }
+            }
+        )
+
+        MissDistanceUnitDialog(
+            showDialog = missDistanceDialogShow,
+            missDistanceUnit = data?.missDistanceUnits,
+            onItemSelected = {
+                if (data != null) {
+                    onPrefsUpdate(
+                        UserPreferencesModel(
+                            diameterUnits = data.diameterUnits,
+                            relativeVelocityUnits = data.relativeVelocityUnits,
+                            missDistanceUnits = it
+                        )
+                    )
+                }
+            }
+        )
+
+        RelativeVelocityUnitDialog(
+            showDialog = relativeVelocityDialogShow,
+            relativeVelocity = data?.relativeVelocityUnits,
+            onItemSelected = {
+                if (data != null) {
+                    onPrefsUpdate(
+                        UserPreferencesModel(
+                            diameterUnits = data.diameterUnits,
+                            relativeVelocityUnits = it,
+                            missDistanceUnits = data.missDistanceUnits
+                        )
+                    )
+                }
+            }
+        )
     }
 
 }

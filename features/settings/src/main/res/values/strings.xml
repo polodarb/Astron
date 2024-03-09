@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_unit_astronomical">AU</string>
+    <string name="settings_unit_miles">Miles</string>
+    <string name="settings_unit_km">Km</string>
+    <string name="settings_unit_lunar">LD</string>
+    <string name="settings_unit_speed_mph">Mph</string>
+    <string name="settings_unit_speed_km_s">Km/s</string>
+    <string name="settings_unit_speed_km_h">Km/h</string>
+    <string name="settings_unit_meters">Meters</string>
+    <string name="settings_unit_feets">Feets</string>
+    <string name="settings_title_general">General</string>
+    <string name="settings_title_other">Other</string>
+</resources>
