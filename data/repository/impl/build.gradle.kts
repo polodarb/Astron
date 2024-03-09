@@ -49,7 +49,6 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(project(":data:repository"))
-    implementation(project(":data:source"))
 }
 
 kapt {

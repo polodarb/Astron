@@ -4,8 +4,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dev.kobzar.datasource.DataStoreSource
-import dev.kobzar.impl.DataStoreSourceImpl
+import dev.kobzar.impl.source.DataStoreSourceImpl
+import dev.kobzar.preferences.source.DataStoreSource
 import javax.inject.Singleton
 
 @Module

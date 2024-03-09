@@ -41,7 +41,6 @@ class OnBoardingScreen : Screen {
         val asteroidsScreen = rememberScreen(SharedScreen.AsteroidsListScreen)
 
         val coroutineScope = rememberCoroutineScope()
-        val context = LocalContext.current
 
         val pagerState = rememberPagerState(pageCount = {
             3
