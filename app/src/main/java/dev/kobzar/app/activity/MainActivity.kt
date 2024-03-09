@@ -42,7 +42,7 @@ class MainActivity : BaseActivity() {
                     AsteroidsListScreen()
                 }
 
-                Navigator(screen = DetailsScreen(asteroidId = "3542519")) { navigator ->
+                Navigator(screen = startScreen) { navigator ->
                     SlideTransition(navigator)
                 }
             }

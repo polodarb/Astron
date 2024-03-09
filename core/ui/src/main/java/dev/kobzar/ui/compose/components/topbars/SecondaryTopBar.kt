@@ -25,8 +25,8 @@ fun SecondaryTopBar(
     title: String,
     customAction: (@Composable (onBackClick: () -> Unit) -> Unit)? = null,
     onBackClick: () -> Unit,
-    isFavorite: Boolean,
-    onFavoriteClick: (value: Boolean) -> Unit
+    isFavorite: Boolean? = null,
+    onFavoriteClick: ((value: Boolean) -> Unit)? = null
 ) {
 
     val haptic = LocalHapticFeedback.current
@@ -62,27 +62,29 @@ fun SecondaryTopBar(
             )
         },
         actions = {
-            if (customAction != null) {
-                customAction(onBackClick)
-            } else {
-                OutlineIconButton(
-                    icon = {
-                        Icon(
-                            painter = if (isFavorite) {
-                                painterResource(id = R.drawable.ic_bookmark)
-                            } else {
-                                painterResource(id = R.drawable.ic_bookmark_fill)
-                            },
-                            contentDescription = null,
-                            tint = AppTheme.colors.primary,
-                            modifier = Modifier.size(26.dp)
-                        )
-                    },
-                    onClick = {
-                        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                        onFavoriteClick(!isFavorite)
-                    }
-                )
+            if (isFavorite != null && onFavoriteClick != null) {
+                if (customAction != null) {
+                    customAction(onBackClick)
+                } else {
+                    OutlineIconButton(
+                        icon = {
+                            Icon(
+                                painter = if (isFavorite) {
+                                    painterResource(id = R.drawable.ic_bookmark_fill)
+                                } else {
+                                    painterResource(id = R.drawable.ic_bookmark)
+                                },
+                                contentDescription = null,
+                                tint = AppTheme.colors.primary,
+                                modifier = Modifier.size(26.dp)
+                            )
+                        },
+                        onClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                            onFavoriteClick(!isFavorite)
+                        }
+                    )
+                }
             }
         }
     )

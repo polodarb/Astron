@@ -9,6 +9,7 @@ import dev.kobzar.repository.uiStates.UiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,13 +21,7 @@ class DetailsViewModel @Inject constructor(
 ) : ScreenModel {
 
     private val _details = MutableStateFlow<AsteroidDetails>(UiState.Loading())
-    val details: StateFlow<AsteroidDetails> = _details
-
-    var asteroid: String? = null
-
-    fun setAsteroidId(id: String?) {
-        asteroid = id
-    }
+    val details: StateFlow<AsteroidDetails> = _details.asStateFlow()
 
     fun getAsteroidDetails(asteroid: String?) {
         screenModelScope.launch(Dispatchers.IO) {
