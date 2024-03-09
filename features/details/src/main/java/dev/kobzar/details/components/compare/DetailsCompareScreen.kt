@@ -16,16 +16,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,7 +31,6 @@ import dev.kobzar.details.R
 import dev.kobzar.details.components.compare.charts.distance.DetailsCompareDistanceChart
 import dev.kobzar.ui.compose.components.charts.CompareSizeChart
 import dev.kobzar.ui.compose.theme.AppTheme
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -44,15 +38,11 @@ fun DetailsCompareScreen(
     modifier: Modifier = Modifier,
     objectName: String,
     objectSize: Float,
-    astronomicalDistance: Float
+    astronomicalDistance: Float,
+    comparePagerState: PagerState,
+    switchIndexPosition: Int,
+    onSwitchIndexPosition: (Int) -> Unit
 ) {
-
-    val comparePagerState = rememberPagerState(pageCount = { 2 })
-
-    var selectedIndex by remember { mutableIntStateOf(0) }
-
-    val coroutineScope = rememberCoroutineScope()
-
     Column(modifier = Modifier) {
         HorizontalPager(
             state = comparePagerState,
@@ -64,7 +54,7 @@ fun DetailsCompareScreen(
         ) {
             when (it) {
                 0 -> CompareSizeChart(
-                    objectDiameter = objectSize,
+                    objectDiameterInKm = objectSize,
                     objectName = objectName,
                     modifier = modifier
                 )
@@ -76,13 +66,8 @@ fun DetailsCompareScreen(
             }
         }
         DetailsCompareSwitcher(
-            selectedIndex = selectedIndex,
-            onIndexChange = {
-                selectedIndex = it
-                coroutineScope.launch {
-                    comparePagerState.animateScrollToPage(it)
-                }
-            }
+            selectedIndex = switchIndexPosition,
+            onIndexChange = onSwitchIndexPosition
         )
     }
 }

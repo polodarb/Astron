@@ -21,7 +21,7 @@ fun InsertLoader(
     text: String
 ) {
     Column(
-        modifier = modifier.background(AppTheme.colors.background),
+        modifier = modifier,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

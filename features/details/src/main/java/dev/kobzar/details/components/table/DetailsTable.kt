@@ -7,27 +7,31 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import dev.kobzar.details.R
+import dev.kobzar.details.utils.PrefsDataExtensions.getDiameterRangeByUnit
+import dev.kobzar.details.utils.PrefsDataExtensions.getMissDistanceUnit
+import dev.kobzar.details.utils.PrefsDataExtensions.getRelativeVelocity
 import dev.kobzar.preferences.model.DiameterUnit
-import dev.kobzar.repository.models.PrefsDetailsModel
+import dev.kobzar.preferences.model.UserPreferencesModel
+import dev.kobzar.repository.models.MainDetailsModel
 import dev.kobzar.ui.compose.components.containers.OutlineBox
 import dev.kobzar.ui.compose.theme.AppTheme
 
 @Composable
 fun DetailsTable(
     modifier: Modifier = Modifier,
-    data: PrefsDetailsModel,
-    diameterUnit: DiameterUnit?
-) {
+    data: MainDetailsModel,
+    userPrefs: UserPreferencesModel?
+    ) {
 
-    val diameterPrefixUnit = with(data.closeApproachData) {
-        when (diameterUnit) {
-            DiameterUnit.KILOMETER -> "Km"
-            DiameterUnit.METER -> "Meters"
-            DiameterUnit.MILE -> "Miles"
-            DiameterUnit.FEET -> "Feet"
-            null -> ""
-        }
-    }
+    val closeApproachData = data.closeApproachData[0]
+
+    val missDistanceUnit = closeApproachData.getMissDistanceUnit(userPrefs)
+    val relativeVelocity = closeApproachData.getRelativeVelocity(userPrefs)
+    val diameterUnits = data.estimatedDiameter.getDiameterRangeByUnit(userPrefs?.diameterUnits ?: DiameterUnit.KILOMETER)
+
+    val diameterPrefixUnit = userPrefs?.diameterUnits?.unit?.let { stringResource(id = it) } ?: "N/A"
+    val relativeVelocityPrefix = userPrefs?.relativeVelocityUnits?.unit?.let { stringResource(id = it) } ?: "N/A"
+    val missDistancePrefix = userPrefs?.missDistanceUnits?.unit?.let { stringResource(id = it) } ?: "N/A"
 
     OutlineBox(
         modifier = modifier
@@ -37,43 +41,43 @@ fun DetailsTable(
         Column {
             DetailsTableItem(
                 title = stringResource(R.string.details_table_item_dangerous),
-                value = data.isDangerous.toString(),
+                itemValue = data.isDangerous.toString(),
                 isDangerItem = true
             )
 
             DetailsTableItem(
                 title = stringResource(R.string.details_table_item_min_diameter),
-                value = "${data.estimatedDiameter.estimatedDiameterMin} $diameterPrefixUnit"
+                itemValue = "${diameterUnits.first} $diameterPrefixUnit"
             )
 
             DetailsTableItem(
                 title = stringResource(R.string.details_table_item_max_diameter),
-                value = "${data.estimatedDiameter.estimatedDiameterMax} $diameterPrefixUnit"
+                itemValue = "${diameterUnits.second} $diameterPrefixUnit"
             )
 
             DetailsTableItem(
                 title = stringResource(R.string.details_table_item_close_approach),
-                value = data.closeApproachData.closeApproachDateFull
+                itemValue = closeApproachData.closeApproachDateFull
             )
 
             DetailsTableItem(
                 title = stringResource(R.string.details_table_item_relative_velocity),
-                value = data.closeApproachData.relativeVelocity
+                itemValue = "$relativeVelocity $relativeVelocityPrefix"
             )
 
             DetailsTableItem(
                 title = stringResource(R.string.details_table_item_miss_distance),
-                value = data.closeApproachData.missDistance
+                itemValue = "$missDistanceUnit $missDistancePrefix"
             )
 
             DetailsTableItem(
                 title = stringResource(R.string.details_table_item_orbiting_body),
-                value = data.closeApproachData.orbitingBody
+                itemValue = closeApproachData.orbitingBody
             )
 
             DetailsTableItem(
                 title = stringResource(R.string.details_table_item_is_sentry_object),
-                value = data.isSentryObject.toString(),
+                itemValue = data.isSentryObject.toString(),
                 isSentryItem = true
             )
         }

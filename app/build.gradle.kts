@@ -97,10 +97,10 @@ dependencies {
 
     implementation(project(":data:repository"))
     implementation(project(":data:repository:impl"))
-    implementation(project(":data:source"))
-    implementation(project(":data:source:impl"))
+    
     implementation(project(":data:preferences"))
     implementation(project(":data:preferences:impl"))
+
     implementation(project(":data:network"))
     implementation(project(":data:network:impl"))
 

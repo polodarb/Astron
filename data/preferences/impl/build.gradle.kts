@@ -36,9 +36,8 @@ android {
 }
 
 dependencies {
-
-    // GSON
-    implementation(libs.gson)
+    // KtSerialization
+    implementation(libs.kotlinx.serialization.json)
 
     // Datastore
     implementation(libs.datastore.preferences)

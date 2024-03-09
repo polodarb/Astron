@@ -13,6 +13,7 @@ material = "1.11.0"
 voyager = "1.0.0"
 composeRuntime = "1.6.2"
 splashscreen = "1.0.1"
+kotlinxSerializationJson = "1.6.3"
 kotlinxCollectionsImmutable = "0.3.7"
 hilt = "2.49"
 hilt-common = "1.1.0"
@@ -23,6 +24,9 @@ okhttp = "4.11.0"
 paging = "3.2.1"
 pagingCompose = "3.3.0-alpha03"
 uiTooling = "1.6.2"
+room = "2.6.1"
+ksp = "1.9.20-1.0.14"
+sheetsCompose = "1.3.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -48,6 +52,7 @@ voyager-screenmodel = { group = "cafe.adriel.voyager", name = "voyager-screenmod
 voyager-hilt = { group = "cafe.adriel.voyager", name = "voyager-hilt", version.ref = "voyager" }
 splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
 material-view = { group = "com.google.android.material", name = "material", version.ref = "material" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson"}
 kotlinx-collections-immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
@@ -56,7 +61,6 @@ hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hilt-c
 hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
 hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }
-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 chucker = { group = "com.github.chuckerteam.chucker", name = "library", version.ref = "chucker" }
@@ -64,10 +68,17 @@ chucker-no-op = { group = "com.github.chuckerteam.chucker", name = "library-no-o
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 paging3 = { module = "androidx.paging:paging-runtime", version.ref = "paging" }
 paging3-compose = { module = "androidx.paging:paging-compose", version.ref = "pagingCompose" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
+sheets-compose = { group = "com.maxkeppeler.sheets-compose-dialogs", name = "core", version.ref = "sheetsCompose" }
+sheets-compose-options = { group = "com.maxkeppeler.sheets-compose-dialogs", name = "option", version.ref = "sheetsCompose" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
-
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
