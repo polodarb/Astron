@@ -19,10 +19,12 @@ import dev.kobzar.ui.compose.theme.AppTheme
 fun DetailsTableItem(
     modifier: Modifier = Modifier,
     title: String,
-    value: String,
+    itemValue: String?,
     isDangerItem: Boolean = false,
     isSentryItem: Boolean = false
 ) {
+
+    val value = itemValue ?: "N/A"
 
     val dangerTextColor = if (isDangerItem) {
         val result = value.toBoolean()

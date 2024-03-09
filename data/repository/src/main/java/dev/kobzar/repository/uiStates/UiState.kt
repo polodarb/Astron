@@ -1,7 +1,6 @@
 package dev.kobzar.repository.uiStates
 
-import dev.kobzar.preferences.model.DiameterUnit
-import dev.kobzar.preferences.model.MissDistanceUnit
+import dev.kobzar.preferences.model.UserPreferencesModel
 
 sealed interface UiState<T> {
     class Loading<T> : UiState<T>
@@ -9,7 +8,7 @@ sealed interface UiState<T> {
     data class Success<T>(
         val data: T,
         val dataFromDB: Boolean = false,
-        val diameterUnit: DiameterUnit? = null
+        val userPrefs: UserPreferencesModel? = null
     ) : UiState<T>
 
     data class Error<T>(

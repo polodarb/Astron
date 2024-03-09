@@ -6,12 +6,16 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.filter
+import androidx.paging.map
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import dev.kobzar.asteroidslist.utils.Utils.formatDateFromTimestamp
 import dev.kobzar.asteroidslist.utils.Utils.getDaysDifference
+import dev.kobzar.domain.useCases.reformatUnits.ReformatDiameterUseCase
 import dev.kobzar.impl.paging.AsteroidsPagingSource
+import dev.kobzar.preferences.model.UserPreferencesModel
 import dev.kobzar.repository.AsteroidsRepository
+import dev.kobzar.repository.DataStoreRepository
 import dev.kobzar.repository.models.MainAsteroidsListItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,17 +28,23 @@ import javax.inject.Inject
 typealias AsteroidsList = PagingData<MainAsteroidsListItem>
 
 class AsteroidsListViewModel @Inject constructor(
-    private val repository: AsteroidsRepository
+    private val repository: AsteroidsRepository,
+    private val datastore: DataStoreRepository,
+    private val reformatDiameterUseCase: ReformatDiameterUseCase
 ) : ScreenModel {
 
     private val _marketCoins = MutableStateFlow<AsteroidsList>(PagingData.empty())
     val marketCoins: StateFlow<AsteroidsList> = _marketCoins
+
+    private val _prefsData = MutableStateFlow<UserPreferencesModel?>(null)
+    val prefsData: StateFlow<UserPreferencesModel?> = _prefsData
 
     var firstDate: String = getCurrentDate()
     var secondDate: String = getCurrentDate(7)
 
     init {
         val dateRange = getDaysDifference(firstDate, secondDate)
+        getUserPrefsData()
         getAsteroids(firstDate, dateRange)
     }
 
@@ -58,6 +68,10 @@ class AsteroidsListViewModel @Inject constructor(
                             pagingData.filter { it.isDangerous }
                         } else {
                             pagingData
+                        }.map {
+                            it.copy(
+                                estimatedDiameter = reformatDiameterUseCase(it.estimatedDiameter)
+                            )
                         }
                     }
                     .collect { pagingData ->
@@ -65,6 +79,14 @@ class AsteroidsListViewModel @Inject constructor(
                     }
             } catch (e: Exception) {
                 Log.e("AsteroidsListViewModel", e.toString())
+            }
+        }
+    }
+
+    fun getUserPrefsData() {
+        screenModelScope.launch {
+            datastore.getUserPreferences().collect {
+                _prefsData.value = it
             }
         }
     }

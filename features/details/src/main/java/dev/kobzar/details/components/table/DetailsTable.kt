@@ -8,19 +8,62 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import dev.kobzar.details.R
 import dev.kobzar.preferences.model.DiameterUnit
-import dev.kobzar.repository.models.PrefsDetailsModel
+import dev.kobzar.preferences.model.MissDistanceUnit
+import dev.kobzar.preferences.model.RelativeVelocityUnit
+import dev.kobzar.preferences.model.UserPreferencesModel
+import dev.kobzar.repository.models.MainDetailsModel
 import dev.kobzar.ui.compose.components.containers.OutlineBox
 import dev.kobzar.ui.compose.theme.AppTheme
 
 @Composable
 fun DetailsTable(
     modifier: Modifier = Modifier,
-    data: PrefsDetailsModel,
-    diameterUnit: DiameterUnit?
-) {
+    data: MainDetailsModel,
+    userPrefs: UserPreferencesModel?
+    ) {
+
+    val closeApproachData = data.closeApproachData[0]
+
+    val missDistanceUnit = when (userPrefs?.missDistanceUnits) {
+        MissDistanceUnit.LUNAR -> closeApproachData.missDistance.lunar
+        MissDistanceUnit.KILOMETER -> closeApproachData.missDistance.kilometers
+        MissDistanceUnit.MILE -> closeApproachData.missDistance.miles
+        MissDistanceUnit.ASTRONOMICAL -> closeApproachData.missDistance.astronomical
+        else -> null
+    }
+
+    val missDistancePrefix = when (userPrefs?.missDistanceUnits) {
+        MissDistanceUnit.LUNAR -> "LD"
+        MissDistanceUnit.KILOMETER -> "Km"
+        MissDistanceUnit.MILE -> "Miles"
+        MissDistanceUnit.ASTRONOMICAL -> "A. U."
+        else -> ""
+    }
+
+    val relativeVelocity = when (userPrefs?.relativeVelocityUnits) {
+        RelativeVelocityUnit.MILE_H -> closeApproachData.relativeVelocity.milesPerHour
+        RelativeVelocityUnit.KM_S -> closeApproachData.relativeVelocity.kilometersPerSecond
+        RelativeVelocityUnit.KM_H -> closeApproachData.relativeVelocity.kilometersPerHour
+        else -> null
+    }
+
+    val relativeVelocityPrefix = when (userPrefs?.relativeVelocityUnits) {
+        RelativeVelocityUnit.MILE_H -> "mph"
+        RelativeVelocityUnit.KM_S -> "km/s"
+        RelativeVelocityUnit.KM_H -> "km/h"
+        else -> ""
+    }
+
+    val diameterUnits = when (userPrefs?.diameterUnits) {
+        DiameterUnit.KILOMETER -> data.estimatedDiameter.kilometers.estimatedDiameterMin to data.estimatedDiameter.kilometers.estimatedDiameterMax
+        DiameterUnit.METER -> data.estimatedDiameter.meters.estimatedDiameterMin to data.estimatedDiameter.meters.estimatedDiameterMax
+        DiameterUnit.MILE -> data.estimatedDiameter.miles.estimatedDiameterMin to data.estimatedDiameter.miles.estimatedDiameterMax
+        DiameterUnit.FEET -> data.estimatedDiameter.feet.estimatedDiameterMin to data.estimatedDiameter.feet.estimatedDiameterMax
+        else -> null to null
+    }
 
     val diameterPrefixUnit = with(data.closeApproachData) {
-        when (diameterUnit) {
+        when (userPrefs?.diameterUnits) {
             DiameterUnit.KILOMETER -> "Km"
             DiameterUnit.METER -> "Meters"
             DiameterUnit.MILE -> "Miles"
@@ -37,43 +80,43 @@ fun DetailsTable(
         Column {
             DetailsTableItem(
                 title = stringResource(R.string.details_table_item_dangerous),
-                value = data.isDangerous.toString(),
+                itemValue = data.isDangerous.toString(),
                 isDangerItem = true
             )
 
             DetailsTableItem(
                 title = stringResource(R.string.details_table_item_min_diameter),
-                value = "${data.estimatedDiameter.estimatedDiameterMin} $diameterPrefixUnit"
+                itemValue = "${diameterUnits.first} $diameterPrefixUnit"
             )
 
             DetailsTableItem(
                 title = stringResource(R.string.details_table_item_max_diameter),
-                value = "${data.estimatedDiameter.estimatedDiameterMax} $diameterPrefixUnit"
+                itemValue = "${diameterUnits.second} $diameterPrefixUnit"
             )
 
             DetailsTableItem(
                 title = stringResource(R.string.details_table_item_close_approach),
-                value = data.closeApproachData.closeApproachDateFull
+                itemValue = closeApproachData.closeApproachDateFull
             )
 
             DetailsTableItem(
                 title = stringResource(R.string.details_table_item_relative_velocity),
-                value = data.closeApproachData.relativeVelocity
+                itemValue = "$relativeVelocity $relativeVelocityPrefix"
             )
 
             DetailsTableItem(
                 title = stringResource(R.string.details_table_item_miss_distance),
-                value = data.closeApproachData.missDistance
+                itemValue = "$missDistanceUnit $missDistancePrefix"
             )
 
             DetailsTableItem(
                 title = stringResource(R.string.details_table_item_orbiting_body),
-                value = data.closeApproachData.orbitingBody
+                itemValue = closeApproachData.orbitingBody
             )
 
             DetailsTableItem(
                 title = stringResource(R.string.details_table_item_is_sentry_object),
-                value = data.isSentryObject.toString(),
+                itemValue = data.isSentryObject.toString(),
                 isSentryItem = true
             )
         }

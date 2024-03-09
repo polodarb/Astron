@@ -4,7 +4,6 @@ import dev.kobzar.network.models.NetworkAsteroid
 import dev.kobzar.network.models.NetworkAsteroidsModel
 import dev.kobzar.network.models.NetworkCloseApproachData
 import dev.kobzar.network.models.NetworkLinks
-import dev.kobzar.repository.mappers.ModelsMapper.toMainAsteroidsListItem
 import dev.kobzar.repository.models.MainAsteroidsCloseApproachData
 import dev.kobzar.repository.models.MainAsteroidsListItem
 import dev.kobzar.repository.models.MainAsteroidsModel
@@ -13,6 +12,8 @@ import dev.kobzar.repository.models.MainDetailsModel
 import dev.kobzar.repository.models.shared.MainAsteroidsDiameter
 import dev.kobzar.repository.models.shared.MainAsteroidsEstimatedDiameter
 import dev.kobzar.repository.models.shared.MainAsteroidsLinks
+import dev.kobzar.repository.models.shared.MissDistanceModel
+import dev.kobzar.repository.models.shared.RelativeVelocityModel
 
 object ModelsMapper {
 
@@ -76,8 +77,17 @@ object ModelsMapper {
             closeApproachDateFull = this.closeApproachDateFull,
             epochDateCloseApproach = this.epochDateCloseApproach,
             orbitingBody = this.orbitingBody,
-            relativeVelocity = this.relativeVelocity,
-            missDistance = this.missDistance,
+            relativeVelocity = RelativeVelocityModel(
+                kilometersPerSecond = this.relativeVelocity.kilometersPerSecond,
+                kilometersPerHour = this.relativeVelocity.kilometersPerHour,
+                milesPerHour = this.relativeVelocity.milesPerHour
+            ),
+            missDistance = MissDistanceModel(
+                astronomical = this.missDistance.astronomical,
+                lunar = this.missDistance.lunar,
+                kilometers = this.missDistance.kilometers,
+                miles = this.missDistance.miles
+            ),
             astronomicalDistance = this.missDistance.astronomical
         )
     }

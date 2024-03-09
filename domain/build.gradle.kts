@@ -42,5 +42,5 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     api(project(":data:repository"))
-    implementation(project(":core:platform"))
+    api(project(":core:platform"))
 }

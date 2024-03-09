@@ -13,6 +13,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,7 +33,8 @@ import dev.kobzar.details.components.indicators.PageIndicator
 import dev.kobzar.details.components.table.DetailsTable
 import dev.kobzar.navigation.shared.SharedScreen
 import dev.kobzar.preferences.model.DiameterUnit
-import dev.kobzar.repository.models.PrefsDetailsModel
+import dev.kobzar.preferences.model.UserPreferencesModel
+import dev.kobzar.repository.models.MainDetailsModel
 import dev.kobzar.repository.uiStates.UiState
 import dev.kobzar.ui.compose.components.fabs.PrimaryFAB
 import dev.kobzar.ui.compose.components.inserts.InsertError
@@ -54,7 +56,10 @@ data class DetailsScreen(
 //        }
 
         val viewModel = getScreenModel<DetailsViewModel>()
-        viewModel.getAsteroidDetails(asteroidId)
+
+        LaunchedEffect(Unit) {
+            viewModel.getAsteroidDetails(asteroidId)
+        }
 
         val asteroidData = viewModel.details.collectAsState()
 
@@ -83,7 +88,7 @@ data class DetailsScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun DetailsScreenComposable(
-    data: UiState<PrefsDetailsModel>,
+    data: UiState<MainDetailsModel>,
     onBackClick: () -> Unit,
     onSaveClick: (value: Boolean) -> Unit,
     isSavedAsteroid: Boolean,
@@ -99,7 +104,9 @@ private fun DetailsScreenComposable(
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         when (data) {
             is UiState.Loading -> {
-                Box(modifier = Modifier.fillMaxSize().background(AppTheme.colors.background), contentAlignment = Alignment.Center) {
+                Box(modifier = Modifier
+                    .fillMaxSize()
+                    .background(AppTheme.colors.background), contentAlignment = Alignment.Center) {
                     InsertLoader(text = "Loading asteroid details")
                 }
             }
@@ -108,7 +115,7 @@ private fun DetailsScreenComposable(
                 DetailsMainContent(
                     data = data.data,
                     pagerState = pagerState,
-                    missDistance = data.diameterUnit,
+                    userPrefs = data.userPrefs,
                     onBackClick = onBackClick,
                     onSaveClick = onSaveClick,
                     isSavedAsteroid = isSavedAsteroid,
@@ -124,9 +131,9 @@ private fun DetailsScreenComposable(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DetailsMainContent(
-    data: PrefsDetailsModel,
+    data: MainDetailsModel,
     pagerState: PagerState,
-    missDistance: DiameterUnit?,
+    userPrefs: UserPreferencesModel?,
     onBackClick: () -> Unit,
     onSaveClick: (value: Boolean) -> Unit,
     isSavedAsteroid: Boolean,
@@ -134,6 +141,17 @@ fun DetailsMainContent(
     compareFabVisibility: Boolean,
     onSbdClick: (url: String) -> Unit
 ) {
+
+    val estimatedDiameter = when (userPrefs?.diameterUnits) {
+        DiameterUnit.KILOMETER -> data.estimatedDiameter.kilometers.estimatedDiameterMin to data.estimatedDiameter.kilometers.estimatedDiameterMax
+        DiameterUnit.METER -> data.estimatedDiameter.meters.estimatedDiameterMin to data.estimatedDiameter.meters.estimatedDiameterMax
+        DiameterUnit.MILE -> data.estimatedDiameter.miles.estimatedDiameterMin to data.estimatedDiameter.miles.estimatedDiameterMax
+        DiameterUnit.FEET -> data.estimatedDiameter.feet.estimatedDiameterMin to data.estimatedDiameter.feet.estimatedDiameterMax
+        else -> null to null
+    }
+
+    val closeApproach = data.closeApproachData[0]
+    val astronomicalDistance = closeApproach.missDistance.astronomical
 
     Scaffold(
         containerColor = AppTheme.colors.background,
@@ -180,15 +198,15 @@ fun DetailsMainContent(
                     0 -> DetailsTable(
                         modifier = Modifier,
                         data = data,
-                        diameterUnit = missDistance
+                        userPrefs = userPrefs
                     )
 
                     1 -> DetailsCompareScreen(
                         modifier = Modifier
                             .padding(horizontal = AppTheme.spaces.space16),
                         objectName = data.name,
-                        objectSize = data.estimatedDiameter.estimatedDiameterMax.toFloat(),
-                        astronomicalDistance = data.closeApproachData.astronomicalDistance.toFloat()
+                        objectSize = estimatedDiameter.second?.toFloat() ?: 0f,
+                        astronomicalDistance = astronomicalDistance.toFloat()
                     )
                 }
             }

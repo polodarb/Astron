@@ -17,3 +17,16 @@ data class MainAsteroidsLinks(
     val prev: String,
     val self: String
 )
+
+data class RelativeVelocityModel(
+    val kilometersPerSecond: String,
+    val kilometersPerHour: String,
+    val milesPerHour: String
+)
+
+data class MissDistanceModel(
+    val astronomical: String,
+    val lunar: String,
+    val kilometers: String,
+    val miles: String
+)

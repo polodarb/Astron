@@ -23,7 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,6 +45,8 @@ import dev.kobzar.asteroidslist.bottomSheet.FilterBottomSheet
 import dev.kobzar.asteroidslist.utils.Utils.formatDateFromTimestamp
 import dev.kobzar.asteroidslist.utils.toMillis
 import dev.kobzar.navigation.shared.SharedScreen
+import dev.kobzar.preferences.model.DiameterUnit
+import dev.kobzar.preferences.model.UserPreferencesModel
 import dev.kobzar.repository.models.MainAsteroidsListItem
 import dev.kobzar.ui.compose.components.fabs.PrimaryFAB
 import dev.kobzar.ui.compose.components.fabs.SecondaryFAB
@@ -54,7 +56,6 @@ import dev.kobzar.ui.compose.components.inserts.InsertLoader
 import dev.kobzar.ui.compose.components.inserts.InsertNoData
 import dev.kobzar.ui.compose.components.topbars.MainTopBar
 import dev.kobzar.ui.compose.theme.AppTheme
-import dev.kobzar.ui.compose.unitsEnum.EstimatedDiameterEnum
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.util.Locale
@@ -67,6 +68,7 @@ class AsteroidsListScreen : Screen {
 
         val viewModel = getScreenModel<AsteroidsListViewModel>()
         val asteroidsData = viewModel.marketCoins.collectAsLazyPagingItems()
+        val userPrefsData = viewModel.prefsData.collectAsState()
 
         val navigator = LocalNavigator.current
 
@@ -96,6 +98,7 @@ class AsteroidsListScreen : Screen {
 
         AsteroidsListScreenComposable(
             dataState = asteroidsData,
+            userPrefsData = userPrefsData.value,
             onFavoritesClick = {
                 navigator?.push(favoritesScreen)
             },
@@ -153,6 +156,7 @@ class AsteroidsListScreen : Screen {
 @Composable
 private fun AsteroidsListScreenComposable(
     dataState: LazyPagingItems<MainAsteroidsListItem>,
+    userPrefsData: UserPreferencesModel?,
     onFavoritesClick: () -> Unit,
     onDetailsClick: (asteroidId: String) -> Unit,
     onFilterClick: () -> Unit,
@@ -200,14 +204,33 @@ private fun AsteroidsListScreenComposable(
             LazyColumn {
                 items(dataState.itemCount) { index ->
                     dataState[index]?.let { item ->
+
+                        val data = item.closeApproachData[0] // TODO: Review before release
+
+                        val diameterValue = when (userPrefsData?.diameterUnits) {
+                            DiameterUnit.KILOMETER -> item.estimatedDiameter.kilometers
+                            DiameterUnit.METER -> item.estimatedDiameter.meters
+                            DiameterUnit.MILE -> item.estimatedDiameter.miles
+                            DiameterUnit.FEET -> item.estimatedDiameter.feet
+                            else -> null
+                        }
+
+                        val diameterPrefix = when (userPrefsData?.diameterUnits) {
+                            DiameterUnit.KILOMETER -> "Km"
+                            DiameterUnit.METER -> "m"
+                            DiameterUnit.MILE -> "mi"
+                            DiameterUnit.FEET -> "ft"
+                            else -> "N/A"
+                        }
+
                         AsteroidCard(
-                            dataType = EstimatedDiameterEnum.KILOMETERS, // TODO: Reimplement after settings feature
+                            diameterUnits = diameterPrefix,
                             name = item.name,
                             isDangerous = item.isDangerous,
-                            diameterMin = item.estimatedDiameter.kilometers.estimatedDiameterMin,
-                            diameterMax = item.estimatedDiameter.kilometers.estimatedDiameterMax,
-                            orbitingBody = item.closeApproachData[0].orbitingBody, // TODO: Review before release
-                            closeApproach = item.closeApproachData[0].closeApproachDate, // TODO: Review before release
+                            diameterMin = diameterValue?.estimatedDiameterMin ?: 0.0,
+                            diameterMax = diameterValue?.estimatedDiameterMax ?: 0.0,
+                            orbitingBody = data.orbitingBody,
+                            closeApproach = data.closeApproachDate,
                             onCardClick = {
                                 onDetailsClick(item.id)
                             }

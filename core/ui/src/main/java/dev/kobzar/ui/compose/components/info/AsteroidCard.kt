@@ -30,30 +30,22 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import dev.kobzar.ui.compose.theme.AppTheme
-import dev.kobzar.ui.compose.unitsEnum.EstimatedDiameterEnum
 import dev.kobzar.platform.utils.UnitUtils
+import dev.kobzar.ui.compose.theme.AppTheme
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun AsteroidCard(
     modifier: Modifier = Modifier,
-    dataType: EstimatedDiameterEnum,
     name: String,
     isDangerous: Boolean,
     diameterMin: Double,
     diameterMax: Double,
+    diameterUnits: String,
     orbitingBody: String,
     closeApproach: String,
     onCardClick: () -> Unit
 ) {
-
-    val units = when (dataType) {
-        EstimatedDiameterEnum.KILOMETERS -> "km"
-        EstimatedDiameterEnum.METERS -> "m"
-        EstimatedDiameterEnum.MILES -> "mi"
-        EstimatedDiameterEnum.FEET -> "ft"
-    }
 
     val interactionSource = remember { MutableInteractionSource() }
     var isHover by remember { mutableStateOf(false) }
@@ -73,8 +65,8 @@ fun AsteroidCard(
         }
     }
 
-    val reformattedDiameterMin = "${UnitUtils.roundDouble(diameterMin)} $units"
-    val reformattedDiameterMax = "${UnitUtils.roundDouble(diameterMax)} $units"
+    val reformattedDiameterMin = "${UnitUtils.roundDouble(diameterMin)} $diameterUnits"
+    val reformattedDiameterMax = "${UnitUtils.roundDouble(diameterMax)} $diameterUnits"
 
     val diametersData = listOf(
         Pair("Min", reformattedDiameterMin),
@@ -234,7 +226,7 @@ private fun IsDangerous(
 @Composable
 private fun AsteroidCardPreview() {
     AsteroidCard(
-        dataType = EstimatedDiameterEnum.KILOMETERS,
+        diameterUnits = "Km",
         name = "347813 (2002 NP1)",
         isDangerous = true,
         diameterMin = 0.7808272775,

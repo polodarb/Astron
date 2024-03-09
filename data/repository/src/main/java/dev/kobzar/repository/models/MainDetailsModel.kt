@@ -1,9 +1,9 @@
 package dev.kobzar.repository.models
 
-import dev.kobzar.network.models.NetworkMissDistance
-import dev.kobzar.network.models.NetworkRelativeVelocity
 import dev.kobzar.repository.models.shared.MainAsteroidsDiameter
 import dev.kobzar.repository.models.shared.MainAsteroidsEstimatedDiameter
+import dev.kobzar.repository.models.shared.MissDistanceModel
+import dev.kobzar.repository.models.shared.RelativeVelocityModel
 
 data class MainDetailsModel(
     val id: String,
@@ -41,8 +41,8 @@ data class MainDetailsCloseApproachData(
     val closeApproachDate: String,
     val closeApproachDateFull: String,
     val epochDateCloseApproach: Long,
-    val relativeVelocity: NetworkRelativeVelocity,
-    val missDistance: NetworkMissDistance,
+    val relativeVelocity: RelativeVelocityModel,
+    val missDistance: MissDistanceModel,
     val astronomicalDistance: String,
     val orbitingBody: String
 )
