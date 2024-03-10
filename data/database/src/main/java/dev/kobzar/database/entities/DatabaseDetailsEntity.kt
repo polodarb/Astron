@@ -5,35 +5,6 @@ import androidx.room.Embedded
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 
-//@Entity(tableName = "main_details")
-//data class MainDetailsEntity(
-//    @PrimaryKey val id: String,
-//    val neoReferenceId: String,
-//    val name: String,
-//    val nasaJplUrl: String,
-//    val isDangerous: Boolean,
-//    val isSentryObject: Boolean,
-//    @Embedded val estimatedDiameter: MainAsteroidsEstimatedDiameterDatabaseModel,
-//    @Relation(
-//        parentColumn = "id",
-//        entityColumn = "asteroidId"
-//    )
-//    val closeApproachData: List<CloseApproachDataEntity>
-//)
-
-//@Entity(tableName = "close_approach_data")
-//data class CloseApproachDataEntity(
-//    @PrimaryKey(autoGenerate = true) val id: Long = 0,
-//    val asteroidId: String,
-//    val closeApproachDate: String,
-//    val closeApproachDateFull: String,
-//    val epochDateCloseApproach: Long,
-//    @Embedded val relativeVelocity: RelativeVelocityDatabaseModel,
-//    @Embedded val missDistance: MissDistanceDatabaseModel,
-//    val astronomicalDistance: String,
-//    val orbitingBody: String
-//)
-
 data class MainDetailsWithCloseApproachData(
     @Embedded val mainDetails: MainDetailsEntity,
     @Relation(
@@ -51,7 +22,8 @@ data class MainDetailsEntity(
     val nasaJplUrl: String,
     val isDangerous: Boolean,
     val isSentryObject: Boolean,
-    @Embedded val estimatedDiameter: MainAsteroidsEstimatedDiameterDatabaseModel
+    @Embedded val estimatedDiameter: MainAsteroidsEstimatedDiameterDatabaseModel,
+    val saveTime: Long
 )
 
 @Entity(tableName = "close_approach_data")

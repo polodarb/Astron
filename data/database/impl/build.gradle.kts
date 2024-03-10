@@ -38,10 +38,10 @@ android {
 dependencies {
 
     // Room Database
-    implementation(libs.room.runtime)
+    api(libs.room.runtime)
     ksp(libs.room.compiler)
-    implementation(libs.room.ktx)
-    implementation(libs.room.paging)
+    api(libs.room.ktx)
+    api(libs.room.paging)
 
     // Hilt
     implementation(libs.hilt.android)

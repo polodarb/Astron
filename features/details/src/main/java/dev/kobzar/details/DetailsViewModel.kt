@@ -3,18 +3,13 @@ package dev.kobzar.details
 import android.util.Log
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import dev.kobzar.database.entities.CloseApproachDataEntity
-import dev.kobzar.database.entities.MainAsteroidsDiameterDatabaseModel
-import dev.kobzar.database.entities.MainAsteroidsEstimatedDiameterDatabaseModel
-import dev.kobzar.database.entities.MainDetailsEntity
-import dev.kobzar.database.entities.MainDetailsWithCloseApproachData
-import dev.kobzar.database.entities.MissDistanceDatabaseModel
-import dev.kobzar.database.entities.RelativeVelocityDatabaseModel
 import dev.kobzar.domain.useCases.reformatUnits.ReformatDiameterUseCase
 import dev.kobzar.domain.useCases.reformatUnits.ReformatMissDistanceUseCase
 import dev.kobzar.domain.useCases.reformatUnits.ReformatRelativeVelocityUseCase
 import dev.kobzar.repository.AsteroidDetailsRepository
 import dev.kobzar.repository.DataStoreRepository
+import dev.kobzar.repository.mappers.DatabaseMapper.toMainDetailsWithCloseApproachData
+import dev.kobzar.repository.models.MainDetailsCloseApproachData
 import dev.kobzar.repository.models.MainDetailsModel
 import dev.kobzar.repository.uiStates.UiState
 import kotlinx.coroutines.Dispatchers
@@ -39,66 +34,39 @@ class DetailsViewModel @Inject constructor(
     private val _details = MutableStateFlow<AsteroidDetails>(UiState.Loading())
     val details: StateFlow<AsteroidDetails> = _details.asStateFlow()
 
-    fun insertAsteroidDetails(mainDetails: MainDetailsModel) {
+    private val _asteroidExists = MutableStateFlow(false)
+    val asteroidExists: StateFlow<Boolean> = _asteroidExists.asStateFlow()
+
+    private var allCloseApproachData: List<MainDetailsCloseApproachData>? = null
+
+    val currentTime = System.currentTimeMillis()
+
+    fun checkIfDetailsExists(asteroidId: String?) {
         screenModelScope.launch(Dispatchers.IO) {
-            repository.insertAsteroidDetails(mainDetails.toMainDetailsWithCloseApproachData())
+            if (asteroidId != null) {
+                repository.isAsteroidDetailsExists(asteroidId).collect {
+                    _asteroidExists.value = it
+                }
+            }
         }
     }
 
-    fun MainDetailsModel.toMainDetailsWithCloseApproachData(): MainDetailsWithCloseApproachData {
-        return MainDetailsWithCloseApproachData(
-            mainDetails = this.toMainDetailsEntity(),
-            closeApproachData = this.closeApproachData.map {
-                CloseApproachDataEntity(
-                    asteroidId = this.id,
-                    closeApproachDate = it.closeApproachDate,
-                    relativeVelocity = RelativeVelocityDatabaseModel(
-                        kilometersPerSecond = it.relativeVelocity.kilometersPerSecond,
-                        kilometersPerHour = it.relativeVelocity.kilometersPerHour,
-                        milesPerHour = it.relativeVelocity.milesPerHour
-                    ),
-                    missDistance = MissDistanceDatabaseModel(
-                        astronomical = it.missDistance.astronomical,
-                        lunar = it.missDistance.lunar,
-                        kilometers = it.missDistance.kilometers,
-                        miles = it.missDistance.miles
-                    ),
-                    orbitingBody = it.orbitingBody,
-                    closeApproachDateFull = it.closeApproachDateFull,
-                    epochDateCloseApproach = it.epochDateCloseApproach,
-                    astronomicalDistance = it.astronomicalDistance
-                )
-            },
-        )
-    }
+    fun insertOrDeleteAsteroidDetails() {
+        val detailsValue = details.value
+        val asteroidExistsValue = asteroidExists.value
 
-    fun MainDetailsModel.toMainDetailsEntity(): MainDetailsEntity {
-        return MainDetailsEntity(
-            id = this.id,
-            name = this.name,
-            neoReferenceId = neoReferenceId,
-            estimatedDiameter = MainAsteroidsEstimatedDiameterDatabaseModel(
-                kilometers = MainAsteroidsDiameterDatabaseModel(
-                    estimatedDiameterMax = this.estimatedDiameter.kilometers.estimatedDiameterMax,
-                    estimatedDiameterMin = this.estimatedDiameter.kilometers.estimatedDiameterMin
-                ),
-                meters = MainAsteroidsDiameterDatabaseModel(
-                    estimatedDiameterMax = this.estimatedDiameter.meters.estimatedDiameterMax,
-                    estimatedDiameterMin = this.estimatedDiameter.meters.estimatedDiameterMin
-                ),
-                miles = MainAsteroidsDiameterDatabaseModel(
-                    estimatedDiameterMax = this.estimatedDiameter.miles.estimatedDiameterMax,
-                    estimatedDiameterMin = this.estimatedDiameter.miles.estimatedDiameterMin
-                ),
-                feet = MainAsteroidsDiameterDatabaseModel(
-                    estimatedDiameterMax = this.estimatedDiameter.feet.estimatedDiameterMax,
-                    estimatedDiameterMin = this.estimatedDiameter.feet.estimatedDiameterMin
-                )
-            ),
-            nasaJplUrl = this.nasaJplUrl,
-            isDangerous = this.isDangerous,
-            isSentryObject = this.isSentryObject
-        )
+        if (detailsValue is UiState.Success && allCloseApproachData != null) {
+            screenModelScope.launch(Dispatchers.IO) {
+                if (asteroidExistsValue) {
+                    repository.deleteAsteroidDetails(detailsValue.data.id)
+                } else {
+                    val mainDetailsWithCloseApproachData =
+                        detailsValue.data.copy(closeApproachData = allCloseApproachData ?: emptyList())
+                            .toMainDetailsWithCloseApproachData(saveTime = currentTime)
+                    repository.insertAsteroidDetails(mainDetailsWithCloseApproachData)
+                }
+            }
+        }
     }
 
     fun getAsteroidDetails(asteroid: String?) {
@@ -107,6 +75,9 @@ class DetailsViewModel @Inject constructor(
                 repository.getAsteroidDetails(asteroid).collect { uiState ->
                     when (uiState) {
                         is UiState.Success -> {
+
+                            Log.d("DetailsViewModel", "${uiState.data}")
+
                             val currentDate = LocalDate.now()
                             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                             val closestApproach = uiState.data.closeApproachData
@@ -126,6 +97,7 @@ class DetailsViewModel @Inject constructor(
                             )
 
                             datastore.getUserPreferences().collect { prefs ->
+                                allCloseApproachData = uiState.data.closeApproachData
                                 _details.value =
                                     UiState.Success(
                                         data = uiState.data.copy(
@@ -134,7 +106,6 @@ class DetailsViewModel @Inject constructor(
                                         ),
                                         userPrefs = prefs
                                     )
-                                insertAsteroidDetails(uiState.data)
                             }
                         }
 
