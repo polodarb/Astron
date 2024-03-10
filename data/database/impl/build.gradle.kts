@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
     kotlin("kapt")
 }
 
@@ -37,16 +37,16 @@ android {
 
 dependencies {
 
-    // Hilt
-    implementation(libs.hilt.android)
-    implementation(libs.hilt.common)
-    kapt(libs.hilt.compiler)
-
     // Room Database
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)
     implementation(libs.room.ktx)
     implementation(libs.room.paging)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.common)
+    kapt(libs.hilt.compiler)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -57,6 +58,7 @@ import dev.kobzar.ui.compose.components.inserts.InsertLoader
 import dev.kobzar.ui.compose.components.inserts.InsertNoData
 import dev.kobzar.ui.compose.components.topbars.MainTopBar
 import dev.kobzar.ui.compose.theme.AppTheme
+import dev.kobzar.ui.compose.theme.dialogsTheme.CustomDialogTheme
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.util.Locale
@@ -137,18 +139,20 @@ class AsteroidsListScreen : Screen {
             showBottomSheet = showBottomSheet
         )
 
-        BsDateRangePicker(
-            showDatePicker = showDatePicker.value,
-            onDismiss = {
-                showDatePicker.value = false
-            },
-            onConfirmClick = { start, end ->
-                firstDateState.value = formatDateFromTimestamp(start)
-                secondDateState.value = formatDateFromTimestamp(end)
-                showDatePicker.value = false
-            },
-            state = dateRangePickerState
-        )
+        CustomDialogTheme {
+            BsDateRangePicker(
+                showDatePicker = showDatePicker.value,
+                onDismiss = {
+                    showDatePicker.value = false
+                },
+                onConfirmClick = { start, end ->
+                    firstDateState.value = formatDateFromTimestamp(start)
+                    secondDateState.value = formatDateFromTimestamp(end)
+                    showDatePicker.value = false
+                },
+                state = dateRangePickerState
+            )
+        }
     }
 
 }
@@ -255,9 +259,9 @@ private fun AsteroidsListScreenComposable(
 
                     dataState.loadState.append is LoadState.Loading -> {
                         item {
-                            LoadingNextPageItem(
-                                modifier = Modifier.fillParentMaxSize()
-                            )
+                            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                                LoadingNextPageItem()
+                            }
                         }
                     }
 
@@ -344,7 +348,7 @@ fun BsDateRangePicker(
 }
 
 @Composable
-fun LoadingNextPageItem(modifier: Modifier) {
+fun LoadingNextPageItem(modifier: Modifier = Modifier) {
     CircularProgressIndicator(
         strokeCap = StrokeCap.Round,
         color = AppTheme.colors.primary,
