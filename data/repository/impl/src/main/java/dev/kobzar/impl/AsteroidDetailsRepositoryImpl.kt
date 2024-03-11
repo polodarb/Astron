@@ -50,6 +50,10 @@ class AsteroidDetailsRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getItemsCount(): Flow<Int> {
+        return databaseSource.getItemsCount()
+    }
+
     override suspend fun isAsteroidDetailsExists(asteroidId: String): Flow<Boolean> {
         return databaseSource.isAsteroidDetailsExists(asteroidId)
     }

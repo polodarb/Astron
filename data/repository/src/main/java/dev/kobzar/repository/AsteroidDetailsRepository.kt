@@ -11,6 +11,8 @@ interface AsteroidDetailsRepository {
 
     suspend fun getAllAsteroidDetails(): Flow<UiState<List<MainDetailsModel>>>
 
+    suspend fun getItemsCount(): Flow<Int>
+
     suspend fun isAsteroidDetailsExists(asteroidId: String): Flow<Boolean>
 
     suspend fun insertAsteroidDetails(mainDetails: MainDetailsWithCloseApproachData)

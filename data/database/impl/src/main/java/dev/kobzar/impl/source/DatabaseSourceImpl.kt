@@ -24,6 +24,12 @@ class DatabaseSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun getItemsCount(): Flow<Int> {
+        return withContext(Dispatchers.IO) {
+            asteroidDetailsDao.getItemsCount()
+        }
+    }
+
     override suspend fun getAllAsteroidDetails(): Flow<List<MainDetailsWithCloseApproachData>> {
         return withContext(Dispatchers.IO) {
             asteroidDetailsDao.getAllAsteroidDetails()

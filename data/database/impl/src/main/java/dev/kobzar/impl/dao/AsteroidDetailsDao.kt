@@ -17,6 +17,9 @@ interface AsteroidDetailsDao {
     @Query("SELECT * FROM main_details WHERE id = :asteroidId")
     fun getAsteroidDetails(asteroidId: String): Flow<MainDetailsWithCloseApproachData>
 
+    @Query("SELECT COUNT(*) FROM main_details")
+    fun getItemsCount(): Flow<Int>
+
     @Transaction
     @Query("SELECT * FROM main_details")
     fun getAllAsteroidDetails(): Flow<List<MainDetailsWithCloseApproachData>>

@@ -17,8 +17,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 typealias AsteroidDetails = UiState<MainDetailsModel>
@@ -37,9 +35,16 @@ class DetailsViewModel @Inject constructor(
     private val _asteroidExists = MutableStateFlow(false)
     val asteroidExists: StateFlow<Boolean> = _asteroidExists.asStateFlow()
 
+    private val _asteroidsCountInDB = MutableStateFlow(0)
+    val asteroidsCountInDB: StateFlow<Int> = _asteroidsCountInDB.asStateFlow()
+
     private var allCloseApproachData: List<MainDetailsCloseApproachData>? = null
 
-    val currentTime = System.currentTimeMillis()
+    private val currentTime = System.currentTimeMillis()
+
+    init {
+        getItemsCount()
+    }
 
     fun checkIfDetailsExists(asteroidId: String?) {
         screenModelScope.launch(Dispatchers.IO) {
@@ -69,6 +74,14 @@ class DetailsViewModel @Inject constructor(
         }
     }
 
+    fun getItemsCount() {
+        screenModelScope.launch(Dispatchers.IO) {
+            repository.getItemsCount().collect {
+                _asteroidsCountInDB.value = it
+            }
+        }
+    }
+
     fun getAsteroidDetails(asteroid: String?) {
         screenModelScope.launch(Dispatchers.IO) {
             if (asteroid != null) {
@@ -76,18 +89,11 @@ class DetailsViewModel @Inject constructor(
                     when (uiState) {
                         is UiState.Success -> {
 
-                            Log.d("DetailsViewModel", "${uiState.data}")
-
-                            val currentDate = LocalDate.now()
-                            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                             val closestApproach = uiState.data.closeApproachData
                                 .filter { data ->
-                                    LocalDate.parse(
-                                        data.closeApproachDate,
-                                        formatter
-                                    ) >= currentDate
+                                    data.epochDateCloseApproach >= currentTime
                                 }
-                                .minBy { LocalDate.parse(it.closeApproachDate, formatter) }
+                                .minBy { it.closeApproachDate }
 
                             val reformattedCloseApproachData = closestApproach.copy(
                                 relativeVelocity = reformatRelativeVelocityUnitUseCase(
