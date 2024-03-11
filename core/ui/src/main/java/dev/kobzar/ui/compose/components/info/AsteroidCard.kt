@@ -10,6 +10,7 @@ import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,10 +29,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.kobzar.platform.utils.UnitUtils
+import dev.kobzar.ui.R
+import dev.kobzar.ui.compose.components.buttons.icon.OutlineIconButton
 import dev.kobzar.ui.compose.theme.AppTheme
 import kotlinx.coroutines.flow.collectLatest
 
@@ -44,7 +49,8 @@ fun AsteroidCard(
     diameterUnits: String,
     orbitingBody: String,
     closeApproach: String,
-    onCardClick: () -> Unit
+    onCardClick: () -> Unit,
+    onDeleteAsteroid: (() -> Unit)? = null
 ) {
 
     val interactionSource = remember { MutableInteractionSource() }
@@ -78,7 +84,7 @@ fun AsteroidCard(
         Pair("Close Approach", closeApproach)
     )
 
-    Column(
+    Box(
         modifier = modifier
             .padding(horizontal = AppTheme.spaces.space16, vertical = AppTheme.spaces.space8)
             .border(1.dp, AppTheme.colors.border, RoundedCornerShape(12.dp))
@@ -93,17 +99,40 @@ fun AsteroidCard(
                 onCardClick()
             }
     ) {
-        MainInfo(name = name, isDangerous = isDangerous)
-        SecondaryInfo(
-            title = "Diameters",
-            data = diametersData,
-            modifier = Modifier.padding(horizontal = AppTheme.spaces.space16)
-        )
-        SecondaryInfo(
-            title = "Other",
-            data = otherData,
-            modifier = Modifier.padding(all = AppTheme.spaces.space16)
-        )
+        Column(
+        ) {
+            MainInfo(name = name, isDangerous = isDangerous)
+            SecondaryInfo(
+                title = "Diameters",
+                data = diametersData,
+                modifier = Modifier.padding(horizontal = AppTheme.spaces.space16)
+            )
+            SecondaryInfo(
+                title = "Other",
+                data = otherData,
+                modifier = Modifier.padding(
+                    start = AppTheme.spaces.space16,
+                    top = AppTheme.spaces.space16,
+                    bottom = AppTheme.spaces.space16,
+                    end = 64.dp
+                )
+            )
+        }
+
+        if (onDeleteAsteroid != null) {
+            OutlineIconButton(
+                icon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_trash),
+                        contentDescription = null
+                    )
+                },
+                onClick = onDeleteAsteroid,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(AppTheme.spaces.space16)
+            )
+        }
     }
 }
 

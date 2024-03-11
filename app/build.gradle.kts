@@ -104,6 +104,9 @@ dependencies {
     implementation(project(":data:network"))
     implementation(project(":data:network:impl"))
 
+    implementation(project(":data:database"))
+    implementation(project(":data:database:impl"))
+
     implementation(project(":domain"))
     implementation(project(":domain:impl"))
 

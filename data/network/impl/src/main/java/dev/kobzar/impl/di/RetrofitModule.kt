@@ -52,7 +52,7 @@ object RetrofitModule {
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-            .addInterceptor(ChuckerInterceptor.Builder(context).build())
+            .addInterceptor(createLoggingInterceptor(context = context))
             .build()
     }
 

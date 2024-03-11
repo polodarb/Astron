@@ -86,6 +86,10 @@ fun CompareSizeChart(
             }
             isAlreadyShow = true
         }
+    } else {
+//        zoomState = initialZoom
+//        gridZoomState = zoomMultiplier
+//        generalZoom = 1f
     }
 
     Column(

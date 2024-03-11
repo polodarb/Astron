@@ -15,7 +15,7 @@ import dev.kobzar.repository.models.shared.MainAsteroidsLinks
 import dev.kobzar.repository.models.shared.MissDistanceModel
 import dev.kobzar.repository.models.shared.RelativeVelocityModel
 
-object ModelsMapper {
+object NetworkMapper {
 
     fun NetworkAsteroid.toMainDetailsModel(): MainDetailsModel {
         return MainDetailsModel(
