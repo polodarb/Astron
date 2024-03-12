@@ -27,6 +27,7 @@ uiTooling = "1.6.2"
 room = "2.6.1"
 ksp = "1.9.20-1.0.14"
 sheetsCompose = "1.3.0"
+permissionFlow = "2.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -74,6 +75,9 @@ room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "
 room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
 sheets-compose = { group = "com.maxkeppeler.sheets-compose-dialogs", name = "core", version.ref = "sheetsCompose" }
 sheets-compose-options = { group = "com.maxkeppeler.sheets-compose-dialogs", name = "option", version.ref = "sheetsCompose" }
+sheets-compose-info = { group = "com.maxkeppeler.sheets-compose-dialogs", name = "info", version.ref = "sheetsCompose" }
+permission-flow-general = { module = "dev.shreyaspatil.permission-flow:permission-flow-android", version.ref = "permissionFlow" }
+permission-flow-compose = { module = "dev.shreyaspatil.permission-flow:permission-flow-compose", version.ref = "permissionFlow" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

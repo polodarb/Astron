@@ -40,6 +40,10 @@ android {
 
 dependencies {
 
+    // Compose Sheets
+    implementation(libs.sheets.compose)
+    implementation(libs.sheets.compose.info)
+
     // Compose
     implementation(libs.androidx.ui.compose.runtime)
     implementation(libs.androidx.lifecycle.runtime.ktx)

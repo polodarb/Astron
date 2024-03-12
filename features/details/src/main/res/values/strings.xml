@@ -16,6 +16,7 @@
     <string name="details_chart_title_astronomical_distance">Astronomical distance</string>
     <string name="unit_astronomical">AU</string>
     <string name="toast_details_compare_error">You need at least 2 asteroids</string>
+    <string name="notification_title_compare_error">So far, there is nothing to compare this asteroid with</string>
     <!--    <string name="unit_miles">Miles</string>-->
 <!--    <string name="unit_km">Km</string>-->
 <!--    <string name="unit_lunar">LD</string>-->

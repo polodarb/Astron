@@ -21,7 +21,7 @@ interface AsteroidDetailsDao {
     fun getItemsCount(): Flow<Int>
 
     @Transaction
-    @Query("SELECT * FROM main_details")
+    @Query("SELECT * FROM main_details ORDER BY saveTime DESC")
     fun getAllAsteroidDetails(): Flow<List<MainDetailsWithCloseApproachData>>
 
     @Query("SELECT EXISTS(SELECT * FROM main_details WHERE id = :asteroidId)")

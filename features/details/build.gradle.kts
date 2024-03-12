@@ -43,6 +43,10 @@ android {
 
 dependencies {
 
+    // Permission Flow
+    implementation(libs.permission.flow.general)
+    implementation(libs.permission.flow.compose)
+
     // Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)

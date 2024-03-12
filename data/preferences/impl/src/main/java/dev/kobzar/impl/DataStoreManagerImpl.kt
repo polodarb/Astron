@@ -8,6 +8,9 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.kobzar.preferences.DataStoreManager
+import dev.kobzar.preferences.model.DiameterUnit
+import dev.kobzar.preferences.model.MissDistanceUnit
+import dev.kobzar.preferences.model.RelativeVelocityUnit
 import dev.kobzar.preferences.model.UserPreferencesModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -42,8 +45,14 @@ class DataStoreManagerImpl @Inject constructor(
         setValue(KEY_USER_PREFERENCES, prefs)
     }
 
-    override suspend fun getUserPreferences(): Flow<UserPreferencesModel?> {
-        return getValue<UserPreferencesModel>(KEY_USER_PREFERENCES)
+    override suspend fun getUserPreferences(): Flow<UserPreferencesModel> {
+        return getValue<UserPreferencesModel>(KEY_USER_PREFERENCES).map { preferences ->
+            preferences ?: UserPreferencesModel(
+                diameterUnits = DiameterUnit.KILOMETER,
+                missDistanceUnits = MissDistanceUnit.KILOMETER,
+                relativeVelocityUnits = RelativeVelocityUnit.KM_S
+            )
+        }
     }
 
     private suspend inline fun <reified T> setValue(key: Preferences.Key<String>, value: T) {
@@ -56,7 +65,7 @@ class DataStoreManagerImpl @Inject constructor(
         }
     }
 
-    private suspend inline fun <reified T> getValue(key: Preferences.Key<String>): Flow<T?> {
+    private inline fun <reified T> getValue(key: Preferences.Key<String>): Flow<T?> {
         return context.dataStore.data.map { preferences ->
             val json = preferences[key]
             json?.let {

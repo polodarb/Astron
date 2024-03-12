@@ -10,6 +10,7 @@ import androidx.compose.material3.FloatingActionButtonElevation
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import dev.kobzar.ui.compose.theme.AppTheme
@@ -30,6 +31,7 @@ fun PrimaryFAB(
         icon = {
             Image(
                 painter = painterResource(id = iconRes),
+                colorFilter = ColorFilter.tint(AppTheme.colors.white),
                 contentDescription = null,
                 modifier = Modifier.size(26.dp)
             )

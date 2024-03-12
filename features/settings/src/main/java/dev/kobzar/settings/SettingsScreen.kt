@@ -1,5 +1,12 @@
 package dev.kobzar.settings
 
+import android.Manifest
+import android.content.Intent
+import android.os.Build
+import android.provider.Settings
+import android.util.Log
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,9 +26,11 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
@@ -37,9 +46,13 @@ import dev.kobzar.ui.compose.components.containers.OutlineColumn
 import dev.kobzar.ui.compose.components.inserts.InsertLoader
 import dev.kobzar.ui.compose.components.topbars.SecondaryTopBar
 import dev.kobzar.ui.compose.theme.AppTheme
+import dev.shreyaspatil.permissionFlow.utils.launch
+import dev.shreyaspatil.permissionflow.compose.rememberPermissionFlowRequestLauncher
+import dev.shreyaspatil.permissionflow.compose.rememberPermissionState
 
 class SettingsScreen : Screen {
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     @Composable
     override fun Content() {
 
@@ -61,6 +74,8 @@ class SettingsScreen : Screen {
 
 }
 
+
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 private fun SettingsStatesScreenComposable(
     prefs: UiState<UserPreferencesModel?>,
@@ -105,12 +120,18 @@ private fun SettingsStatesScreenComposable(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 private fun SettingsScreenComposable(
     modifier: Modifier = Modifier,
     data: UserPreferencesModel?,
     onPrefsUpdate: (UserPreferencesModel) -> Unit
 ) {
+
+    val context = LocalContext.current
+
+    val permissionLauncher = rememberPermissionFlowRequestLauncher()
+    val state by rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
 
     val diameterDialogShow = rememberUseCaseState(embedded = false)
     val missDistanceDialogShow = rememberUseCaseState(embedded = false)
@@ -168,7 +189,20 @@ private fun SettingsScreenComposable(
         OutlineColumn {
             SettingsItem(title = "Danger notifications") {
                 Switch(
-                    checked = true, onCheckedChange = {}, colors = SwitchDefaults.colors(
+                    checked = state.isGranted, onCheckedChange = {
+                        if (it) {
+                            Log.e("TAG", "SettingsScreenComposable: ${state}")
+                            if (!state.isGranted && state.isRationaleRequired == false) {
+                                permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                            } else {
+                                val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                                intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                                context.startActivity(intent)
+                            }
+                        } else {
+                            Toast.makeText(context, "You can disable notifications in settings", Toast.LENGTH_SHORT).show()
+                        }
+                    }, colors = SwitchDefaults.colors(
                         uncheckedThumbColor = AppTheme.colors.secondaryGray600,
                         uncheckedBorderColor = AppTheme.colors.secondaryGray600,
                         uncheckedTrackColor = AppTheme.colors.secondaryGray100,

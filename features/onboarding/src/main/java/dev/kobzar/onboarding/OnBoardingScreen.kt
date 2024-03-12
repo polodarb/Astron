@@ -1,5 +1,7 @@
 package dev.kobzar.onboarding
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -33,6 +35,7 @@ import kotlinx.coroutines.launch
 
 class OnBoardingScreen : Screen {
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
     override fun Content() {
@@ -57,6 +60,7 @@ class OnBoardingScreen : Screen {
                     it.push(asteroidsScreen)
                     it.replaceAll(asteroidsScreen)
                 }
+
                 coroutineScope.launch {
                     viewModel.setUserPreferences(
                         prefs = UserPreferencesModel(

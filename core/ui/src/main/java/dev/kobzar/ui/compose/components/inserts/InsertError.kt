@@ -13,12 +13,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import dev.kobzar.ui.R
 import dev.kobzar.ui.compose.theme.AppTheme
 
 @Composable
 fun InsertError(
     modifier: Modifier = Modifier,
+    customText: String? = null,
     onRetryClick: (() -> Unit)? = null
 ) {
     Column(
@@ -30,7 +32,7 @@ fun InsertError(
     ) {
         Image(painter = painterResource(id = R.drawable.pic_error), contentDescription = null)
         Text(
-            text = "Something went wrong",
+            text = customText ?: stringResource(R.string.insert_error_something_went_wrong),
             style = AppTheme.typography.medium18,
             modifier = Modifier.padding(top = AppTheme.spaces.space12)
         )

@@ -3,12 +3,12 @@ package dev.kobzar.ui.compose
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
+import dev.kobzar.ui.compose.theme.AppTheme
 import dev.kobzar.ui.compose.theme.Colors
 import dev.kobzar.ui.compose.theme.LocalColors
 import dev.kobzar.ui.compose.theme.LocalSpaces
 import dev.kobzar.ui.compose.theme.LocalTypography
 import dev.kobzar.ui.compose.theme.Spaces
-import dev.kobzar.ui.compose.theme.AppTheme
 import dev.kobzar.ui.compose.theme.Typography
 
 fun lightColors() = Colors(
@@ -68,6 +68,7 @@ fun AppTheme(
     content: @Composable () -> Unit,
 ) {
     val colorsTheme = lightColors()
+
     CompositionLocalProvider(
         LocalColors provides colorsTheme,
         LocalSpaces provides spaces,

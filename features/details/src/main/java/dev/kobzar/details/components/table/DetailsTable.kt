@@ -7,9 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import dev.kobzar.details.R
-import dev.kobzar.details.utils.PrefsDataExtensions.getDiameterRangeByUnit
-import dev.kobzar.details.utils.PrefsDataExtensions.getMissDistanceUnit
-import dev.kobzar.details.utils.PrefsDataExtensions.getRelativeVelocity
+import dev.kobzar.domain.utils.FilterDataByPrefsExtensions.getDiameterRangeByUnit
+import dev.kobzar.domain.utils.FilterDataByPrefsExtensions.getMissDistanceUnit
+import dev.kobzar.domain.utils.FilterDataByPrefsExtensions.getRelativeVelocity
 import dev.kobzar.preferences.model.DiameterUnit
 import dev.kobzar.preferences.model.UserPreferencesModel
 import dev.kobzar.repository.models.MainDetailsModel
@@ -23,7 +23,7 @@ fun DetailsTable(
     userPrefs: UserPreferencesModel?
     ) {
 
-    val closeApproachData = data.closeApproachData[0]
+    val closeApproachData = data.closeApproachData[0] // The closest date to the current time
 
     val missDistanceUnit = closeApproachData.getMissDistanceUnit(userPrefs)
     val relativeVelocity = closeApproachData.getRelativeVelocity(userPrefs)
