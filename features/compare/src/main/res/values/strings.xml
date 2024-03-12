@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="insert_error_no_favorites_yet">No favorites yet</string>
+    <string name="compare_screen_fab_title">Return to main</string>
+    <string name="compare_screen_title_loading">Loading asteroid details</string>
+    <string name="compare_screen_card_title_diameter">Diameters</string>
+    <string name="compare_screen_card_title_diameters_max">Max</string>
+    <string name="compare_screen_card_title_diameters_min">Min</string>
+    <string name="compare_screen_card_title_relative_velocity">Relative velocity</string>
+    <string name="compare_screen_card_title_miss_distance">Miss distance</string>
+    <string name="compare_screen_card_title_orbiting_body">Orbiting body</string>
+    <string name="compare_screen_card_title_is_sentry">Is sentry</string>
+    <string name="compare_screen_card_title_is_dangerous">Is dangerous</string>
+</resources>

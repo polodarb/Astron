@@ -1,5 +1,13 @@
 package dev.kobzar.asteroidslist
 
+import android.Manifest
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
+import android.util.Log
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,16 +31,19 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
@@ -43,6 +54,7 @@ import cafe.adriel.voyager.core.registry.rememberScreen
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.hilt.getScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
+import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import dev.kobzar.asteroidslist.bottomSheet.FilterBottomSheet
 import dev.kobzar.asteroidslist.utils.Utils.formatDateFromTimestamp
 import dev.kobzar.asteroidslist.utils.toMillis
@@ -50,6 +62,7 @@ import dev.kobzar.navigation.shared.SharedScreen
 import dev.kobzar.preferences.model.DiameterUnit
 import dev.kobzar.preferences.model.UserPreferencesModel
 import dev.kobzar.repository.models.MainAsteroidsListItem
+import dev.kobzar.ui.compose.components.dialogs.RequestNotificationPermissionDialog
 import dev.kobzar.ui.compose.components.fabs.PrimaryFAB
 import dev.kobzar.ui.compose.components.fabs.SecondaryFAB
 import dev.kobzar.ui.compose.components.info.AsteroidCard
@@ -59,12 +72,17 @@ import dev.kobzar.ui.compose.components.inserts.InsertNoData
 import dev.kobzar.ui.compose.components.topbars.MainTopBar
 import dev.kobzar.ui.compose.theme.AppTheme
 import dev.kobzar.ui.compose.theme.dialogsTheme.CustomDialogTheme
+import dev.shreyaspatil.permissionFlow.utils.launch
+import dev.shreyaspatil.permissionflow.compose.rememberPermissionFlowRequestLauncher
+import dev.shreyaspatil.permissionflow.compose.rememberPermissionState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.util.Locale
 
 class AsteroidsListScreen : Screen {
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
@@ -74,6 +92,12 @@ class AsteroidsListScreen : Screen {
         val userPrefsData = viewModel.prefsData.collectAsState()
 
         val navigator = LocalNavigator.current
+        val context = LocalContext.current
+
+        val permissionLauncher = rememberPermissionFlowRequestLauncher()
+        val permissionState by rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
+        val notifyDialogShow = rememberUseCaseState(embedded = false)
+        val isShowDialog = rememberSaveable { mutableStateOf(false) }
 
         var showBottomSheet by remember { mutableStateOf(false) }
         val sheetState = rememberModalBottomSheetState()
@@ -98,6 +122,19 @@ class AsteroidsListScreen : Screen {
 
         val firstDateState = remember { mutableStateOf(viewModel.firstDate) }
         val secondDateState = remember { mutableStateOf(viewModel.secondDate) }
+
+        LaunchedEffect(asteroidsData.loadState.refresh) {
+            if (asteroidsData.loadState.refresh is LoadState.NotLoading) {
+                Log.e("TAG", "$permissionState")
+                delay(250)
+                if (!permissionState.isGranted && permissionState.isRationaleRequired == false ||
+                    !permissionState.isGranted && permissionState.isRationaleRequired == true
+                ) {
+                    if (!isShowDialog.value) notifyDialogShow.show()
+                }
+            }
+
+        }
 
         AsteroidsListScreenComposable(
             dataState = asteroidsData,
@@ -140,6 +177,31 @@ class AsteroidsListScreen : Screen {
         )
 
         CustomDialogTheme {
+            RequestNotificationPermissionDialog(
+                showDialog = notifyDialogShow,
+                onRequestPermission = {
+                    if (permissionState.isGranted) {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.asteroids_toast_permission_granted),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else if (permissionState.isRationaleRequired == true) {
+                        val intent = Intent(
+                            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                            Uri.fromParts("package", context.packageName, null)
+                        )
+                        context.startActivity(intent)
+                    } else {
+                        permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    }
+                    isShowDialog.value = true
+                },
+                closeSelection = {
+                    isShowDialog.value = true
+                }
+            )
+
             BsDateRangePicker(
                 showDatePicker = showDatePicker.value,
                 onDismiss = {
@@ -175,6 +237,8 @@ private fun AsteroidsListScreenComposable(
     showBottomSheet: Boolean
 ) {
 
+    val checkedState = rememberSaveable { mutableStateOf(false) }
+
     Scaffold(
         containerColor = AppTheme.colors.background,
         topBar = {
@@ -199,41 +263,56 @@ private fun AsteroidsListScreenComposable(
                 )
             }
         }
-    ) {
+    ) { contentPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = it.calculateTopPadding())
+                .padding(top = contentPadding.calculateTopPadding())
                 .background(AppTheme.colors.background)
         ) {
             LazyColumn {
-                items(dataState.itemCount) { index ->
-                    dataState[index]?.let { item ->
-
-                        val data = item.closeApproachData[0] // It always has only one item
-
-                        val diameterValue = when (userPrefsData?.diameterUnits) {
-                            DiameterUnit.KILOMETER -> item.estimatedDiameter.kilometers
-                            DiameterUnit.METER -> item.estimatedDiameter.meters
-                            DiameterUnit.MILE -> item.estimatedDiameter.miles
-                            DiameterUnit.FEET -> item.estimatedDiameter.feet
-                            else -> null
-                        }
-
-                        AsteroidCard(
-                            diameterUnits = userPrefsData?.diameterUnits?.unit?.let { stringResource(id = it) } ?: "N/A",
-                            name = item.name,
-                            isDangerous = item.isDangerous,
-                            diameterMin = diameterValue?.estimatedDiameterMin ?: 0.0,
-                            diameterMax = diameterValue?.estimatedDiameterMax ?: 0.0,
-                            orbitingBody = data.orbitingBody,
-                            closeApproach = data.closeApproachDate,
-                            onCardClick = {
-                                onDetailsClick(item.id)
-                            }
+                if (dataState.itemCount == 0 && dataState.loadState.refresh != LoadState.Loading && dataState.loadState.append != LoadState.Loading) {
+                    item {
+                        InsertError(
+                            customText = stringResource(R.string.asteroids_error_no_such_asteroids),
+                            modifier = Modifier.fillParentMaxSize()
                         )
                     }
+                } else {
+                    items(dataState.itemCount) { index ->
+                        dataState[index]?.let { item ->
+
+                            val data =
+                                item.closeApproachData[0] // The closest date to the current time
+
+                            val diameterValue = when (userPrefsData?.diameterUnits) {
+                                DiameterUnit.KILOMETER -> item.estimatedDiameter.kilometers
+                                DiameterUnit.METER -> item.estimatedDiameter.meters
+                                DiameterUnit.MILE -> item.estimatedDiameter.miles
+                                DiameterUnit.FEET -> item.estimatedDiameter.feet
+                                else -> null
+                            }
+
+                            AsteroidCard(
+                                diameterUnits = userPrefsData?.diameterUnits?.unit?.let {
+                                    stringResource(
+                                        id = it
+                                    )
+                                } ?: "N/A",
+                                name = item.name,
+                                isDangerous = item.isDangerous,
+                                diameterMin = diameterValue?.estimatedDiameterMin ?: 0.0,
+                                diameterMax = diameterValue?.estimatedDiameterMax ?: 0.0,
+                                orbitingBody = data.orbitingBody,
+                                closeApproach = data.closeApproachDate,
+                                onCardClick = {
+                                    onDetailsClick(item.id)
+                                }
+                            )
+                        }
+                    }
                 }
+
                 item {
                     Spacer(modifier = Modifier.height(AppTheme.spaces.space16))
                 }
@@ -241,8 +320,10 @@ private fun AsteroidsListScreenComposable(
                     dataState.loadState.refresh is LoadState.Loading -> {
                         item {
                             InsertLoader(
-                                modifier = Modifier.fillParentMaxSize(),
-                                text = "Loading asteroids"
+                                modifier = Modifier
+                                    .fillParentMaxSize()
+                                    .padding(bottom = contentPadding.calculateTopPadding()),
+                                text = stringResource(R.string.asteroids_screen_toast_loading_asteroids)
                             )
                         }
                     }
@@ -259,7 +340,10 @@ private fun AsteroidsListScreenComposable(
 
                     dataState.loadState.append is LoadState.Loading -> {
                         item {
-                            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                            Box(
+                                modifier = Modifier.fillMaxWidth(),
+                                contentAlignment = Alignment.Center
+                            ) {
                                 LoadingNextPageItem()
                             }
                         }
@@ -278,6 +362,10 @@ private fun AsteroidsListScreenComposable(
 
             FilterBottomSheet(
                 showBottomSheet = showBottomSheet,
+                dangerCheckedState = checkedState.value,
+                onDangerCheckedChange = {
+                    checkedState.value = it
+                },
                 sheetState = sheetState,
                 onDismiss = onFilterBsDismiss,
                 firstDate = sheetFirstDate,

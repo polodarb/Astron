@@ -80,10 +80,10 @@ private fun FavoritesScreenComposable(
         topBar = {
             SecondaryTopBar(title = "Favorites", onBackClick = onBackClick)
         }
-    ) {
+    ) { contentPadding ->
         Box(
             modifier = Modifier
-                .padding(top = it.calculateTopPadding())
+                .padding(top = contentPadding.calculateTopPadding())
                 .fillMaxSize()
         ) {
             when (state) {
@@ -102,11 +102,25 @@ private fun FavoritesScreenComposable(
 
                 is UiState.Success -> {
 
+                    val dataList = state.data.toList()
+
+                    if (dataList.isEmpty()) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(bottom = contentPadding.calculateTopPadding()),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            InsertError(customText = stringResource(R.string.insert_error_no_favorites_yet))
+                        }
+                        return@Box
+                    }
+
                     LazyColumn(
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        items(state.data.toList()) { item ->
-                            val data = item.closeApproachData[0] // It always has only one item
+                        items(dataList) { item ->
+                            val data = item.closeApproachData[0] // The closest date to the current time
 
                             val diameterValue = when (userPrefsData?.diameterUnits) {
                                 DiameterUnit.KILOMETER -> item.estimatedDiameter.kilometers
@@ -117,7 +131,11 @@ private fun FavoritesScreenComposable(
                             }
 
                             AsteroidCard(
-                                diameterUnits = userPrefsData?.diameterUnits?.unit?.let { stringResource(id = it) } ?: "N/A",
+                                diameterUnits = userPrefsData?.diameterUnits?.unit?.let {
+                                    stringResource(
+                                        id = it
+                                    )
+                                } ?: "N/A",
                                 name = item.name,
                                 isDangerous = item.isDangerous,
                                 diameterMin = diameterValue?.estimatedDiameterMin ?: 0.0,
@@ -132,8 +150,8 @@ private fun FavoritesScreenComposable(
                                 }
                             )
                         }
-                        
-                        item { 
+
+                        item {
                             Spacer(modifier = Modifier.height(AppTheme.spaces.space24))
                         }
                     }

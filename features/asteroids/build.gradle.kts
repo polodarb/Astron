@@ -43,6 +43,14 @@ android {
 
 dependencies {
 
+    // Compose Sheets
+    implementation(libs.sheets.compose)
+    implementation(libs.sheets.compose.info)
+
+    // Permission Flow
+    implementation(libs.permission.flow.general)
+    implementation(libs.permission.flow.compose)
+
     // Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)

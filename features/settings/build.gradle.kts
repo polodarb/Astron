@@ -43,6 +43,10 @@ android {
 
 dependencies {
 
+    // Permission Flow
+    implementation(libs.permission.flow.general)
+    implementation(libs.permission.flow.compose)
+
     // Compose Sheets
     implementation(libs.sheets.compose)
     implementation(libs.sheets.compose.options)

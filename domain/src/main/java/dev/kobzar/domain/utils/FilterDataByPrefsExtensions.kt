@@ -1,4 +1,4 @@
-package dev.kobzar.details.utils
+package dev.kobzar.domain.utils
 
 import dev.kobzar.preferences.model.DiameterUnit
 import dev.kobzar.preferences.model.MissDistanceUnit
@@ -7,7 +7,7 @@ import dev.kobzar.preferences.model.UserPreferencesModel
 import dev.kobzar.repository.models.MainDetailsCloseApproachData
 import dev.kobzar.repository.models.shared.MainAsteroidsEstimatedDiameter
 
-object PrefsDataExtensions {
+object FilterDataByPrefsExtensions {
 
     fun MainDetailsCloseApproachData.getMissDistanceUnit(userPrefs: UserPreferencesModel?): String? {
         return when (userPrefs?.missDistanceUnits) {

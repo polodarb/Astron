@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="asteroids_toast_permission_granted">Permission granted</string>
+    <string name="asteroids_error_no_such_asteroids">No such asteroids</string>
+    <string name="asteroids_screen_toast_loading_asteroids">Loading asteroids</string>
+</resources>

@@ -52,7 +52,7 @@ class AsteroidsListViewModel @Inject constructor(
         screenModelScope.launch {
             try {
                 Pager(
-                    config = PagingConfig(pageSize = 5),
+                    config = PagingConfig(pageSize = 10),
                     pagingSourceFactory = {
                         AsteroidsPagingSource(
                             repository,
@@ -83,7 +83,7 @@ class AsteroidsListViewModel @Inject constructor(
         }
     }
 
-    fun getUserPrefsData() {
+    private fun getUserPrefsData() {
         screenModelScope.launch {
             datastore.getUserPreferences().collect {
                 _prefsData.value = it

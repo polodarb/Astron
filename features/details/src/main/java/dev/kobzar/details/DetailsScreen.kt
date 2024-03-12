@@ -1,7 +1,13 @@
 package dev.kobzar.details
 
+import android.Manifest
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -41,6 +47,7 @@ import dev.kobzar.details.components.header.DetailsMainContentHeader
 import dev.kobzar.details.components.indicators.PageIndicator
 import dev.kobzar.details.components.table.DetailsTable
 import dev.kobzar.navigation.shared.SharedScreen
+import dev.kobzar.platform.base.BaseActivity
 import dev.kobzar.platform.utils.ConvertDiameterToKm
 import dev.kobzar.preferences.model.DiameterUnit
 import dev.kobzar.preferences.model.UserPreferencesModel
@@ -51,6 +58,9 @@ import dev.kobzar.ui.compose.components.inserts.InsertError
 import dev.kobzar.ui.compose.components.inserts.InsertLoader
 import dev.kobzar.ui.compose.components.topbars.SecondaryTopBar
 import dev.kobzar.ui.compose.theme.AppTheme
+import dev.shreyaspatil.permissionFlow.utils.launch
+import dev.shreyaspatil.permissionflow.compose.rememberPermissionFlowRequestLauncher
+import dev.shreyaspatil.permissionflow.compose.rememberPermissionState
 import kotlinx.coroutines.launch
 
 data class DetailsScreen(
@@ -59,6 +69,7 @@ data class DetailsScreen(
 
     override val key: ScreenKey = uniqueScreenKey
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     @Composable
     override fun Content() {
 
@@ -85,6 +96,9 @@ data class DetailsScreen(
 
         val uriHandler = LocalUriHandler.current
 
+        val permissionLauncher = rememberPermissionFlowRequestLauncher()
+        val state by rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
+
         DetailsScreenComposable(
             data = asteroidData.value,
             onBackClick = { navigator?.pop() },
@@ -93,10 +107,29 @@ data class DetailsScreen(
             },
             isSavedAsteroid = asteroidExistsData.value,
             onCompareClick = {
+
                 if (asteroidsCountInDB.value == 1) {
-                    Toast.makeText(context,
-                        context.getString(R.string.toast_details_compare_error), Toast.LENGTH_SHORT)
-                        .show()
+                    permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    if (state.isGranted) {
+                        (context as BaseActivity).sendNotification(
+                            title = context.getString(R.string.notification_title_compare_error),
+                            autoCancel = true
+                        )
+                    } else if (state.isRationaleRequired == true) {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.toast_details_compare_error),
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    } else {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.toast_details_compare_error),
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    }
                 } else {
                     navigator?.push(compareScreen)
                 }
@@ -173,7 +206,7 @@ fun DetailsMainContent(
 
     val coroutineScope = rememberCoroutineScope()
 
-    val closeApproach = data.closeApproachData[0]
+    val closeApproach = data.closeApproachData[0] // The closest date to the current time
     val astronomicalDistance = closeApproach.missDistance.astronomical
 
     val convertedDiameterToKm = when (userPrefs?.diameterUnits) {
@@ -227,9 +260,13 @@ fun DetailsMainContent(
                 state = pagerState,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .animateContentSize(
+                        animationSpec = tween(200, easing = FastOutSlowInEasing)
+                    )
                     .padding(top = AppTheme.spaces.space32),
                 verticalAlignment = Alignment.Top,
-            ) {
+
+                ) {
                 when (it) {
                     0 -> DetailsTable(
                         modifier = Modifier,

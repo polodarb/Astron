@@ -6,7 +6,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import dev.kobzar.details.R
 import dev.kobzar.details.components.compare.charts.distance.DetailsCompareDistanceChart
 import dev.kobzar.ui.compose.components.charts.CompareSizeChart
+import dev.kobzar.ui.compose.modifiers.animateClickable
 import dev.kobzar.ui.compose.theme.AppTheme
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -106,16 +106,21 @@ fun DetailsCompareSwitcher(
             options.forEachIndexed { index, option ->
                 Box(
                     modifier = Modifier
-                        .background(
-                            if (selectedIndex == index) {
-                                AppTheme.colors.secondaryBlue100
-                            } else {
-                                Color.Transparent
-                            }
-                        )
                         .fillMaxHeight()
                         .weight(1f)
-                        .clickable { onIndexChange(index) }
+                        .animateClickable(
+                            onClick = { onIndexChange(index) },
+                            defaultColor = if (selectedIndex == index) {
+                                AppTheme.colors.secondaryBlue100
+                            } else {
+                                AppTheme.colors.background
+                            },
+                            pressedColor = if (selectedIndex == index) {
+                                AppTheme.colors.secondaryBlue200
+                            } else {
+                                AppTheme.colors.secondaryBlue100
+                            }
+                        )
                         .padding(
                             vertical = AppTheme.spaces.space16,
                             horizontal = AppTheme.spaces.space24
