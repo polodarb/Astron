@@ -125,7 +125,7 @@ class AsteroidsListScreen : Screen {
 
         LaunchedEffect(asteroidsData.loadState.refresh) {
             if (asteroidsData.loadState.refresh is LoadState.NotLoading) {
-                Log.e("TAG", "$permissionState")
+                Log.e("TAG", "$permissionState - ${permissionLauncher}")
                 delay(250)
                 if (!permissionState.isGranted && permissionState.isRationaleRequired == false ||
                     !permissionState.isGranted && permissionState.isRationaleRequired == true

@@ -3,10 +3,13 @@ package dev.kobzar.app.activity
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.WorkManager
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
 import dagger.hilt.android.AndroidEntryPoint
 import dev.kobzar.asteroidslist.AsteroidsListScreen
+import dev.kobzar.dangernotify.DangerNotifyWorker
 import dev.kobzar.onboarding.OnBoardingScreen
 import dev.kobzar.platform.base.BaseActivity
 import dev.kobzar.preferences.DataStoreManager
@@ -26,6 +29,14 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         val isFirstStart = runBlocking { preferencesRepository.isFirstStart.first() }
+
+        val workerRequester = DangerNotifyWorker.createPeriodicRequester()
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "app_worker",
+            ExistingPeriodicWorkPolicy.KEEP,
+            workerRequester
+        )
 
         setContent {
             AppTheme {
