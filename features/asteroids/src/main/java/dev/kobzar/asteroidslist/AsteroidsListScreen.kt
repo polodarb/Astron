@@ -61,7 +61,6 @@ import dev.kobzar.asteroidslist.utils.toMillis
 import dev.kobzar.navigation.shared.SharedScreen
 import dev.kobzar.preferences.model.DiameterUnit
 import dev.kobzar.preferences.model.UserPreferencesModel
-import dev.kobzar.repository.models.MainAsteroidsListItem
 import dev.kobzar.ui.compose.components.dialogs.RequestNotificationPermissionDialog
 import dev.kobzar.ui.compose.components.fabs.PrimaryFAB
 import dev.kobzar.ui.compose.components.fabs.SecondaryFAB
@@ -222,7 +221,7 @@ class AsteroidsListScreen : Screen {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AsteroidsListScreenComposable(
-    dataState: LazyPagingItems<MainAsteroidsListItem>,
+    dataState: LazyPagingItems<dev.kobzar.model.models.MainAsteroidsListItem>,
     userPrefsData: UserPreferencesModel?,
     onFavoritesClick: () -> Unit,
     onDetailsClick: (asteroidId: String) -> Unit,

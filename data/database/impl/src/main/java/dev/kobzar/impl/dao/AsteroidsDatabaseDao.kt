@@ -1,6 +1,7 @@
 package dev.kobzar.impl.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -8,10 +9,11 @@ import androidx.room.Transaction
 import dev.kobzar.database.entities.CloseApproachDataEntity
 import dev.kobzar.database.entities.MainDetailsEntity
 import dev.kobzar.database.entities.MainDetailsWithCloseApproachData
+import dev.kobzar.database.entities.NotifiedAsteroidsEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface AsteroidDetailsDao {
+interface AsteroidsDatabaseDao {
 
     @Transaction
     @Query("SELECT * FROM main_details WHERE id = :asteroidId")
@@ -31,6 +33,9 @@ interface AsteroidDetailsDao {
     suspend fun insertAsteroidDetails(mainDetails: MainDetailsWithCloseApproachData) {
         insertMainDetails(mainDetails.mainDetails)
         insertCloseApproachData(mainDetails.closeApproachData)
+        insertNotifiedAsteroids(NotifiedAsteroidsEntity(
+            id = mainDetails.mainDetails.id
+        ))
     }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -43,6 +48,7 @@ interface AsteroidDetailsDao {
     suspend fun deleteAsteroidDetails(asteroidId: String) {
         deleteCloseApproachData(asteroidId)
         deleteMainDetails(asteroidId)
+        deleteNotifiedAsteroids(NotifiedAsteroidsEntity(id = asteroidId))
     }
 
     @Query("DELETE FROM main_details WHERE id = :asteroidId")
@@ -50,5 +56,14 @@ interface AsteroidDetailsDao {
 
     @Query("DELETE FROM close_approach_data WHERE asteroidId = :asteroidId")
     suspend fun deleteCloseApproachData(asteroidId: String)
+
+    @Query("SELECT * FROM notified_asteroids")
+    fun getNotifiedAsteroids(): Flow<List<NotifiedAsteroidsEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertNotifiedAsteroids(notifiedAsteroids: NotifiedAsteroidsEntity)
+
+    @Delete
+    suspend fun deleteNotifiedAsteroids(notifiedAsteroids: NotifiedAsteroidsEntity)
 
 }

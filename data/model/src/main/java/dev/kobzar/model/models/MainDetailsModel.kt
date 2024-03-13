@@ -1,9 +1,8 @@
-package dev.kobzar.repository.models
+package dev.kobzar.model.models
 
-import dev.kobzar.repository.models.shared.MainAsteroidsDiameter
-import dev.kobzar.repository.models.shared.MainAsteroidsEstimatedDiameter
-import dev.kobzar.repository.models.shared.MissDistanceModel
-import dev.kobzar.repository.models.shared.RelativeVelocityModel
+import dev.kobzar.model.models.shared.MainAsteroidsEstimatedDiameter
+import dev.kobzar.model.models.shared.MissDistanceModel
+import dev.kobzar.model.models.shared.RelativeVelocityModel
 
 data class MainDetailsModel(
     val id: String,

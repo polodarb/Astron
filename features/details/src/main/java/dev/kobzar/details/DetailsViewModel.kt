@@ -6,11 +6,9 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import dev.kobzar.domain.useCases.reformatUnits.ReformatDiameterUseCase
 import dev.kobzar.domain.useCases.reformatUnits.ReformatMissDistanceUseCase
 import dev.kobzar.domain.useCases.reformatUnits.ReformatRelativeVelocityUseCase
+import dev.kobzar.model.mappers.DatabaseMapper.toMainDetailsWithCloseApproachData
 import dev.kobzar.repository.AsteroidDetailsRepository
 import dev.kobzar.repository.DataStoreRepository
-import dev.kobzar.repository.mappers.DatabaseMapper.toMainDetailsWithCloseApproachData
-import dev.kobzar.repository.models.MainDetailsCloseApproachData
-import dev.kobzar.repository.models.MainDetailsModel
 import dev.kobzar.repository.uiStates.UiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +17,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-typealias AsteroidDetails = UiState<MainDetailsModel>
+typealias AsteroidDetails = UiState<dev.kobzar.model.models.MainDetailsModel>
 
 class DetailsViewModel @Inject constructor(
     private val repository: AsteroidDetailsRepository,
@@ -38,7 +36,7 @@ class DetailsViewModel @Inject constructor(
     private val _asteroidsCountInDB = MutableStateFlow(0)
     val asteroidsCountInDB: StateFlow<Int> = _asteroidsCountInDB.asStateFlow()
 
-    private var allCloseApproachData: List<MainDetailsCloseApproachData>? = null
+    private var allCloseApproachData: List<dev.kobzar.model.models.MainDetailsCloseApproachData>? = null
 
     private val currentTime = System.currentTimeMillis()
 
@@ -66,7 +64,9 @@ class DetailsViewModel @Inject constructor(
                     repository.deleteAsteroidDetails(detailsValue.data.id)
                 } else {
                     val mainDetailsWithCloseApproachData =
-                        detailsValue.data.copy(closeApproachData = allCloseApproachData ?: emptyList())
+                        detailsValue.data.copy(
+                            closeApproachData = allCloseApproachData ?: emptyList()
+                        )
                             .toMainDetailsWithCloseApproachData(saveTime = currentTime)
                     repository.insertAsteroidDetails(mainDetailsWithCloseApproachData)
                 }
@@ -89,30 +89,40 @@ class DetailsViewModel @Inject constructor(
                     when (uiState) {
                         is UiState.Success -> {
 
-                            val closestApproach = uiState.data.closeApproachData
-                                .filter { data ->
-                                    data.epochDateCloseApproach >= currentTime
+                            Log.e("DetailsViewModel", uiState.data.toString())
+
+                            runCatching {
+                                val closestApproach = uiState.data.closeApproachData
+                                    .filter { data ->
+                                        data.epochDateCloseApproach >= currentTime
+                                    }
+                                    .minBy { it.closeApproachDate }
+
+                                val reformattedCloseApproachData = closestApproach.copy(
+                                    relativeVelocity = reformatRelativeVelocityUnitUseCase(
+                                        closestApproach.relativeVelocity
+                                    ),
+                                    missDistance = reformatMissDistanceUnitUseCase(closestApproach.missDistance)
+                                )
+
+                                datastore.getUserPreferences().collect { prefs ->
+                                    allCloseApproachData = uiState.data.closeApproachData
+                                    _details.value =
+                                        UiState.Success(
+                                            data = uiState.data.copy(
+                                                closeApproachData = listOf(
+                                                    reformattedCloseApproachData
+                                                ),
+                                                estimatedDiameter = reformatDiameterUseCase(uiState.data.estimatedDiameter)
+                                            ),
+                                            userPrefs = prefs
+                                        )
                                 }
-                                .minBy { it.closeApproachDate }
-
-                            val reformattedCloseApproachData = closestApproach.copy(
-                                relativeVelocity = reformatRelativeVelocityUnitUseCase(
-                                    closestApproach.relativeVelocity
-                                ),
-                                missDistance = reformatMissDistanceUnitUseCase(closestApproach.missDistance)
-                            )
-
-                            datastore.getUserPreferences().collect { prefs ->
-                                allCloseApproachData = uiState.data.closeApproachData
-                                _details.value =
-                                    UiState.Success(
-                                        data = uiState.data.copy(
-                                            closeApproachData = listOf(reformattedCloseApproachData),
-                                            estimatedDiameter = reformatDiameterUseCase(uiState.data.estimatedDiameter)
-                                        ),
-                                        userPrefs = prefs
-                                    )
+                            }.onFailure {
+                                Log.e("DetailsViewModel", it.toString())
+                                _details.value = UiState.Error(it)
                             }
+
                         }
 
                         is UiState.Error -> {

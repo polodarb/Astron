@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "dev.kobzar.repository"
+    namespace = "dev.kobzar.model"
     compileSdk = 34
 
     defaultConfig {
@@ -41,8 +41,6 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    api(project(":data:preferences"))
-    api(project(":data:network"))
-    api(project(":data:database"))
-    api(project(":data:model"))
+    implementation(project(":data:database"))
+    implementation(project(":data:network"))
 }

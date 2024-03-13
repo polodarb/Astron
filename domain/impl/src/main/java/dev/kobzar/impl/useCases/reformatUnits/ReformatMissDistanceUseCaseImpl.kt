@@ -1,8 +1,8 @@
 package dev.kobzar.impl.useCases.reformatUnits
 
 import dev.kobzar.domain.useCases.reformatUnits.ReformatMissDistanceUseCase
+import dev.kobzar.model.models.shared.MissDistanceModel
 import dev.kobzar.platform.utils.UnitUtils
-import dev.kobzar.repository.models.shared.MissDistanceModel
 import javax.inject.Inject
 
 class ReformatMissDistanceUseCaseImpl @Inject constructor(): ReformatMissDistanceUseCase {

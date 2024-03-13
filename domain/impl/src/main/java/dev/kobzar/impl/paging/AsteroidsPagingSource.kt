@@ -2,8 +2,8 @@ package dev.kobzar.impl.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import dev.kobzar.model.models.MainAsteroidsListItem
 import dev.kobzar.repository.AsteroidsRepository
-import dev.kobzar.repository.models.MainAsteroidsListItem
 
 class AsteroidsPagingSource(
     private val repository: AsteroidsRepository,

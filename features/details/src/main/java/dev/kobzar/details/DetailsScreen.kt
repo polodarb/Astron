@@ -51,7 +51,6 @@ import dev.kobzar.platform.base.BaseActivity
 import dev.kobzar.platform.utils.ConvertDiameterToKm
 import dev.kobzar.preferences.model.DiameterUnit
 import dev.kobzar.preferences.model.UserPreferencesModel
-import dev.kobzar.repository.models.MainDetailsModel
 import dev.kobzar.repository.uiStates.UiState
 import dev.kobzar.ui.compose.components.fabs.PrimaryFAB
 import dev.kobzar.ui.compose.components.inserts.InsertError
@@ -145,7 +144,7 @@ data class DetailsScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun DetailsScreenComposable(
-    data: UiState<MainDetailsModel>,
+    data: UiState<dev.kobzar.model.models.MainDetailsModel>,
     onBackClick: () -> Unit,
     onSaveClick: (value: Boolean) -> Unit,
     isSavedAsteroid: Boolean,
@@ -191,7 +190,7 @@ private fun DetailsScreenComposable(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DetailsMainContent(
-    data: MainDetailsModel,
+    data: dev.kobzar.model.models.MainDetailsModel,
     pagerState: PagerState,
     userPrefs: UserPreferencesModel?,
     onBackClick: () -> Unit,

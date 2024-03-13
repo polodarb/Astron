@@ -1,6 +1,6 @@
 package dev.kobzar.repository
 
-import dev.kobzar.repository.models.MainAsteroidsModel
+import dev.kobzar.model.models.MainAsteroidsModel
 
 interface AsteroidsRepository {
 

@@ -1,19 +1,19 @@
-package dev.kobzar.repository.mappers
+package dev.kobzar.model.mappers
 
 import dev.kobzar.network.models.NetworkAsteroid
 import dev.kobzar.network.models.NetworkAsteroidsModel
 import dev.kobzar.network.models.NetworkCloseApproachData
 import dev.kobzar.network.models.NetworkLinks
-import dev.kobzar.repository.models.MainAsteroidsCloseApproachData
-import dev.kobzar.repository.models.MainAsteroidsListItem
-import dev.kobzar.repository.models.MainAsteroidsModel
-import dev.kobzar.repository.models.MainDetailsCloseApproachData
-import dev.kobzar.repository.models.MainDetailsModel
-import dev.kobzar.repository.models.shared.MainAsteroidsDiameter
-import dev.kobzar.repository.models.shared.MainAsteroidsEstimatedDiameter
-import dev.kobzar.repository.models.shared.MainAsteroidsLinks
-import dev.kobzar.repository.models.shared.MissDistanceModel
-import dev.kobzar.repository.models.shared.RelativeVelocityModel
+import dev.kobzar.model.models.MainAsteroidsCloseApproachData
+import dev.kobzar.model.models.MainAsteroidsListItem
+import dev.kobzar.model.models.MainAsteroidsModel
+import dev.kobzar.model.models.MainDetailsCloseApproachData
+import dev.kobzar.model.models.MainDetailsModel
+import dev.kobzar.model.models.shared.MainAsteroidsDiameter
+import dev.kobzar.model.models.shared.MainAsteroidsEstimatedDiameter
+import dev.kobzar.model.models.shared.MainAsteroidsLinks
+import dev.kobzar.model.models.shared.MissDistanceModel
+import dev.kobzar.model.models.shared.RelativeVelocityModel
 
 object NetworkMapper {
 

@@ -7,8 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dev.kobzar.impl.AppDatabase
-import dev.kobzar.impl.dao.AsteroidDetailsDao
-import javax.inject.Named
+import dev.kobzar.impl.dao.AsteroidsDatabaseDao
 import javax.inject.Singleton
 
 @Module
@@ -31,8 +30,8 @@ object DatabaseModule {
     @Singleton
     fun provideAsteroidDetailsDao(
         database: AppDatabase
-    ): AsteroidDetailsDao {
-        return database.asteroidDetailsDao()
+    ): AsteroidsDatabaseDao {
+        return database.asteroidsDatabaseDao()
     }
 
 }

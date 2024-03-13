@@ -1,7 +1,7 @@
-package dev.kobzar.repository.models
+package dev.kobzar.model.models
 
-import dev.kobzar.repository.models.shared.MainAsteroidsEstimatedDiameter
-import dev.kobzar.repository.models.shared.MainAsteroidsLinks
+import dev.kobzar.model.models.shared.MainAsteroidsEstimatedDiameter
+import dev.kobzar.model.models.shared.MainAsteroidsLinks
 
 data class MainAsteroidsModel (
     val elementCount: Int,

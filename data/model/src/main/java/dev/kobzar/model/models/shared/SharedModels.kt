@@ -1,4 +1,4 @@
-package dev.kobzar.repository.models.shared
+package dev.kobzar.model.models.shared
 
 data class MainAsteroidsEstimatedDiameter(
     val kilometers: MainAsteroidsDiameter,

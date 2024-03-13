@@ -1,4 +1,4 @@
-package dev.kobzar.repository.mappers
+package dev.kobzar.model.mappers
 
 import dev.kobzar.database.entities.CloseApproachDataEntity
 import dev.kobzar.database.entities.MainAsteroidsDiameterDatabaseModel
@@ -6,15 +6,31 @@ import dev.kobzar.database.entities.MainAsteroidsEstimatedDiameterDatabaseModel
 import dev.kobzar.database.entities.MainDetailsEntity
 import dev.kobzar.database.entities.MainDetailsWithCloseApproachData
 import dev.kobzar.database.entities.MissDistanceDatabaseModel
+import dev.kobzar.database.entities.NotifiedAsteroidsEntity
 import dev.kobzar.database.entities.RelativeVelocityDatabaseModel
-import dev.kobzar.repository.models.MainDetailsCloseApproachData
-import dev.kobzar.repository.models.MainDetailsModel
-import dev.kobzar.repository.models.shared.MainAsteroidsDiameter
-import dev.kobzar.repository.models.shared.MainAsteroidsEstimatedDiameter
-import dev.kobzar.repository.models.shared.MissDistanceModel
-import dev.kobzar.repository.models.shared.RelativeVelocityModel
+import dev.kobzar.model.models.MainDetailsCloseApproachData
+import dev.kobzar.model.models.MainDetailsModel
+import dev.kobzar.model.models.MainNotifiedModel
+import dev.kobzar.model.models.shared.MainAsteroidsDiameter
+import dev.kobzar.model.models.shared.MainAsteroidsEstimatedDiameter
+import dev.kobzar.model.models.shared.MissDistanceModel
+import dev.kobzar.model.models.shared.RelativeVelocityModel
 
 object DatabaseMapper {
+
+    fun List<NotifiedAsteroidsEntity>.toListMainNotifiedModel(): List<MainNotifiedModel> {
+        return this.map {
+            MainNotifiedModel(
+                id = it.id
+            )
+        }
+    }
+
+    fun MainNotifiedModel.toNotifiedAsteroidsEntity(): NotifiedAsteroidsEntity {
+        return NotifiedAsteroidsEntity(
+            id = this.id
+        )
+    }
 
     fun List<MainDetailsWithCloseApproachData>.toListMainDetailsModel(): List<MainDetailsModel> {
         return this.map { data ->
@@ -90,7 +106,8 @@ object DatabaseMapper {
                 feet = MainAsteroidsDiameter(
                     estimatedDiameterMax = this.mainDetails.estimatedDiameter.feet.estimatedDiameterMax,
                     estimatedDiameterMin = this.mainDetails.estimatedDiameter.feet.estimatedDiameterMin
-                )),
+                )
+            ),
             closeApproachData = this.closeApproachData.map {
                 MainDetailsCloseApproachData(
                     closeApproachDate = it.closeApproachDate,
