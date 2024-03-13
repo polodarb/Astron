@@ -58,13 +58,14 @@ class DangerNotifyWorker @AssistedInject constructor(
 
             if (closestApproach.epochDateCloseApproach in (currentTime + 1)..<nextDayTime) {
                 asteroidDetailsRepository.getNotifiedAsteroids().collect { notify ->
-                    if (notify.contains(MainNotifiedModel(it.id)))
-                    sendNotification(
-                        title = it.name,
-                        message = closestApproach.closeApproachDateFull,
-                        id = it.id,
-                        intent = createIntent(it.id)
-                    )
+                    if (notify.contains(MainNotifiedModel(it.id))) {
+                        sendNotification(
+                            title = it.name,
+                            message = closestApproach.closeApproachDateFull,
+                            id = it.id,
+                            intent = createIntent(it.id)
+                        )
+                    }
                 }
             }
         }

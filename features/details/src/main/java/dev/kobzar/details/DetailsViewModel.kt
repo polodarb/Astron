@@ -89,14 +89,14 @@ class DetailsViewModel @Inject constructor(
                     when (uiState) {
                         is UiState.Success -> {
 
-                            Log.e("DetailsViewModel", uiState.data.toString())
-
                             runCatching {
                                 val closestApproach = uiState.data.closeApproachData
                                     .filter { data ->
                                         data.epochDateCloseApproach >= currentTime
                                     }
-                                    .minBy { it.closeApproachDate }
+                                    .minBy { it.epochDateCloseApproach }
+
+                                Log.d("DetailsViewModel", closestApproach.toString())
 
                                 val reformattedCloseApproachData = closestApproach.copy(
                                     relativeVelocity = reformatRelativeVelocityUnitUseCase(

@@ -35,11 +35,18 @@ class MainActivity : BaseActivity() {
 
     @Inject lateinit var preferencesRepository: DataStoreManager
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.data?.let {
+            Log.d("MainActivity", it.toString())
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         intent?.data?.let {
-            Log.e("MainActivity", it.toString())
+            Log.d("MainActivity", it.toString())
         }
 
         val isFirstStart = runBlocking { preferencesRepository.isFirstStart.first() }
@@ -74,7 +81,7 @@ class MainActivity : BaseActivity() {
 }
 
 fun handleIntentAction(context: Context, intent: Intent, navigator: Navigator) {
-    Log.e("MainActivity", intent.data.toString())
+    Log.d("MainActivity", intent.data.toString())
     Toast.makeText(context, "${intent.data}", Toast.LENGTH_SHORT).show()
 //    navigator.push(ScreenRegistry.get(SharedScreen.SettingsScreen))
 }
@@ -82,7 +89,7 @@ fun handleIntentAction(context: Context, intent: Intent, navigator: Navigator) {
 @Composable
 fun HandleIntent(context: Context, navigator: Navigator) {
 
-    Log.e("MainActivity", "HandleIntent")
+    Log.d("MainActivity", "HandleIntent")
 
     LaunchedEffect(Unit) {
         callbackFlow<Intent> {

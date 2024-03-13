@@ -34,12 +34,12 @@ class AsterApplication : Application(), Configuration.Provider  {
             .setWorkerFactory(workerFactory)
             .build()
 
-
     override fun onCreate() {
         super.onCreate()
 
-        val permissionDispatcher = Executors.newFixedThreadPool(3).asCoroutineDispatcher()
-        PermissionFlow.init(this, permissionDispatcher)
+//        val permissionDispatcher = Executors.newFixedThreadPool(3).asCoroutineDispatcher()
+//        PermissionFlow.init(this, permissionDispatcher)
+//        PermissionFlow.getInstance().startListening()
 
         ScreenRegistry {
             register<SharedScreen.OnBoardingScreen> { OnBoardingScreen() }

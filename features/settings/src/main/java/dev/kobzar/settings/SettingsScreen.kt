@@ -191,7 +191,7 @@ private fun SettingsScreenComposable(
                 Switch(
                     checked = state.isGranted, onCheckedChange = {
                         if (it) {
-                            Log.e("TAG", "SettingsScreenComposable: ${state}")
+                            Log.d("TAG", "SettingsScreenComposable: ${state}")
                             if (!state.isGranted && state.isRationaleRequired == false) {
                                 permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                             } else {

@@ -106,9 +106,7 @@ data class DetailsScreen(
             },
             isSavedAsteroid = asteroidExistsData.value,
             onCompareClick = {
-
                 if (asteroidsCountInDB.value == 1) {
-                    permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                     if (state.isGranted) {
                         (context as BaseActivity).sendNotification(
                             title = context.getString(R.string.notification_title_compare_error),
