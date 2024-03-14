@@ -171,13 +171,16 @@ private fun OnBoardingScreenComposable(
                         }
                     )
 
-                    1 -> DetailsScreen {
+                    1 -> DetailsScreen(
+                        parallaxEffect = pagerState.currentPageOffsetFraction
+                    ) {
                         coroutineScope.launch {
                             pagerState.animateScrollToPage(2)
                         }
                     }
 
                     2 -> FinalScreen(
+                        parallaxEffect = pagerState.currentPageOffsetFraction,
                         onFinishClick = onFinishClick,
                         diameterOnOptionSelected = diameterOnOptionSelected,
                         velocityOnOptionSelected = velocityOnOptionSelected,

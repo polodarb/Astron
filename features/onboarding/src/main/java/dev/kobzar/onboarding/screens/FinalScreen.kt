@@ -28,6 +28,7 @@ import dev.kobzar.ui.compose.theme.AppTheme
 
 @Composable
 internal fun FinalScreen(
+    parallaxEffect: Float = 0f,
     onFinishClick: () -> Unit,
     diameterOnOptionSelected: (String) -> Unit,
     velocityOnOptionSelected: (String) -> Unit,
@@ -37,7 +38,8 @@ internal fun FinalScreen(
         OnboardingScreenImage(
             image = R.drawable.onboarding_img_3,
             heightFraction = 0.3f,
-            scaleType = ContentScale.Fit
+            scaleType = ContentScale.Fit,
+            parallaxOffset = parallaxEffect
         )
         OnboardingScreenDescription(
             title = stringResource(R.string.onboarding_page3_title),
