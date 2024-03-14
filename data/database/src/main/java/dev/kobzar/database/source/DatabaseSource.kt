@@ -22,4 +22,6 @@ interface DatabaseSource {
 
     suspend fun insertNotifiedAsteroids(notifiedAsteroids: NotifiedAsteroidsEntity)
 
+    suspend fun deleteNotifiedAsteroids(asteroidId: String)
+
 }

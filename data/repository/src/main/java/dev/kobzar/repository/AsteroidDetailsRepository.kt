@@ -24,4 +24,6 @@ interface AsteroidDetailsRepository {
 
     suspend fun insertNotifiedAsteroids(notifiedAsteroids: MainNotifiedModel)
 
+    suspend fun deleteNotifiedAsteroids(asteroidId: String)
+
 }

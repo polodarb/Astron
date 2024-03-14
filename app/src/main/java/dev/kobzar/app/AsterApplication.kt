@@ -11,6 +11,7 @@ import dagger.hilt.android.HiltAndroidApp
 import dev.kobzar.asteroidslist.AsteroidsListScreen
 import dev.kobzar.compare.CompareScreen
 import dev.kobzar.dangernotify.DangerNotifyWorker
+import dev.kobzar.dangernotify.WorkerActivityInterface
 import dev.kobzar.details.DetailsScreen
 import dev.kobzar.favorites.FavoritesScreen
 import dev.kobzar.navigation.shared.SharedScreen
@@ -37,9 +38,9 @@ class AsterApplication : Application(), Configuration.Provider  {
     override fun onCreate() {
         super.onCreate()
 
-//        val permissionDispatcher = Executors.newFixedThreadPool(3).asCoroutineDispatcher()
-//        PermissionFlow.init(this, permissionDispatcher)
-//        PermissionFlow.getInstance().startListening()
+        val permissionDispatcher = Executors.newFixedThreadPool(3).asCoroutineDispatcher()
+        PermissionFlow.init(this, permissionDispatcher)
+        PermissionFlow.getInstance().startListening()
 
         ScreenRegistry {
             register<SharedScreen.OnBoardingScreen> { OnBoardingScreen() }
@@ -56,8 +57,8 @@ class AsterApplication : Application(), Configuration.Provider  {
 
 class AppWorkerFactory @Inject constructor(
     private val asteroidDetailsRepository: AsteroidDetailsRepository,
-) :
-    WorkerFactory() {
+    private val workerActivityInterface: WorkerActivityInterface
+) : WorkerFactory() {
     override fun createWorker(
         appContext: Context,
         workerClassName: String,
@@ -66,8 +67,8 @@ class AppWorkerFactory @Inject constructor(
         return DangerNotifyWorker(
             appContext,
             workerParameters,
-            asteroidDetailsRepository
+            asteroidDetailsRepository,
+            workerActivityInterface
         )
     }
-
 }

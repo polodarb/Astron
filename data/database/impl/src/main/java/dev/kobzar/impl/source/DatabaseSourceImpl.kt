@@ -60,4 +60,10 @@ class DatabaseSourceImpl @Inject constructor(
             asteroidsDatabaseDao.insertNotifiedAsteroids(notifiedAsteroids)
         }
     }
+
+    override suspend fun deleteNotifiedAsteroids(asteroidId: String) {
+        withContext(Dispatchers.IO) {
+            asteroidsDatabaseDao.deleteNotifiedAsteroids(asteroidId)
+        }
+    }
 }

@@ -77,4 +77,8 @@ class AsteroidDetailsRepositoryImpl @Inject constructor(
     override suspend fun insertNotifiedAsteroids(notifiedAsteroids: dev.kobzar.model.models.MainNotifiedModel) {
         databaseSource.insertNotifiedAsteroids(notifiedAsteroids.toNotifiedAsteroidsEntity())
     }
+
+    override suspend fun deleteNotifiedAsteroids(asteroidId: String) {
+        databaseSource.deleteNotifiedAsteroids(asteroidId)
+    }
 }

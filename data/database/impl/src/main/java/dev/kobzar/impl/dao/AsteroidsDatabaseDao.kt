@@ -48,7 +48,7 @@ interface AsteroidsDatabaseDao {
     suspend fun deleteAsteroidDetails(asteroidId: String) {
         deleteCloseApproachData(asteroidId)
         deleteMainDetails(asteroidId)
-        deleteNotifiedAsteroids(NotifiedAsteroidsEntity(id = asteroidId))
+        deleteNotifiedAsteroids(asteroidId)
     }
 
     @Query("DELETE FROM main_details WHERE id = :asteroidId")
@@ -63,7 +63,7 @@ interface AsteroidsDatabaseDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNotifiedAsteroids(notifiedAsteroids: NotifiedAsteroidsEntity)
 
-    @Delete
-    suspend fun deleteNotifiedAsteroids(notifiedAsteroids: NotifiedAsteroidsEntity)
+    @Query("DELETE FROM notified_asteroids WHERE id = :asteroidId")
+    suspend fun deleteNotifiedAsteroids(asteroidId: String)
 
 }
