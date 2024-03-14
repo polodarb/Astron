@@ -16,7 +16,6 @@ import dev.kobzar.impl.paging.AsteroidsPagingSource
 import dev.kobzar.preferences.model.UserPreferencesModel
 import dev.kobzar.repository.AsteroidsRepository
 import dev.kobzar.repository.DataStoreRepository
-import dev.kobzar.repository.models.MainAsteroidsListItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -25,7 +24,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
-typealias AsteroidsList = PagingData<MainAsteroidsListItem>
+typealias AsteroidsList = PagingData<dev.kobzar.model.models.MainAsteroidsListItem>
 
 class AsteroidsListViewModel @Inject constructor(
     private val repository: AsteroidsRepository,

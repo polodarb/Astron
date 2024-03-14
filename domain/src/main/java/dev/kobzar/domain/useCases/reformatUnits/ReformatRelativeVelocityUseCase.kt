@@ -1,6 +1,6 @@
 package dev.kobzar.domain.useCases.reformatUnits
 
-import dev.kobzar.repository.models.shared.RelativeVelocityModel
+import dev.kobzar.model.models.shared.RelativeVelocityModel
 
 interface ReformatRelativeVelocityUseCase {
 

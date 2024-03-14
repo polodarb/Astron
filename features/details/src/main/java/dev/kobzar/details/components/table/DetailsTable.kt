@@ -12,18 +12,17 @@ import dev.kobzar.domain.utils.FilterDataByPrefsExtensions.getMissDistanceUnit
 import dev.kobzar.domain.utils.FilterDataByPrefsExtensions.getRelativeVelocity
 import dev.kobzar.preferences.model.DiameterUnit
 import dev.kobzar.preferences.model.UserPreferencesModel
-import dev.kobzar.repository.models.MainDetailsModel
 import dev.kobzar.ui.compose.components.containers.OutlineBox
 import dev.kobzar.ui.compose.theme.AppTheme
 
 @Composable
 fun DetailsTable(
     modifier: Modifier = Modifier,
-    data: MainDetailsModel,
+    data: dev.kobzar.model.models.MainDetailsModel,
     userPrefs: UserPreferencesModel?
     ) {
 
-    val closeApproachData = data.closeApproachData[0] // The closest date to the current time
+    val closeApproachData = data.closeApproachData[0] // This list contains only one item with most closest date
 
     val missDistanceUnit = closeApproachData.getMissDistanceUnit(userPrefs)
     val relativeVelocity = closeApproachData.getRelativeVelocity(userPrefs)

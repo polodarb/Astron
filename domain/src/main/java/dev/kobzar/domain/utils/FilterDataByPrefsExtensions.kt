@@ -1,11 +1,11 @@
 package dev.kobzar.domain.utils
 
+import dev.kobzar.model.models.MainDetailsCloseApproachData
+import dev.kobzar.model.models.shared.MainAsteroidsEstimatedDiameter
 import dev.kobzar.preferences.model.DiameterUnit
 import dev.kobzar.preferences.model.MissDistanceUnit
 import dev.kobzar.preferences.model.RelativeVelocityUnit
 import dev.kobzar.preferences.model.UserPreferencesModel
-import dev.kobzar.repository.models.MainDetailsCloseApproachData
-import dev.kobzar.repository.models.shared.MainAsteroidsEstimatedDiameter
 
 object FilterDataByPrefsExtensions {
 

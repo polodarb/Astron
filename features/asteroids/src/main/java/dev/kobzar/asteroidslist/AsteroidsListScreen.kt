@@ -61,7 +61,6 @@ import dev.kobzar.asteroidslist.utils.toMillis
 import dev.kobzar.navigation.shared.SharedScreen
 import dev.kobzar.preferences.model.DiameterUnit
 import dev.kobzar.preferences.model.UserPreferencesModel
-import dev.kobzar.repository.models.MainAsteroidsListItem
 import dev.kobzar.ui.compose.components.dialogs.RequestNotificationPermissionDialog
 import dev.kobzar.ui.compose.components.fabs.PrimaryFAB
 import dev.kobzar.ui.compose.components.fabs.SecondaryFAB
@@ -125,7 +124,7 @@ class AsteroidsListScreen : Screen {
 
         LaunchedEffect(asteroidsData.loadState.refresh) {
             if (asteroidsData.loadState.refresh is LoadState.NotLoading) {
-                Log.e("TAG", "$permissionState")
+                Log.d("TAG", "$permissionState - ${permissionLauncher}")
                 delay(250)
                 if (!permissionState.isGranted && permissionState.isRationaleRequired == false ||
                     !permissionState.isGranted && permissionState.isRationaleRequired == true
@@ -222,7 +221,7 @@ class AsteroidsListScreen : Screen {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AsteroidsListScreenComposable(
-    dataState: LazyPagingItems<MainAsteroidsListItem>,
+    dataState: LazyPagingItems<dev.kobzar.model.models.MainAsteroidsListItem>,
     userPrefsData: UserPreferencesModel?,
     onFavoritesClick: () -> Unit,
     onDetailsClick: (asteroidId: String) -> Unit,
@@ -283,7 +282,7 @@ private fun AsteroidsListScreenComposable(
                         dataState[index]?.let { item ->
 
                             val data =
-                                item.closeApproachData[0] // The closest date to the current time
+                                item.closeApproachData[0] // This list contains only one item with most closest date
 
                             val diameterValue = when (userPrefsData?.diameterUnits) {
                                 DiameterUnit.KILOMETER -> item.estimatedDiameter.kilometers

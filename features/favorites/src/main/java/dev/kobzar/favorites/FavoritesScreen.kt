@@ -25,7 +25,6 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import dev.kobzar.navigation.shared.SharedScreen
 import dev.kobzar.preferences.model.DiameterUnit
 import dev.kobzar.preferences.model.UserPreferencesModel
-import dev.kobzar.repository.models.MainDetailsModel
 import dev.kobzar.repository.uiStates.UiState
 import dev.kobzar.ui.compose.components.info.AsteroidCard
 import dev.kobzar.ui.compose.components.inserts.InsertError
@@ -68,7 +67,7 @@ class FavoritesScreen : Screen {
 
 @Composable
 private fun FavoritesScreenComposable(
-    state: UiState<List<MainDetailsModel>>,
+    state: UiState<List<dev.kobzar.model.models.MainDetailsModel>>,
     userPrefsData: UserPreferencesModel?,
     onDetailsClick: (asteroidId: String) -> Unit,
     onDeleteClick: (asteroidId: String, name: String) -> Unit,
@@ -120,7 +119,7 @@ private fun FavoritesScreenComposable(
                         modifier = Modifier.fillMaxSize()
                     ) {
                         items(dataList) { item ->
-                            val data = item.closeApproachData[0] // The closest date to the current time
+                            val data = item.closeApproachData[0] // This list contains only one item with most closest date
 
                             val diameterValue = when (userPrefsData?.diameterUnits) {
                                 DiameterUnit.KILOMETER -> item.estimatedDiameter.kilometers

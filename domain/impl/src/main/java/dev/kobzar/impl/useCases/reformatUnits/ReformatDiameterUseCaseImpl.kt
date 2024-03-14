@@ -1,9 +1,9 @@
 package dev.kobzar.impl.useCases.reformatUnits
 
 import dev.kobzar.domain.useCases.reformatUnits.ReformatDiameterUseCase
+import dev.kobzar.model.models.shared.MainAsteroidsDiameter
+import dev.kobzar.model.models.shared.MainAsteroidsEstimatedDiameter
 import dev.kobzar.platform.utils.UnitUtils
-import dev.kobzar.repository.models.shared.MainAsteroidsDiameter
-import dev.kobzar.repository.models.shared.MainAsteroidsEstimatedDiameter
 import javax.inject.Inject
 
 class ReformatDiameterUseCaseImpl @Inject constructor(): ReformatDiameterUseCase {

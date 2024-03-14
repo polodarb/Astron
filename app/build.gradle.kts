@@ -57,6 +57,12 @@ android {
 
 dependencies {
 
+    // Permission flow
+    implementation(libs.permission.flow.general)
+
+    // WorkManager
+    implementation(libs.work.manager)
+
     // Hilt
     implementation(libs.hilt.android)
     implementation(libs.hilt.common)
@@ -116,6 +122,7 @@ dependencies {
     implementation(project(":features:favorites"))
     implementation(project(":features:settings"))
     implementation(project(":features:compare"))
+    implementation(project(":features:dangerNotify"))
 }
 
 kapt {

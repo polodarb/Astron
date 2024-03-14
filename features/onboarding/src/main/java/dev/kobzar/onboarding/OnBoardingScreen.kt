@@ -12,6 +12,7 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -24,6 +25,7 @@ import dev.kobzar.navigation.shared.SharedScreen
 import dev.kobzar.onboarding.screens.DetailsScreen
 import dev.kobzar.onboarding.screens.FinalScreen
 import dev.kobzar.onboarding.screens.WelcomeScreen
+import dev.kobzar.preferences.model.DangerNotifyPrefs
 import dev.kobzar.preferences.model.DiameterUnit
 import dev.kobzar.preferences.model.MissDistanceUnit
 import dev.kobzar.preferences.model.RelativeVelocityUnit
@@ -48,6 +50,21 @@ class OnBoardingScreen : Screen {
         val pagerState = rememberPagerState(pageCount = {
             3
         })
+
+        LaunchedEffect(Unit) {
+            viewModel.setUserPreferences(
+                prefs = UserPreferencesModel(
+                    diameterUnits = DiameterUnit.KILOMETER,
+                    relativeVelocityUnits = RelativeVelocityUnit.KM_S,
+                    missDistanceUnits = MissDistanceUnit.KILOMETER,
+                    dangerNotifyPrefs = DangerNotifyPrefs(
+                        syncHours = 1,
+                        checkIntervalHours = 24
+                    )
+                )
+            )
+            viewModel.configureFirstStart()
+        }
 
         var diameterUnit = "Km"
         var velocityUnit = "Km/s"
@@ -80,7 +97,11 @@ class OnBoardingScreen : Screen {
                                 "Lunar" -> MissDistanceUnit.LUNAR
                                 "Astronomical" -> MissDistanceUnit.ASTRONOMICAL
                                 else -> MissDistanceUnit.KILOMETER
-                            }
+                            },
+                            dangerNotifyPrefs = DangerNotifyPrefs(
+                                syncHours = 1,
+                                checkIntervalHours = 24
+                            )
                         )
                     )
                     viewModel.configureFirstStart()
@@ -150,13 +171,16 @@ private fun OnBoardingScreenComposable(
                         }
                     )
 
-                    1 -> DetailsScreen {
+                    1 -> DetailsScreen(
+                        parallaxEffect = pagerState.currentPageOffsetFraction
+                    ) {
                         coroutineScope.launch {
                             pagerState.animateScrollToPage(2)
                         }
                     }
 
                     2 -> FinalScreen(
+                        parallaxEffect = pagerState.currentPageOffsetFraction,
                         onFinishClick = onFinishClick,
                         diameterOnOptionSelected = diameterOnOptionSelected,
                         velocityOnOptionSelected = velocityOnOptionSelected,

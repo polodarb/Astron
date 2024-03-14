@@ -1,18 +1,11 @@
 package dev.kobzar.platform.utils
 
-import java.math.BigDecimal
 import java.math.RoundingMode
-import java.text.DecimalFormat
 
 object UnitUtils {
 
     fun roundDouble(input: Double, digits: Int = 3): Double {
-        return try {
-            val df = DecimalFormat("#." + "#".repeat(digits))
-            df.format(input).toDouble()
-        } catch (e: Exception) {
-            0.0
-        }
+        return input.toBigDecimal().setScale(digits, RoundingMode.HALF_UP).toDouble()
     }
 
     fun extractIntegerPart(input: String): String {

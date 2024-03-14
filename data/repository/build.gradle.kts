@@ -44,4 +44,5 @@ dependencies {
     api(project(":data:preferences"))
     api(project(":data:network"))
     api(project(":data:database"))
+    api(project(":data:model"))
 }

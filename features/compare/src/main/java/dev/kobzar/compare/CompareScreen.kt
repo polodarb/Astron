@@ -42,7 +42,6 @@ import dev.kobzar.domain.utils.FilterDataByPrefsExtensions.getRelativeVelocity
 import dev.kobzar.navigation.shared.SharedScreen
 import dev.kobzar.preferences.model.DiameterUnit
 import dev.kobzar.preferences.model.UserPreferencesModel
-import dev.kobzar.repository.models.MainDetailsModel
 import dev.kobzar.repository.uiStates.UiState
 import dev.kobzar.ui.compose.components.chips.TitleValueChip
 import dev.kobzar.ui.compose.components.fabs.PrimaryFAB
@@ -90,7 +89,7 @@ class CompareScreen : Screen {
 
 @Composable
 private fun CompareScreenComposable(
-    state: UiState<List<MainDetailsModel>>,
+    state: UiState<List<dev.kobzar.model.models.MainDetailsModel>>,
     userPrefsData: UserPreferencesModel?,
     onDetailsClick: (asteroidId: String) -> Unit,
     onBackClick: () -> Unit,
@@ -148,7 +147,7 @@ private fun CompareScreenComposable(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ComparePager(
-    data: List<MainDetailsModel>,
+    data: List<dev.kobzar.model.models.MainDetailsModel>,
     prefsData: UserPreferencesModel?,
     onCardClick: (asteroidId: String) -> Unit
 ) {
@@ -183,11 +182,11 @@ fun ComparePager(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun CompareInfoCard(
-    item: MainDetailsModel,
+    item: dev.kobzar.model.models.MainDetailsModel,
     prefsData: UserPreferencesModel?,
     onCardClick: () -> Unit
 ) {
-    val closeApproachData = item.closeApproachData[0] // The closest date to the current time
+    val closeApproachData = item.closeApproachData[0] // This list contains only one item with most closest date
     val diameters = item.estimatedDiameter.getDiameterRangeByUnit(prefsData?.diameterUnits ?: DiameterUnit.KILOMETER)
     val missDistanceUnit = closeApproachData.getMissDistanceUnit(prefsData)
     val relativeVelocity = closeApproachData.getRelativeVelocity(prefsData)

@@ -10,11 +10,13 @@ import dev.kobzar.onboarding.screens.shared.OnboardingScreenImage
 
 @Composable
 internal fun WelcomeScreen(
+    parallaxEffect: Float = 0f,
     onNextClick: () -> Unit
 ) {
     Column {
         OnboardingScreenImage(
-            image = R.drawable.onboarding_img_1
+            image = R.drawable.onboarding_img_1,
+            parallaxOffset = parallaxEffect
         )
         OnboardingScreenDescription(
             title = stringResource(R.string.onboarding_page1_title),

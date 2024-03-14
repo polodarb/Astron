@@ -5,10 +5,10 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import dev.kobzar.domain.useCases.reformatUnits.ReformatDiameterUseCase
 import dev.kobzar.domain.useCases.reformatUnits.ReformatMissDistanceUseCase
 import dev.kobzar.domain.useCases.reformatUnits.ReformatRelativeVelocityUseCase
+import dev.kobzar.model.models.MainDetailsModel
 import dev.kobzar.preferences.model.UserPreferencesModel
 import dev.kobzar.repository.AsteroidDetailsRepository
 import dev.kobzar.repository.DataStoreRepository
-import dev.kobzar.repository.models.MainDetailsModel
 import dev.kobzar.repository.uiStates.UiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
