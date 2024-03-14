@@ -1,5 +1,6 @@
 package dev.kobzar.onboarding.screens
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -23,6 +24,9 @@ import dev.kobzar.onboarding.screens.shared.OnboardingButtonType
 import dev.kobzar.onboarding.screens.shared.OnboardingScreenButtons
 import dev.kobzar.onboarding.screens.shared.OnboardingScreenDescription
 import dev.kobzar.onboarding.screens.shared.OnboardingScreenImage
+import dev.kobzar.preferences.model.DiameterUnit
+import dev.kobzar.preferences.model.MissDistanceUnit
+import dev.kobzar.preferences.model.RelativeVelocityUnit
 import dev.kobzar.ui.compose.components.chips.AsterFilterChip
 import dev.kobzar.ui.compose.theme.AppTheme
 
@@ -30,9 +34,9 @@ import dev.kobzar.ui.compose.theme.AppTheme
 internal fun FinalScreen(
     parallaxEffect: Float = 0f,
     onFinishClick: () -> Unit,
-    diameterOnOptionSelected: (String) -> Unit,
-    velocityOnOptionSelected: (String) -> Unit,
-    distanceOnOptionSelected: (String) -> Unit
+    diameterOnOptionSelected: (DiameterUnit) -> Unit,
+    velocityOnOptionSelected: (RelativeVelocityUnit) -> Unit,
+    distanceOnOptionSelected: (MissDistanceUnit) -> Unit
 ) {
     Column {
         OnboardingScreenImage(
@@ -60,33 +64,23 @@ internal fun FinalScreen(
 @Composable
 private fun FinalScreenAdjustments(
     modifier: Modifier = Modifier,
-    diameterOnOptionSelected: (String) -> Unit,
-    velocityOnOptionSelected: (String) -> Unit,
-    distanceOnOptionSelected: (String) -> Unit
+    diameterOnOptionSelected: (DiameterUnit) -> Unit,
+    velocityOnOptionSelected: (RelativeVelocityUnit) -> Unit,
+    distanceOnOptionSelected: (MissDistanceUnit) -> Unit
 ) {
 
     val scrollableState = rememberScrollState()
 
-//    val itemsList = listOf("Km", "Meter", "Mile", "Feet")
-    val itemsList = listOf("Km", "Meter", "Mile", "Feet")
     val (diameterSelectedOption, diameterOnOptionSelectedState) = remember {
-        mutableStateOf(
-            itemsList[0]
-        )
+        mutableStateOf(DiameterUnit.entries[0])
     }
 
-    val velocityUnits = listOf("Km/s", "Km/h", "Mile/h")
     val (velocitySelectedOption, velocityOnOptionSelectedState) = remember {
-        mutableStateOf(
-            velocityUnits[0]
-        )
+        mutableStateOf(RelativeVelocityUnit.entries[0])
     }
 
-    val distanceUnits = listOf("Km", "Mile", "Lunar", "Astronomical")
     val (distanceSelectedOption, distanceOnOptionSelectedState) = remember {
-        mutableStateOf(
-            distanceUnits[0]
-        )
+        mutableStateOf(MissDistanceUnit.entries[0])
     }
 
     Column(
@@ -102,8 +96,8 @@ private fun FinalScreenAdjustments(
         horizontalAlignment = Alignment.Start
     ) {
         FinalScreenAdjustmentsRow(
-            title = stringResource(R.string.onboarding_prefs_diameter_units_title),
-            itemsList = itemsList,
+            title = R.string.onboarding_prefs_diameter_units_title,
+            options = DiameterUnit.entries.associateWith { it.unit },
             selectedOption = diameterSelectedOption,
             onOptionSelected = {
                 diameterOnOptionSelectedState(it)
@@ -112,8 +106,8 @@ private fun FinalScreenAdjustments(
         )
 
         FinalScreenAdjustmentsRow(
-            title = stringResource(R.string.onboarding_prefs_relative_velocity_title),
-            itemsList = velocityUnits,
+            title = R.string.onboarding_prefs_relative_velocity_title,
+            options = RelativeVelocityUnit.entries.associateWith { it.unit },
             selectedOption = velocitySelectedOption,
             onOptionSelected = {
                 velocityOnOptionSelectedState(it)
@@ -123,8 +117,8 @@ private fun FinalScreenAdjustments(
         )
 
         FinalScreenAdjustmentsRow(
-            title = stringResource(R.string.onboarding_prefs_distance_units_title),
-            itemsList = distanceUnits,
+            title = R.string.onboarding_prefs_distance_units_title,
+            options = MissDistanceUnit.entries.associateWith { it.unit },
             selectedOption = distanceSelectedOption,
             onOptionSelected = {
                 distanceOnOptionSelectedState(it)
@@ -137,18 +131,18 @@ private fun FinalScreenAdjustments(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun FinalScreenAdjustmentsRow(
+private fun <T> FinalScreenAdjustmentsRow(
     modifier: Modifier = Modifier,
-    title: String,
-    itemsList: List<String>,
-    selectedOption: String,
-    onOptionSelected: (String) -> Unit
+    @StringRes title: Int,
+    options: Map<T, Int>,
+    selectedOption: T,
+    onOptionSelected: (T) -> Unit
 ) {
     Column(
         modifier = modifier
     ) {
         Text(
-            text = title,
+            text = stringResource(id = title),
             style = AppTheme.typography.medium14,
             color = AppTheme.colors.outline
         )
@@ -158,12 +152,12 @@ private fun FinalScreenAdjustmentsRow(
                 .selectableGroup(),
             horizontalArrangement = Arrangement.spacedBy(AppTheme.spaces.space12)
         ) {
-            itemsList.forEach { text ->
+            options.forEach { option ->
                 AsterFilterChip(
-                    title = text,
-                    selected = (text == selectedOption)
+                    title = stringResource(id = option.value),
+                    selected = (option.key == selectedOption)
                 ) {
-                    onOptionSelected(text)
+                    onOptionSelected(option.key)
                 }
             }
         }

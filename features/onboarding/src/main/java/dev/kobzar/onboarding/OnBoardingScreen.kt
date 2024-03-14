@@ -16,7 +16,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.platform.LocalContext
 import cafe.adriel.voyager.core.registry.rememberScreen
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.hilt.getScreenModel
@@ -66,9 +65,9 @@ class OnBoardingScreen : Screen {
             viewModel.configureFirstStart()
         }
 
-        var diameterUnit = "Km"
-        var velocityUnit = "Km/s"
-        var distanceUnit = "Km"
+        var diameterUnit = DiameterUnit.KILOMETER
+        var velocityUnit = RelativeVelocityUnit.KM_S
+        var distanceUnit = MissDistanceUnit.KILOMETER
 
         OnBoardingScreenComposable(
             pagerState = pagerState,
@@ -81,23 +80,9 @@ class OnBoardingScreen : Screen {
                 coroutineScope.launch {
                     viewModel.setUserPreferences(
                         prefs = UserPreferencesModel(
-                            diameterUnits = when (diameterUnit) {
-                                "Meter" -> DiameterUnit.METER
-                                "Mile" -> DiameterUnit.MILE
-                                "Feet" -> DiameterUnit.FEET
-                                else -> DiameterUnit.KILOMETER
-                            },
-                            relativeVelocityUnits = when (velocityUnit) {
-                                "Km/h" -> RelativeVelocityUnit.KM_H
-                                "Mile/h" -> RelativeVelocityUnit.MILE_H
-                                else -> RelativeVelocityUnit.KM_S
-                            },
-                            missDistanceUnits = when (distanceUnit) {
-                                "Mile" -> MissDistanceUnit.MILE
-                                "Lunar" -> MissDistanceUnit.LUNAR
-                                "Astronomical" -> MissDistanceUnit.ASTRONOMICAL
-                                else -> MissDistanceUnit.KILOMETER
-                            },
+                            diameterUnits = diameterUnit,
+                            relativeVelocityUnits = velocityUnit,
+                            missDistanceUnits = distanceUnit,
                             dangerNotifyPrefs = DangerNotifyPrefs(
                                 syncHours = 1,
                                 checkIntervalHours = 24
@@ -133,9 +118,9 @@ private fun OnBoardingScreenComposable(
     pagerState: PagerState,
     onFinishClick: () -> Unit,
     onSkipClick: () -> Unit,
-    diameterOnOptionSelected: (String) -> Unit,
-    velocityOnOptionSelected: (String) -> Unit,
-    distanceOnOptionSelected: (String) -> Unit
+    diameterOnOptionSelected: (DiameterUnit) -> Unit,
+    velocityOnOptionSelected: (RelativeVelocityUnit) -> Unit,
+    distanceOnOptionSelected: (MissDistanceUnit) -> Unit
 ) {
 
     val coroutineScope = rememberCoroutineScope()
