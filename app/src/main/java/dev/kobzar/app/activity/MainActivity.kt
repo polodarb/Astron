@@ -4,12 +4,12 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequest
-import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import dev.kobzar.asteroidslist.AsteroidsListScreen
 import dev.kobzar.dangernotify.DangerNotifyWorker
@@ -30,10 +30,14 @@ class MainActivity : BaseActivity() {
     @Inject
     lateinit var preferencesRepository: DataStoreManager
 
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val isFirstStart = runBlocking { preferencesRepository.isFirstStart.first() }
+
+        firebaseAnalytics = Firebase.analytics
 
         val prefs = viewModel.prefsWorkerInterval.value
 

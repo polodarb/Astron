@@ -2,6 +2,11 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
 
+    alias(libs.plugins.gms)
+    alias(libs.plugins.firebase.crashlytics)
+
+    alias(libs.plugins.detekt)
+
     alias(libs.plugins.hilt)
     kotlin("kapt")
 }
@@ -55,7 +60,20 @@ android {
     }
 }
 
+detekt {
+    toolVersion = "1.23.1"
+    config = files("config/detekt/detekt.yml")
+    buildUponDefaultConfig = true
+}
+
 dependencies {
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.config)
 
     // Permission flow
     implementation(libs.permission.flow.general)

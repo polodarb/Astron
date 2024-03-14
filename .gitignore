@@ -13,6 +13,8 @@ app/build
 local.properties
 keystore.properties
 
+app/google-services.json
+
 core/navigation/build
 core/platform/build
 core/ui/build
