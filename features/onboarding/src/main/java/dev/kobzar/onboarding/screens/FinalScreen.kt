@@ -65,6 +65,7 @@ private fun FinalScreenAdjustments(
 
     val scrollableState = rememberScrollState()
 
+//    val itemsList = listOf("Km", "Meter", "Mile", "Feet")
     val itemsList = listOf("Km", "Meter", "Mile", "Feet")
     val (diameterSelectedOption, diameterOnOptionSelectedState) = remember {
         mutableStateOf(

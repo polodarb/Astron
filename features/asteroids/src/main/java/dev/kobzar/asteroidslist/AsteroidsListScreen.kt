@@ -282,7 +282,7 @@ private fun AsteroidsListScreenComposable(
                         dataState[index]?.let { item ->
 
                             val data =
-                                item.closeApproachData[0] // The closest date to the current time
+                                item.closeApproachData[0] // This list contains only one item with most closest date
 
                             val diameterValue = when (userPrefsData?.diameterUnits) {
                                 DiameterUnit.KILOMETER -> item.estimatedDiameter.kilometers

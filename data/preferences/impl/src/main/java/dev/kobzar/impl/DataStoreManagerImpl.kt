@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.kobzar.preferences.DataStoreManager
+import dev.kobzar.preferences.model.DangerNotifyPrefs
 import dev.kobzar.preferences.model.DiameterUnit
 import dev.kobzar.preferences.model.MissDistanceUnit
 import dev.kobzar.preferences.model.RelativeVelocityUnit
@@ -30,6 +31,7 @@ class DataStoreManagerImpl @Inject constructor(
     private val KEY_USER_PREFERENCES = stringPreferencesKey("user_preferences")
 
     private val prefKeyIsFirstStart = booleanPreferencesKey(name = "is_first_start")
+
     override val isFirstStart: Flow<Boolean> =
         context.dataStore.data.map { prefs -> prefs[prefKeyIsFirstStart] ?: true }
 
@@ -50,7 +52,11 @@ class DataStoreManagerImpl @Inject constructor(
             preferences ?: UserPreferencesModel(
                 diameterUnits = DiameterUnit.KILOMETER,
                 missDistanceUnits = MissDistanceUnit.KILOMETER,
-                relativeVelocityUnits = RelativeVelocityUnit.KM_S
+                relativeVelocityUnits = RelativeVelocityUnit.KM_S,
+                dangerNotifyPrefs = DangerNotifyPrefs(
+                    syncHours = 1,
+                    checkIntervalHours = 24
+                )
             )
         }
     }

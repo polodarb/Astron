@@ -127,6 +127,7 @@ class DetailsViewModel @Inject constructor(
 
                         is UiState.Error -> {
                             _details.value = UiState.Error(uiState.throwable)
+                            Log.e("DetailsViewModel", uiState.throwable?.stackTrace.toString())
                         }
 
                         is UiState.Loading -> {

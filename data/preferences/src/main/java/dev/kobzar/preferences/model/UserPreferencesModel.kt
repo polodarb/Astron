@@ -8,7 +8,14 @@ import kotlinx.serialization.Serializable
 data class UserPreferencesModel(
     val diameterUnits: DiameterUnit,
     val relativeVelocityUnits: RelativeVelocityUnit,
-    val missDistanceUnits: MissDistanceUnit
+    val missDistanceUnits: MissDistanceUnit,
+    val dangerNotifyPrefs: DangerNotifyPrefs
+)
+
+@Serializable
+data class DangerNotifyPrefs(
+    val syncHours: Int,
+    val checkIntervalHours: Int
 )
 
 @Serializable

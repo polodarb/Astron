@@ -39,9 +39,11 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import dev.kobzar.preferences.model.UserPreferencesModel
 import dev.kobzar.repository.uiStates.UiState
+import dev.kobzar.settings.dialogs.CheckIntervalDialog
 import dev.kobzar.settings.dialogs.DiameterUnitDialog
 import dev.kobzar.settings.dialogs.MissDistanceUnitDialog
 import dev.kobzar.settings.dialogs.RelativeVelocityUnitDialog
+import dev.kobzar.settings.dialogs.UpdateSyncDialog
 import dev.kobzar.ui.compose.components.containers.OutlineColumn
 import dev.kobzar.ui.compose.components.inserts.InsertLoader
 import dev.kobzar.ui.compose.components.topbars.SecondaryTopBar
@@ -136,6 +138,8 @@ private fun SettingsScreenComposable(
     val diameterDialogShow = rememberUseCaseState(embedded = false)
     val missDistanceDialogShow = rememberUseCaseState(embedded = false)
     val relativeVelocityDialogShow = rememberUseCaseState(embedded = false)
+    val updateSyncDialogShow = rememberUseCaseState(embedded = false)
+    val checkIntervalHoursDialogShow = rememberUseCaseState(embedded = false)
 
     Column(
         modifier = modifier
@@ -178,7 +182,7 @@ private fun SettingsScreenComposable(
         }
 
         Text(
-            text = stringResource(R.string.settings_title_other),
+            text = "Notifications",
             style = AppTheme.typography.medium14,
             modifier = Modifier.padding(
                 bottom = AppTheme.spaces.space8,
@@ -187,7 +191,7 @@ private fun SettingsScreenComposable(
             color = AppTheme.colors.secondaryGray700
         )
         OutlineColumn {
-            SettingsItem(title = "Danger notifications") {
+            SettingsItem(title = "Enable notification") {
                 Switch(
                     checked = state.isGranted, onCheckedChange = {
                         if (it) {
@@ -200,7 +204,11 @@ private fun SettingsScreenComposable(
                                 context.startActivity(intent)
                             }
                         } else {
-                            Toast.makeText(context, "You can disable notifications in settings", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                "You can disable notifications in settings",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }, colors = SwitchDefaults.colors(
                         uncheckedThumbColor = AppTheme.colors.secondaryGray600,
@@ -212,6 +220,35 @@ private fun SettingsScreenComposable(
             }
         }
 
+        Text(
+            text = "Danger notifications",
+            style = AppTheme.typography.medium14,
+            modifier = Modifier.padding(
+                bottom = AppTheme.spaces.space8,
+                top = AppTheme.spaces.space32
+            ),
+            color = AppTheme.colors.secondaryGray700
+        )
+        OutlineColumn {
+            SettingsItem(title = "Update sync (hours)") {
+                Text(text = data?.dangerNotifyPrefs?.syncHours?.toString() ?: "N/A",
+                    color = AppTheme.colors.secondaryGray800,
+                    modifier = Modifier.settingsItemValue {
+                        updateSyncDialogShow.show()
+                    }
+                )
+            }
+
+            SettingsItem(title = "Checking interval (hours)") {
+                Text(text = data?.dangerNotifyPrefs?.checkIntervalHours?.toString() ?: "N/A",
+                    color = AppTheme.colors.secondaryGray800,
+                    modifier = Modifier.settingsItemValue {
+                        checkIntervalHoursDialogShow.show()
+                    })
+            }
+
+        }
+
         DiameterUnitDialog(
             showDialog = diameterDialogShow,
             diameterPrefs = data?.diameterUnits,
@@ -221,7 +258,8 @@ private fun SettingsScreenComposable(
                         UserPreferencesModel(
                             diameterUnits = it,
                             relativeVelocityUnits = data.relativeVelocityUnits,
-                            missDistanceUnits = data.missDistanceUnits
+                            missDistanceUnits = data.missDistanceUnits,
+                            dangerNotifyPrefs = data.dangerNotifyPrefs
                         )
                     )
                 }
@@ -237,7 +275,8 @@ private fun SettingsScreenComposable(
                         UserPreferencesModel(
                             diameterUnits = data.diameterUnits,
                             relativeVelocityUnits = data.relativeVelocityUnits,
-                            missDistanceUnits = it
+                            missDistanceUnits = it,
+                            dangerNotifyPrefs = data.dangerNotifyPrefs
                         )
                     )
                 }
@@ -253,7 +292,42 @@ private fun SettingsScreenComposable(
                         UserPreferencesModel(
                             diameterUnits = data.diameterUnits,
                             relativeVelocityUnits = it,
-                            missDistanceUnits = data.missDistanceUnits
+                            missDistanceUnits = data.missDistanceUnits,
+                            dangerNotifyPrefs = data.dangerNotifyPrefs
+                        )
+                    )
+                }
+            }
+        )
+
+        UpdateSyncDialog(
+            showDialog = updateSyncDialogShow,
+            syncValue = data?.dangerNotifyPrefs?.syncHours,
+            onItemSelected = {
+                if (data != null) {
+                    onPrefsUpdate(
+                        UserPreferencesModel(
+                            diameterUnits = data.diameterUnits,
+                            relativeVelocityUnits = data.relativeVelocityUnits,
+                            missDistanceUnits = data.missDistanceUnits,
+                            dangerNotifyPrefs = data.dangerNotifyPrefs.copy(syncHours = it)
+                        )
+                    )
+                }
+            }
+        )
+
+        CheckIntervalDialog(
+            showDialog = checkIntervalHoursDialogShow,
+            checkInterval = data?.dangerNotifyPrefs?.checkIntervalHours,
+            onItemSelected = {
+                if (data != null) {
+                    onPrefsUpdate(
+                        UserPreferencesModel(
+                            diameterUnits = data.diameterUnits,
+                            relativeVelocityUnits = data.relativeVelocityUnits,
+                            missDistanceUnits = data.missDistanceUnits,
+                            dangerNotifyPrefs = data.dangerNotifyPrefs.copy(checkIntervalHours = it)
                         )
                     )
                 }

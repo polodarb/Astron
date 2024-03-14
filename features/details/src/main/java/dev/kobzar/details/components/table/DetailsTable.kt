@@ -22,7 +22,7 @@ fun DetailsTable(
     userPrefs: UserPreferencesModel?
     ) {
 
-    val closeApproachData = data.closeApproachData[0] // The closest date to the current time
+    val closeApproachData = data.closeApproachData[0] // This list contains only one item with most closest date
 
     val missDistanceUnit = closeApproachData.getMissDistanceUnit(userPrefs)
     val relativeVelocity = closeApproachData.getRelativeVelocity(userPrefs)

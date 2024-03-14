@@ -186,7 +186,7 @@ private fun CompareInfoCard(
     prefsData: UserPreferencesModel?,
     onCardClick: () -> Unit
 ) {
-    val closeApproachData = item.closeApproachData[0] // The closest date to the current time
+    val closeApproachData = item.closeApproachData[0] // This list contains only one item with most closest date
     val diameters = item.estimatedDiameter.getDiameterRangeByUnit(prefsData?.diameterUnits ?: DiameterUnit.KILOMETER)
     val missDistanceUnit = closeApproachData.getMissDistanceUnit(prefsData)
     val relativeVelocity = closeApproachData.getRelativeVelocity(prefsData)

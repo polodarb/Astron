@@ -12,4 +12,10 @@
     <string name="onboarding_prefs_distance_units_title">Miss distance units</string>
     <string name="onboarding_prefs_relative_velocity_title">Relative velocity units</string>
     <string name="onboarding_prefs_diameter_units_title">Select diameter units</string>
+
+    <string name="unit_meter">Meter</string>
+    <string name="unit_mile">Mile</string>
+    <string name="unit_feet">Feet</string>
+    <string name="unit_km_per_hour">Km/h</string>
+    <string name="unit_mile_per_hour">Mile/h</string>
 </resources>

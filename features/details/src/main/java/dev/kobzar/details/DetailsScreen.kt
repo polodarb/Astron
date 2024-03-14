@@ -57,13 +57,13 @@ import dev.kobzar.ui.compose.components.inserts.InsertError
 import dev.kobzar.ui.compose.components.inserts.InsertLoader
 import dev.kobzar.ui.compose.components.topbars.SecondaryTopBar
 import dev.kobzar.ui.compose.theme.AppTheme
-import dev.shreyaspatil.permissionFlow.utils.launch
 import dev.shreyaspatil.permissionflow.compose.rememberPermissionFlowRequestLauncher
 import dev.shreyaspatil.permissionflow.compose.rememberPermissionState
 import kotlinx.coroutines.launch
 
 data class DetailsScreen(
-    val asteroidId: String?
+    val asteroidId: String?,
+    val isDistanceDanger: Boolean = false
 ) : Screen {
 
     override val key: ScreenKey = uniqueScreenKey
@@ -134,7 +134,8 @@ data class DetailsScreen(
             compareFabVisibility = asteroidExistsData.value,
             onSbdClick = {
                 uriHandler.openUri(it)
-            }
+            },
+            isDistanceDanger = isDistanceDanger
         )
     }
 }
@@ -148,12 +149,16 @@ private fun DetailsScreenComposable(
     isSavedAsteroid: Boolean,
     onCompareClick: () -> Unit,
     compareFabVisibility: Boolean,
-    onSbdClick: (url: String) -> Unit
+    onSbdClick: (url: String) -> Unit,
+    isDistanceDanger: Boolean
 ) {
 
-    val pagerState = rememberPagerState(pageCount = {
-        2
-    })
+    val pagerState = rememberPagerState(
+        pageCount = {
+            2
+        },
+        initialPage = if (isDistanceDanger) 1 else 0
+    )
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         when (data) {
@@ -178,7 +183,8 @@ private fun DetailsScreenComposable(
                     isSavedAsteroid = isSavedAsteroid,
                     onCompareClick = onCompareClick,
                     compareFabVisibility = compareFabVisibility,
-                    onSbdClick = onSbdClick
+                    onSbdClick = onSbdClick,
+                    isDistanceDanger = isDistanceDanger
                 )
             }
         }
@@ -196,14 +202,20 @@ fun DetailsMainContent(
     isSavedAsteroid: Boolean,
     onCompareClick: () -> Unit,
     compareFabVisibility: Boolean,
-    onSbdClick: (url: String) -> Unit
+    onSbdClick: (url: String) -> Unit,
+    isDistanceDanger: Boolean
 ) {
-    val comparePagerState = rememberPagerState(pageCount = { 2 })
-    var selectedIndex by remember { mutableIntStateOf(0) }
+
+    val comparePagerState =
+        rememberPagerState(
+            pageCount = { 2 },
+            initialPage = if (isDistanceDanger) 1 else 0
+        )
+    var selectedIndex by remember { mutableIntStateOf(if (isDistanceDanger) 1 else 0) }
 
     val coroutineScope = rememberCoroutineScope()
 
-    val closeApproach = data.closeApproachData[0] // The closest date to the current time
+    val closeApproach = data.closeApproachData[0] // This list contains only one item with most closest date
     val astronomicalDistance = closeApproach.missDistance.astronomical
 
     val convertedDiameterToKm = when (userPrefs?.diameterUnits) {

@@ -20,6 +20,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import dev.kobzar.model.models.MainNotifiedModel
 import dev.kobzar.repository.AsteroidDetailsRepository
+import dev.kobzar.repository.DataStoreRepository
 import dev.kobzar.repository.uiStates.UiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.filter
@@ -34,7 +35,8 @@ class DangerNotifyWorker @AssistedInject constructor(
     @Assisted private val appContext: Context,
     @Assisted workerParams: WorkerParameters,
     private val asteroidDetailsRepository: AsteroidDetailsRepository,
-    private val workerActivityInterface: WorkerActivityInterface
+    private val workerActivityInterface: WorkerActivityInterface,
+    private val prefs: DataStoreRepository
 ) : CoroutineWorker(appContext, workerParams) {
 
     private val channelId = "asteroids_notification_channel"
@@ -47,9 +49,15 @@ class DangerNotifyWorker @AssistedInject constructor(
 
         val notifiedAsteroids = asteroidDetailsRepository.getNotifiedAsteroids().first()
 
+        val prefs = prefs.getUserPreferences().first()
+
         val result = (data as UiState.Success)
         val currentTime = System.currentTimeMillis()
-        val nextDayTime = currentTime + TimeUnit.DAYS.toMillis(1)
+        val nextDayTime = if (prefs?.dangerNotifyPrefs?.checkIntervalHours != null) {
+            currentTime + TimeUnit.HOURS.toMillis(prefs.dangerNotifyPrefs.checkIntervalHours.toLong())
+        } else {
+            currentTime + TimeUnit.DAYS.toMillis(1)
+        }
 
         result.data.forEach {
             val closestApproach = it.closeApproachData.first { data ->
@@ -121,9 +129,9 @@ class DangerNotifyWorker @AssistedInject constructor(
             .setRequiresBatteryNotLow(true)
             .build()
 
-        fun createPeriodicRequester(): PeriodicWorkRequest {
+        fun createPeriodicRequester(repeatInterval: Long): PeriodicWorkRequest {
 
-            return PeriodicWorkRequestBuilder<DangerNotifyWorker>(1, TimeUnit.HOURS)
+            return PeriodicWorkRequestBuilder<DangerNotifyWorker>(repeatInterval, TimeUnit.HOURS)
                 .setConstraints(constraints)
                 .addTag(APP_WORKER_TAG)
                 .build()

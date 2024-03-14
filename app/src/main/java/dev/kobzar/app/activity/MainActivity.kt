@@ -3,6 +3,7 @@ package dev.kobzar.app.activity
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
@@ -34,20 +35,29 @@ class MainActivity : BaseActivity() {
 
         val isFirstStart = runBlocking { preferencesRepository.isFirstStart.first() }
 
-//        val workerRequester = DangerNotifyWorker.createPeriodicRequester()
+        val prefs = viewModel.prefsWorkerInterval.value
+
+        val workerRequester = DangerNotifyWorker.createPeriodicRequester(
+            repeatInterval = prefs ?: 1
+        )
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "app_worker",
+            ExistingPeriodicWorkPolicy.UPDATE,
+            workerRequester
+        )
+
+        /* For testing OneTimeWorker
+
         val workerRequester: OneTimeWorkRequest = DangerNotifyWorker.createOneTimeRequester()
-//
-//        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-//            "app_worker",
-//            ExistingPeriodicWorkPolicy.KEEP,
-//            workerRequester
-//        )
 
         WorkManager.getInstance(this).enqueueUniqueWork(
             "workName",
             ExistingWorkPolicy.REPLACE,
             OneTimeWorkRequestBuilder<DangerNotifyWorker>().build()
         )
+
+         */
 
         setContent {
 
@@ -62,7 +72,14 @@ class MainActivity : BaseActivity() {
 
                 if (data != null && !isFirstStart) {
                     viewModel.deleteNotifiedAsteroid(data)
-                    Navigator(screens = listOf(AsteroidsListScreen(), DetailsScreen(data))) { navigator ->
+                    Navigator(
+                        screens = listOf(
+                            AsteroidsListScreen(), DetailsScreen(
+                                asteroidId = data,
+                                isDistanceDanger = true
+                            )
+                        )
+                    ) { navigator ->
                         SlideTransition(navigator)
                     }
                 } else {

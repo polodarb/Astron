@@ -17,6 +17,7 @@ import dev.kobzar.favorites.FavoritesScreen
 import dev.kobzar.navigation.shared.SharedScreen
 import dev.kobzar.onboarding.OnBoardingScreen
 import dev.kobzar.repository.AsteroidDetailsRepository
+import dev.kobzar.repository.DataStoreRepository
 import dev.kobzar.settings.SettingsScreen
 import dev.shreyaspatil.permissionFlow.PermissionFlow
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -24,7 +25,7 @@ import java.util.concurrent.Executors
 import javax.inject.Inject
 
 @HiltAndroidApp
-class AsterApplication : Application(), Configuration.Provider  {
+class AsterApplication : Application(), Configuration.Provider {
 
     @Inject
     lateinit var workerFactory: AppWorkerFactory
@@ -38,14 +39,19 @@ class AsterApplication : Application(), Configuration.Provider  {
     override fun onCreate() {
         super.onCreate()
 
-        val permissionDispatcher = Executors.newFixedThreadPool(3).asCoroutineDispatcher()
-        PermissionFlow.init(this, permissionDispatcher)
-        PermissionFlow.getInstance().startListening()
+//        val permissionDispatcher = Executors.newFixedThreadPool(3).asCoroutineDispatcher()
+//        PermissionFlow.init(this, permissionDispatcher)
+//        PermissionFlow.getInstance().startListening()
 
         ScreenRegistry {
             register<SharedScreen.OnBoardingScreen> { OnBoardingScreen() }
             register<SharedScreen.AsteroidsListScreen> { AsteroidsListScreen() }
-            register<SharedScreen.DetailsScreen> { DetailsScreen(asteroidId = it.asteroidId) }
+            register<SharedScreen.DetailsScreen> {
+                DetailsScreen(
+                    asteroidId = it.asteroidId,
+                    isDistanceDanger = it.isDistanceDanger
+                )
+            }
             register<SharedScreen.FavoritesScreen> { FavoritesScreen() }
             register<SharedScreen.SettingsScreen> { SettingsScreen() }
             register<SharedScreen.CompareScreen> { CompareScreen() }
@@ -57,7 +63,8 @@ class AsterApplication : Application(), Configuration.Provider  {
 
 class AppWorkerFactory @Inject constructor(
     private val asteroidDetailsRepository: AsteroidDetailsRepository,
-    private val workerActivityInterface: WorkerActivityInterface
+    private val workerActivityInterface: WorkerActivityInterface,
+    private val prefs: DataStoreRepository
 ) : WorkerFactory() {
     override fun createWorker(
         appContext: Context,
@@ -68,7 +75,8 @@ class AppWorkerFactory @Inject constructor(
             appContext,
             workerParameters,
             asteroidDetailsRepository,
-            workerActivityInterface
+            workerActivityInterface,
+            prefs
         )
     }
 }
