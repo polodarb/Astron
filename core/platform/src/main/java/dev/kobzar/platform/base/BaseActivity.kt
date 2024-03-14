@@ -10,11 +10,11 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.activity.ComponentActivity
-import androidx.activity.enableEdgeToEdge
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.WindowCompat
 import dev.kobzar.platform.R
 import java.time.Instant
 
@@ -26,10 +26,11 @@ open class BaseActivity : ComponentActivity() {
     @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
         installSplashScreen().apply {
             setOnExitAnimationListener { provider ->
-                enableEdgeToEdge()
-
                 val passed = Instant.now().toEpochMilli() - provider.iconAnimationStartMillis
                 val remaining = provider.iconAnimationDurationMillis - passed
 

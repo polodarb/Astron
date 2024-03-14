@@ -87,7 +87,7 @@ class AsteroidsListScreen : Screen {
     override fun Content() {
 
         val viewModel = getScreenModel<AsteroidsListViewModel>()
-        val asteroidsData = viewModel.marketCoins.collectAsLazyPagingItems()
+        val asteroidsData = viewModel.asteroids.collectAsLazyPagingItems()
         val userPrefsData = viewModel.prefsData.collectAsState()
 
         val navigator = LocalNavigator.current

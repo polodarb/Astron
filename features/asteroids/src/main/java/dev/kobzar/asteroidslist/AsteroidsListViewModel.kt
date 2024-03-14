@@ -32,8 +32,8 @@ class AsteroidsListViewModel @Inject constructor(
     private val reformatDiameterUseCase: ReformatDiameterUseCase
 ) : ScreenModel {
 
-    private val _marketCoins = MutableStateFlow<AsteroidsList>(PagingData.empty())
-    val marketCoins: StateFlow<AsteroidsList> = _marketCoins
+    private val _asteroids = MutableStateFlow<AsteroidsList>(PagingData.empty())
+    val asteroids: StateFlow<AsteroidsList> = _asteroids
 
     private val _prefsData = MutableStateFlow<UserPreferencesModel?>(null)
     val prefsData: StateFlow<UserPreferencesModel?> = _prefsData
@@ -74,7 +74,7 @@ class AsteroidsListViewModel @Inject constructor(
                         }
                     }
                     .collect { pagingData ->
-                        _marketCoins.value = pagingData
+                        _asteroids.value = pagingData
                     }
             } catch (e: Exception) {
                 Log.e("AsteroidsListViewModel", e.toString())
