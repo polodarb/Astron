@@ -4,6 +4,7 @@
 
     <style name="Theme.Astro.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenAnimatedIcon">@drawable/data</item>
+        <item name="windowSplashScreenAnimationDuration">3000</item>
         <item name="windowSplashScreenBackground">@color/white</item>
         <item name="postSplashScreenTheme">@style/Theme.Astro</item>
     </style>

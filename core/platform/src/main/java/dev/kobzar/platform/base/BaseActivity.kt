@@ -7,6 +7,8 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.core.app.ActivityCompat
@@ -14,6 +16,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import dev.kobzar.platform.R
+import java.time.Instant
 
 open class BaseActivity : ComponentActivity() {
 
@@ -22,9 +25,20 @@ open class BaseActivity : ComponentActivity() {
 
     @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
-        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        installSplashScreen().apply {
+            setOnExitAnimationListener { provider ->
+                enableEdgeToEdge()
+
+                val passed = Instant.now().toEpochMilli() - provider.iconAnimationStartMillis
+                val remaining = provider.iconAnimationDurationMillis - passed
+
+                Handler(Looper.getMainLooper()).postDelayed(
+                    { provider.remove() },
+                    if (remaining > 0) remaining else 0
+                )
+            }
+        }
 
         createNotificationChannel()
     }
