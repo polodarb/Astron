@@ -2,20 +2,44 @@
 agp = "8.3.0"
 kotlin = "1.9.0"
 coreKtx = "1.12.0"
+detekt = "1.23.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
+coroutineTestVersion = "1.8.0"
 espressoCore = "3.5.1"
 lifecycleRuntimeKtx = "2.7.0"
 activityCompose = "1.8.2"
-composeBom = "2024.02.01"
+composeBom = "2024.02.02"
 appcompat = "1.6.1"
 material = "1.11.0"
 voyager = "1.0.0"
-composeRuntime = "1.6.2"
+composeRuntime = "1.6.3"
+splashscreen = "1.0.1"
+kotlinxSerializationJson = "1.6.3"
+kotlinxCollectionsImmutable = "0.3.7"
+hilt = "2.49" # https://github.com/adrielcafe/voyager/issues/346
+hilt-common = "1.2.0"
+datastorePreferences = "1.0.0"
+retrofit = "2.9.0"
+chucker = "4.0.0"
+okhttp = "4.11.0"
+paging = "3.2.1"
+pagingCompose = "3.3.0-alpha04"
+room = "2.6.1"
+ksp = "1.9.20-1.0.14"
+sheetsCompose = "1.3.0"
+permissionFlow = "2.0.0"
+work-runtime-ktx = "2.9.0"
+pagingVersion = "3.2.1"
+firebase = "32.7.4"
+firebaseCrashlyticsPlugin = "2.9.9"
+gms = "4.4.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-paging = { group = "androidx.paging", name = "paging-runtime", version.ref = "pagingVersion" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutineTestVersion" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
@@ -35,9 +59,48 @@ voyager-navigator = { group = "cafe.adriel.voyager", name = "voyager-navigator",
 voyager-transitions = { group = "cafe.adriel.voyager", name = "voyager-transitions", version.ref = "voyager"  }
 voyager-screenmodel = { group = "cafe.adriel.voyager", name = "voyager-screenmodel", version.ref = "voyager" }
 voyager-hilt = { group = "cafe.adriel.voyager", name = "voyager-hilt", version.ref = "voyager" }
+splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
+material-view = { group = "com.google.android.material", name = "material", version.ref = "material" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson"}
+kotlinx-collections-immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
+work-manager = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work-runtime-ktx" }
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
+hilt-common = { group = "androidx.hilt", name = "hilt-common", version.ref = "hilt-common" }
+hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hilt-common" }
+hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
+hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+chucker = { group = "com.github.chuckerteam.chucker", name = "library", version.ref = "chucker" }
+chucker-no-op = { group = "com.github.chuckerteam.chucker", name = "library-no-op", version.ref = "chucker" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+paging3 = { module = "androidx.paging:paging-runtime", version.ref = "paging" }
+paging3-compose = { module = "androidx.paging:paging-compose", version.ref = "pagingCompose" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
+sheets-compose = { group = "com.maxkeppeler.sheets-compose-dialogs", name = "core", version.ref = "sheetsCompose" }
+sheets-compose-options = { group = "com.maxkeppeler.sheets-compose-dialogs", name = "option", version.ref = "sheetsCompose" }
+sheets-compose-info = { group = "com.maxkeppeler.sheets-compose-dialogs", name = "info", version.ref = "sheetsCompose" }
+permission-flow-general = { module = "dev.shreyaspatil.permission-flow:permission-flow-android", version.ref = "permissionFlow" }
+permission-flow-compose = { module = "dev.shreyaspatil.permission-flow:permission-flow-compose", version.ref = "permissionFlow" }
+firebase-crashlytics-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version.ref = "firebaseCrashlyticsPlugin" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase" }
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
+firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging-ktx" }
+firebase-config = { group = "com.google.firebase", name = "firebase-config-ktx" }
 
 [plugins]
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsPlugin" }
+gms = { id = "com.google.gms.google-services", version.ref = "gms" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
-
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

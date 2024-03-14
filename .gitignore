@@ -13,6 +13,8 @@ app/build
 local.properties
 keystore.properties
 
+app/google-services.json
+
 core/navigation/build
 core/platform/build
 core/ui/build
@@ -25,12 +27,15 @@ data/preferences/build
 data/preferences/impl/build
 data/repository/build
 data/repository/impl/build
+data/model/build
 
 domain/build
 domain/impl/build
 
-features/asteroidsList/build
+features/asteroids/build
 features/onboarding/build
-
-# Project exclude paths
-/core/ui/build/
+features/settings/build
+features/favorites/build
+features/details/build
+features/compare/build
+features/dangerNotify/build

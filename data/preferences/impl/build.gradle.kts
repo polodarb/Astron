@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+
+    alias(libs.plugins.hilt)
+    kotlin("kapt")
 }
 
 android {
@@ -33,6 +36,15 @@ android {
 }
 
 dependencies {
+    // KtSerialization
+    implementation(libs.kotlinx.serialization.json)
+
+    // Datastore
+    implementation(libs.datastore.preferences)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -42,4 +54,8 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(project(":data:preferences"))
+}
+
+kapt {
+    correctErrorTypes = true
 }

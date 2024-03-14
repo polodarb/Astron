@@ -37,7 +37,13 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    api(libs.androidx.paging)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    api(project(":data:preferences"))
+    api(project(":data:network"))
+    api(project(":data:database"))
+    api(project(":data:model"))
 }

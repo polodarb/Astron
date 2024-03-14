@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -33,6 +34,12 @@ android {
 }
 
 dependencies {
+
+    // Room Database
+    implementation(libs.room.runtime)
+    ksp(libs.room.compiler)
+    implementation(libs.room.ktx)
+    implementation(libs.room.paging)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

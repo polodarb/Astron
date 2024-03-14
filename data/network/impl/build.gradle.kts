@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+
+    alias(libs.plugins.hilt)
+    kotlin("kapt")
 }
 
 android {
@@ -34,6 +37,25 @@ android {
 
 dependencies {
 
+    // Interceptor
+    implementation(libs.logging.interceptor)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.common)
+    kapt(libs.hilt.compiler)
+
+    // Retrofit
+    api(libs.retrofit)
+    implementation(libs.kotlinx.serialization.json)
+
+    // OkHttp
+    api(libs.okhttp)
+
+    // Chucker
+    debugImplementation(libs.chucker)
+    releaseImplementation(libs.chucker.no.op)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -42,4 +64,8 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(project(":data:network"))
+}
+
+kapt {
+    correctErrorTypes = true
 }

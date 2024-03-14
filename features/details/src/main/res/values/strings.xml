@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="details_table_item_dangerous">Dangerous</string>
+    <string name="details_table_item_min_diameter">Min diameter</string>
+    <string name="details_table_item_max_diameter">Max diameter</string>
+    <string name="details_table_item_close_approach">Close approach</string>
+    <string name="details_table_item_relative_velocity">Relative velocity</string>
+    <string name="details_table_item_miss_distance">Miss distance</string>
+    <string name="details_table_item_orbiting_body">Orbiting body</string>
+    <string name="details_table_item_is_sentry_object">Is sentry object</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="details_chip_sbd">Go to SBD</string>
+    <string name="details_switch_title_size">Size</string>
+    <string name="details_switch_title_distance">Distance</string>
+    <string name="details_chart_title_astronomical_distance">Astronomical distance</string>
+    <string name="unit_astronomical">AU</string>
+    <string name="toast_details_compare_error">You need at least 2 asteroids</string>
+    <string name="notification_title_compare_error">So far, there is nothing to compare this asteroid with</string>
+    <!--    <string name="unit_miles">Miles</string>-->
+<!--    <string name="unit_km">Km</string>-->
+<!--    <string name="unit_lunar">LD</string>-->
+<!--    <string name="unit_speed_mph">Mph</string>-->
+<!--    <string name="unit_speed_km_s">Km/s</string>-->
+<!--    <string name="unit_speed_km_h">Km/h</string>-->
+<!--    <string name="unit_meters">Meters</string>-->
+<!--    <string name="unit_feets">Foots</string>-->
+</resources>

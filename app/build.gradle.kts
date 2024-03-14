@@ -1,6 +1,14 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+
+    alias(libs.plugins.gms)
+    alias(libs.plugins.firebase.crashlytics)
+
+    alias(libs.plugins.detekt)
+
+    alias(libs.plugins.hilt)
+    kotlin("kapt")
 }
 
 android {
@@ -47,9 +55,36 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    hilt {
+        enableAggregatingTask = false
+    }
+}
+
+detekt {
+    toolVersion = "1.23.1"
+    config = files("config/detekt/detekt.yml")
+    buildUponDefaultConfig = true
 }
 
 dependencies {
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.config)
+
+    // Permission flow
+    implementation(libs.permission.flow.general)
+
+    // WorkManager
+    implementation(libs.work.manager)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.common)
+    kapt(libs.hilt.compiler)
 
     // Voyager Navigation
     implementation(libs.voyager.navigator)
@@ -57,6 +92,10 @@ dependencies {
     implementation(libs.voyager.hilt)
     implementation(libs.voyager.transitions)
 
+    // Splash Screen
+    implementation(libs.splashscreen)
+
+    implementation(libs.material.view)
     implementation(libs.androidx.ui.compose.runtime)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -65,6 +104,9 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+
+    // Testing
+    kaptTest(libs.hilt.android.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -79,12 +121,28 @@ dependencies {
 
     implementation(project(":data:repository"))
     implementation(project(":data:repository:impl"))
+    
+    implementation(project(":data:preferences"))
+    implementation(project(":data:preferences:impl"))
+
     implementation(project(":data:network"))
     implementation(project(":data:network:impl"))
+
+    implementation(project(":data:database"))
+    implementation(project(":data:database:impl"))
 
     implementation(project(":domain"))
     implementation(project(":domain:impl"))
 
     implementation(project(":features:onboarding"))
-    implementation(project(":features:asteroidsList"))
+    implementation(project(":features:asteroids"))
+    implementation(project(":features:details"))
+    implementation(project(":features:favorites"))
+    implementation(project(":features:settings"))
+    implementation(project(":features:compare"))
+    implementation(project(":features:dangerNotify"))
+}
+
+kapt {
+    correctErrorTypes = true
 }
