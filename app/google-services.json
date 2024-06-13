@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "870556189042",
+    "project_id": "nextgenfinal-efbb1",
+    "storage_bucket": "nextgenfinal-efbb1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:870556189042:android:31df0ac3bc4f2eed7e9deb",
+        "android_client_info": {
+          "package_name": "dev.kobzar.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPu2EdZ7r42ydIQePkzxW0AnU0hxwNtKc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
