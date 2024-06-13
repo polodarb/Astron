@@ -19,7 +19,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Kobzar Danyil"
+rootProject.name = "Astron"
 include(":app")
 include(":core:ui")
 include(":core:platform")
